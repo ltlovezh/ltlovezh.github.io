@@ -15,147 +15,381 @@
 <meta name="twitter:title" content="Hexo">
 <meta name="twitter:description">
   
-    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
   
-    <link rel="icon" href="/favicon.png">
+    <link rel="icon" href="/img/favicon.png">
   
   
-    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
   
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   
-
+    
+    
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: true,
+          isPost: false,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
 </head>
-
 <body>
   <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">Hexo</a>
-      </h1>
-      
-        <h2 id="subtitle-wrap">
-          <a href="/" id="subtitle">Android</a>
-        </h2>
-      
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/head.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/">leon</a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">Android</p>
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/Home">博客首页</a></li>
+                        
+                            <li><a href="/works">作品展示</a></li>
+                        
+                            <li><a href="/about">留言打卡</a></li>
+                        
+                            <li><a href="/FrontEndGuide">前端导航</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/luuman" title="github">github</a>
+                            
+                                <a class="fl zhihu" target="_blank" href="https://www.zhihu.com/people/luuman" title="zhihu">zhihu</a>
+                            
+                                <a class="fl weibo" target="_blank" href="http://weibo.com/lishangmou" title="weibo">weibo</a>
+                            
+                                <a class="fl google" target="_blank" href="http://i.youku.com/shangmou" title="google">google</a>
+                            
+                                <a class="fl twitter" target="_blank" href="http://twitter.com/luuman" title="twitter">twitter</a>
+                            
+                                <a class="fl facebook" target="_blank" href="#" title="facebook">facebook</a>
+                            
+                                <a class="fl rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/Android/" style="font-size: 20px;">Android</a> <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a> <a href="/tags/动画框架/" style="font-size: 10px;">动画框架</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://MOxFIVE.github.io/">MOxFIVE</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.vsay.cn/">DoubleV</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.ccwebsite.com/">兮兮</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://blog.dandyweng.com/">翁天信</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.plqblog.com/views/index.php">潘利强</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.hankin.cn/">hankin技术宅</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">90后，水瓶座普通男青年！爱折腾，爱运动，更爱游离于错综复杂的编码与逻辑中，无法自拔。</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
     </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
-        
-        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" results="0" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://ltlovezh.github.io"></form>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页">leon</a></h1>
       </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页">leon</a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">Android</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/Home">博客首页</a></li>
+                
+                    <li><a href="/works">作品展示</a></li>
+                
+                    <li><a href="/about">留言打卡</a></li>
+                
+                    <li><a href="/FrontEndGuide">前端导航</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="mail" target="_blank" href="http://mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=PAkNDgsKBQ4MCnxNTRJfU1E" title="mail">mail</a>
+                    
+                        <a class="github" target="_blank" href="https://github.com/luuman" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/luuman" title="zhihu">zhihu</a>
+                    
+                        <a class="weibo" target="_blank" href="http://weibo.com/lishangmou" title="weibo">weibo</a>
+                    
+                        <a class="google" target="_blank" href="http://i.youku.com/shangmou" title="google">google</a>
+                    
+                        <a class="twitter" target="_blank" href="http://twitter.com/luuman" title="twitter">twitter</a>
+                    
+                        <a class="facebook" target="_blank" href="#" title="facebook">facebook</a>
+                    
+                        <a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+                    
+                </div>
+            </nav>
+        </header>                
     </div>
-  </div>
-</header>
-      <div class="outer">
-        <section id="main">
+</nav>
+      <div class="body-wrap">
   
     <article id="post-Android动画框架一" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/04/05/Android动画框架一/" class="article-date">
-  <time datetime="2016-04-05T06:43:18.000Z" itemprop="datePublished">2016-04-05</time>
+  
+    <div class="article-meta">
+      <a href="/2016/04/05/Android动画框架一/" class="article-date">
+      <time datetime="2016-04-05T08:59:41.000Z" itemprop="datePublished">2016-04-05</time>
 </a>
-    
-  </div>
+    </div>
+  
   <div class="article-inner">
     
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/05/Android动画框架一/">Android动画框架（1）</a>
+    </h1>
+  
+
+      </header>
+      
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>#Android动画框架（1）<br>Tags:动画框架<br>最近，抽空看了下Android中的常用动画使用方式和实现机制，现整理如下：</p>
-<p>##Drawable Animation(Frame Animation)</p>
-<p>帧动画，就是依次展示一系列Drawable，来模拟动画的效果，类似于GIF图片。</p>
-<p>###使用方式<br>帧动画的使用方式比较简单，可以通过XML资源文件或者Java Code来实现（对应于AnimationDrawable类），如下所示：</p>
-<ul>
-<li><p>XML资源文件(放在anim或者Drawable目录下都可以)</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;animation-list xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:oneshot=&quot;true&quot;&gt;</span><br><span class="line">    &lt;item android:drawable=&quot;@drawable/one&quot; android:duration=&quot;100&quot; /&gt;</span><br><span class="line">    &lt;item android:drawable=&quot;@drawable/two&quot; android:duration=&quot;200&quot; /&gt;</span><br><span class="line">    &lt;item android:drawable=&quot;@drawable/three&quot; android:duration=&quot;300&quot; /&gt;</span><br><span class="line">&lt;/animation-list&gt;</span><br><span class="line">        </span><br><span class="line">    其中android:oneshot表示是否仅播放一次，</span><br><span class="line">    android:drawable表示每一帧图片，</span><br><span class="line">    android:duration表示对应Drawable展示的持续时间。</span><br><span class="line">```        </span><br><span class="line">        </span><br><span class="line">* Java Code</span><br></pre></td></tr></table></figure>
-<p>  AnimationDrawable anim = new AnimationDrawable();<br>  anim.addFrame(getDrawable(R.drawable.one),100);<br>  anim.addFrame(getDrawable(R.drawable.two),200);<br>  anim.addFrame(getDrawable(R.drawable.three),300);<br>  anim.setBounds(Rect);//Draw区域，必须指定</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">		</span><br><span class="line">习惯上，我们把AnimationDrawable设置为View的背景，接着我们可以在Java Code中获取AnimationDrawable对象，然后通过start和stop方法来控制动画的播放。</span><br><span class="line"></span><br><span class="line">###实现机制</span><br><span class="line">至于AnimationDrawable是如何实现动画的？我首先想到的是：通过Handler根据每帧图片的持续时间，循环发送Message，定期处理Message，取出不同帧的Drawable进行draw。</span><br><span class="line"></span><br><span class="line">仔细看了下源码，基本逻辑很类似，方法调用栈可以概括为：`start -&gt; run -&gt; nextFrame -&gt; setFrame -&gt; scheduleSelf(Drawable)`，scheduleSelf方法会调用Drawable的Callback.scheduleDrawable方法。然后就是寻找哪里设置了callback属性，我一开始一直在AnimationDrawable的继承体系中寻找，但是只在AnimationDrawable的父类DrawableContainer中找到了Drawable.Callback的实现，但是这里根本就没有消息处理逻辑。后来请教了董大师，原来是在View.setBackgroundDrawable的时候，为Drawable设置了Callback回调,View.scheduleDrawable的代码如下所示：</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>public void scheduleDrawable(Drawable who, Runnable what, long when) {<br>    if (verifyDrawable(who) &amp;&amp; what != null) {<br>        final long delay = when - SystemClock.uptimeMillis();<br>        if (mAttachInfo != null) { //通过垂直同步信号(Vsync)触发下一帧的绘制<br>            mAttachInfo.mViewRootImpl.mChoreographer.postCallbackDelayed(Choreographer.CALLBACK_ANIMATION, what, who,Choreographer.subtractFrameDelay(delay));<br>            } else { //通过Handler消息机制触发下一帧的绘制<br>            ViewRootImpl.getRunQueue().postDelayed(what, delay);<br>            }<br>        }<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">代码很简洁，优先选择通过垂直同步信号来处理下一帧的绘制，若mAttachInfo为null，再通过Handler消息机制实现下一帧的绘制。Vsync信号的处理是在`Choreographer`类中，而Choreographer则负责控制用户的input事件、View的绘制和动画等行为，后续我们会详细分析该类。</span><br><span class="line"></span><br><span class="line">&gt;Frame Animation的主要缺点是：需要准备每一帧的图片，内存占用较大；并且只能用作View的前景和背景图，局限性比较大。</span><br><span class="line"></span><br><span class="line">##Tween Animation（View Animation）</span><br><span class="line"></span><br><span class="line">Tween Animation具有3个基本属性：开始帧、结束帧和动画持续时间，系统会根据这3个属性，计算出中间帧，实现渐变的效果。Tween Animation只能作用在View元素上，对于普通的类对象无能为力。</span><br><span class="line"></span><br><span class="line">###使用方式</span><br><span class="line">补间动画包括4种变换，如下所示，分别指出了XML资源文件中的标签和对应的Java类：</span><br><span class="line"></span><br><span class="line">&lt;img src=&quot;http://7xs2qy.com1.z0.glb.clouddn.com/tween.png&quot; width=&quot;620&quot; height=&quot;250&quot;&gt;</span><br><span class="line">        </span><br><span class="line">Tween Animation可以通过Xml资源文件来定义，也可以直接创建对应的对象来操作，这里以位移动画为例简单介绍其使用方式。</span><br><span class="line"></span><br><span class="line">**XML资源文件（放在anim目录下）**</span><br></pre></td></tr></table></figure></p>
-<set xmlns:android="http://schemas.android.com/apk/res/android"><br>  <translate android:fromxdelta="20" android:toxdelta="60" android:fromydelta="20" android:toydelta="100" android:fillafter="true" android:duration="1000"><br>  </translate></set> 
-
-<p>其中，fromXDelta,fromYDelta表示动画开始时X,Y座标;<br>toXDelta,toYDelta表示动画结束时X,Y的座标；<br>android:fillAfter=”true”，表示这个动画执行完之后保持最后的状态；<br>android:duration表示动画持续的时间。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"> </span><br><span class="line">然后就是加载资源文件，播放动画：</span><br></pre></td></tr></table></figure>
-<p>TranslateAnimation animation = AnimationUtils.loadAnimation(context,R.anim.XXX);<br>view.startAnimation(animation);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**Java Code**</span><br></pre></td></tr></table></figure></p>
-<p>TranslateAnimation animation = new TranslateAnimation(fromXDelta,toXDelta,fromYDelta,toYDelta);//创建位移动画，指定开始和结束的位移位置。<br>animation.setFillAfter(true);//表示这个动画执行完之后保持最后的状态<br>animation.setDuration(1000);//动画持续时间<br>view.startAnimation(animation);<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">除了使用单一的动画外，我们还可以通过AnimationSet来组合多个动画，并且可以为不同动画设置不同的startOffset时间，以实现不同动画之间的先后顺序。</span><br><span class="line"></span><br><span class="line">因为AnimationSet也是继承Animation，所以针对Animation的属性也可以添加到AnimationSet上，但是这些属性对于AnimationSet来说具有不同的含义：</span><br><span class="line"></span><br><span class="line">&gt;duration, repeatMode, fillBefore和fillAfter，这四个属性，AnimationSet会把它们Push给他的子元素，也就是具体的补间动画。</span><br><span class="line"></span><br><span class="line">&gt;repeatCount, fillEnabled，AnimationSet将忽略这两个属性。</span><br><span class="line"></span><br><span class="line">&gt;startOffset, shareInterpolator，AnimationSet可以识别这两个属性，startOffset表示动画开始的延迟时间，shareInterpolator表示是否所有的子元素同享相同的插值器（关于Interpolator，下面会进行详细介绍）</span><br><span class="line">	</span><br><span class="line">**Tips**:*在Android4.0之前只能通过Java Code设置上述属性，XML文件设置会被忽略*。</span><br><span class="line">		</span><br><span class="line">###实现机制</span><br><span class="line"></span><br><span class="line">关于Tween Animation的使用，网上的例子很多，这里不再赘述，下面来分析下Tween的实现机制。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">首先从View.startAnimation(animation)入手，这里的代码很简单，如下所示：</span><br></pre></td></tr></table></figure></p>
-<p>public void startAnimation(Animation animation) {<br>    //设定开始时间<br>    animation.setStartTime(Animation.START_ON_FIRST_FRAME);<br>    //保存Animation到View的mCurrentAnimation属性中<br>    setAnimation(animation);<br>    //通知父View清除相关的缓存<br>    invalidateParentCaches();<br>    invalidate(true);//请求重绘<br>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">从这里可以得知，View仅仅保存了Tween Animation，然后请求View重绘来实现动画。</span><br><span class="line">既然Tween Animation动画是通过View重绘来实现的，那么我们简单了解下View的绘制流程，可以参考View.draw方法，基本包括6步：</span><br><span class="line">		</span><br><span class="line">1. Draw the background，通过View.drawBackground方法来实现</span><br><span class="line">2. If necessary, save the canvas&apos; layers to prepare for fading,如果需要，保存画布（canvas）的层为淡入或淡出做准备</span><br><span class="line">3. draw the content，通过View.onDraw方法来实现，一般我们实现自己的View，就是通过该方法来操作，获得Canvas后，可以draw任何view，实现个性化的定制。</span><br><span class="line">4. draw the children，通过View.dispatchDraw方法来实现，ViewGroup都会实现该方法，来绘制自己的孩子，这里也是实现Tween Animation的关键。参看 ViewGroup的代码，可知调用过程为：`dispatchDraw-&gt;drawChild-&gt;child.draw(canvas,parent,drawingTime)-&gt;child.draw(canvas)` ，这样的调用过程可以保证每个子View的draw函数都被调用，通过这种递归，从而让整个View树中的所有View的内容都得到绘制。*** 在调用每个子View的draw函数之前，View的绘制位置是Canvas通过translate函数来进行切换的，坐标原点切换到了每个子View的左上角窗口中的所有View 共用一个Canvas对象 ***。</span><br><span class="line">5. If necessary, draw the fading edges and restore layers,如果需要，绘制淡入淡出相关的内容并恢复保存的画布所在层（layer）</span><br><span class="line">6. draw decorations (scrollbars)，通过View.onDrawScrollBars方法来实现，绘制滚动条的操作就是在这里实现的。</span><br><span class="line">		</span><br><span class="line">		</span><br><span class="line">既然View的绘制离不开这几步操作，那么就需要看看具体哪一步操作完成了Tween Animation的绘制，仔细分析了各部分代码后，发现了补间动画的基本绘制流程。</span><br><span class="line"></span><br><span class="line">首先，从ViewGroup.dispatchDraw方法开始，该方法会绘制每一个Child，即进入到ViewGroup.drawChild方法中，然后会调用View.draw(Canvas canvas, ViewGroup parent, long drawingTime)方法绘制具体的子View，这里就是实现Tween Animation的地方。极度精简后的关键代码如下所示：</span><br></pre></td></tr></table></figure></p>
-<p>//获取和每个子View绑定的Animation。<br>final Animation a = getAnimation();<br>//这个方法实现具体的动画操作，会调用到每个XXXAnimation子类的applyTransformation方法，applyTransformation方法会把每个动画帧对View的转换保存在Transformation类的Matrix和Alpha属性中，下面会详细分析该方法的实现，这里我们仅需要明确，此方法会把动画的转换保存在了Transformation中就可以了。<br>more = drawAnimation(parent, drawingTime, a, scalingRequired);<br>//transformToApply就是保存具体动画帧的转换信息类。<br>transformToApply = parent.getChildTransformation();<br>//这里主要是进行坐标系的转换，mLeft和mTop就是该子View在父ViewGroup中的位置，在Onlayout方法中指定，这里会把坐标系从父ViewGroup的左上角移动到子View的左上角，这点非常重要，重绘动画发生在子View自己的坐标系中，即子View的左上角是坐标原点。<br>if (offsetForScroll) {<br>    canvas.translate(mLeft - sx, mTop - sy);<br>    } else {<br>        if (!usingRenderNodeProperties) {<br>            canvas.translate(mLeft, mTop);<br>            }<br>        }<br>    // Undo the scroll translation, apply the transformation matrix,then redo the scroll translate to get the correct result.<br>    canvas.translate(-transX, -transY);//撤销滚动距离<br>    //把XXXAnimation所做的matrix改变，添加到当前Canvas Matrix上。因为每次重绘时drawingTime都不一样，所以每次的Matrix都不同，所以就实现了动画效果。<br>canvas.concat(transformToApply.getMatrix());<br>    canvas.translate(transX, transY);//重做滚动<br>    //实现透明度渐变的动画<br>    float transformAlpha = transformToApply.getAlpha();<br>    alpha *= transformAlpha;</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"> 上面只是实现了对Canvas的转换，下面还会通过draw(Canvas canvas)方法实现子View的具体绘制，此处不再赘述，可以参考View的绘制流程。</span><br><span class="line">             </span><br><span class="line">             </span><br><span class="line">        </span><br><span class="line">上面是Tween Animation的大体绘制流程，但是貌似还没有和我们的XXXAnimation相关联起来，下面我们再来分析下drawAnimation方法，就会涉及到具体Animation了,关键代码如下所示：</span><br></pre></td></tr></table></figure>
-<p>//从父ViewGroup中取得变换（平移、旋转或缩放等）信息类Transformation，它包含了一个矩阵Matrix和alpha值，Matrix就是图形转换矩阵。<br>final Transformation t = parent.getChildTransformation();<br>//drawingTime表示当前的绘制时间。more表示动画是否结束，若动画没有结束就返回true，直到动画结束返回false，这里的参数a就是从子View中取出的具体XXXAnimation了。XXXAnimation对View所做的转换，会保存在Transformation中的Matrix矩阵和alpha属性中，供上面的draw方法来实现对Canvas的转换。<br>boolean more = a.getTransformation(drawingTime, t, 1f);</p>
-<p>该方法剩余的代码，会判断动画是否结束，若没有结束，则会调用invalidate来不断的重绘，直到动画结束，此处不再赘述。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">接下来，我们继续看下具体实现动画变换的getTransformation方法，关键代码如下所示：</span><br></pre></td></tr></table></figure></p>
-<p>//获取该动画的延迟执行时间<br>final long startOffset = getStartOffset();<br>final long duration = mDuration;<br>float normalizedTime;<br>if (duration != 0) {<br>    //根据当前时间、动画持续时间，计算出当前动画的时间进度百分比，介于0和1之间<br>    normalizedTime = ((float) (currentTime - (mStartTime + startOffset))) / (float) duration;<br>    } else {<br>    // time is a step-change with a zero duration，特殊情况，动画直接结束。<br>    normalizedTime = currentTime &lt; mStartTime ? 0.0f : 1.0f;<br>    }<br>    //判断动画是否结束。<br>    final boolean expired = normalizedTime &gt;= 1.0f;<br>    mMore = !expired;<br>    if ((normalizedTime &gt;= 0.0f || mFillBefore) &amp;&amp; (normalizedTime &lt;= 1.0f || mFillAfter)) {<br>        if (!mStarted) {<br>            //通知回调，动画开始执行<br>            fireAnimationStart();<br>            mStarted = true;<br>            if (USE_CLOSEGUARD) {<br>                guard.open(“cancel or detach or getTransformation”);<br>            }<br>        }<br>    //获得插值器，插值器的作用就是根据上面获得的时间进度百分比，计算出动画的当前进度，以此来实现加速、减速等动画效果，可以用函数f(t)=t来表示，其中t表示时间进度，f(t)表示真实的动画进度，关于插值器，下面会进行详细的介绍。<br>    final float interpolatedTime = mInterpolator.getInterpolation(normalizedTime);<br>    //applyTransformation是具体的动画实现过程，由每个XXXAnimation子类负责实现。简单来说，就是传入动画进度，然后该函数会根据动画进度，填充具体的转换矩阵。不同时刻对应不同的转换矩阵，通过该转换矩阵，就可以绘制出变换后的子View，从而实现动画效果。<br>    applyTransformation(interpolatedTime,outTransformation);<br>    }<br>    //若动画过期了，即结束了<br>    if (expired) {<br>        //若动画已经执行完了所有的重复行为，则通知回调，动画结束了.否则，继续重复动画行为，并通知回调，repetat开始了。<br>        if (mRepeatCount == mRepeated) {<br>            if (!mEnded) {<br>                mEnded = true;<br>                guard.close();<br>                fireAnimationEnd();//end回调<br>            }<br>        } else {<br>            if (mRepeatCount &gt; 0) {<br>                mRepeated++;<br>            }</p>
-<pre><code>        if (mRepeatMode == REVERSE) { //这里主要处理是反向重复还是正向重复。
-            mCycleFlip = !mCycleFlip;
-            }
-
-        mStartTime = -1;
-        mMore = true;//若重复还没有执行完，则重新对mMore赋值。
-
-        fireAnimationRepeat();//repeat回调
-        }
-return mMore;
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">上面分析了getTransformation方法的主要流程，可知具体的动画变换是在applyTransformation方法中执行的，而该方法在Animation类中没有具体实现，需要在子类中实现，也就是说自定义动画需要实现applyTransformation函数。我们可以看下TranslateAnimation的applyTransformation方法实现，如下所示：</span><br></pre></td></tr></table></figure>
-<p>protected void applyTransformation(float interpolatedTime, Transformation t) {<br>    float dx = mFromXDelta;//起始的X坐标位移<br>    float dy = mFromYDelta;//起始的Y坐标位移<br>    if (mFromXDelta != mToXDelta) {<br>        //根据动画进度，计算出X坐标上具体的位移量<br>        dx = mFromXDelta + ((mToXDelta - mFromXDelta) <em> interpolatedTime);<br>    }<br>    if (mFromYDelta != mToYDelta) {<br>        //根据动画进度，计算出Y坐标上具体的位移量<br>        dy = mFromYDelta + ((mToYDelta - mFromYDelta) </em> interpolatedTime);<br>    }<br>    //通过图形变换矩阵来实现具体的位移。<br>    t.getMatrix().setTranslate(dx, dy);<br>    }<br>```<br>上面代码分析了位移动画的具体实现，其他XXXAnimation的实现非常类似，此处不再赘述.</p>
-<p>###Interpolator</p>
-<p>下面看下插值器（Interpolator）,插值器的基类是TimeInterpolator，它只有一个方法getInterpolation(float input);其中参数，input表示动画的时间进度，屏蔽了duration的差异，介于0和1之间。返回值则表示真实的动画进度，可以用函数f(t)=t来表示，其中t表示时间进度，f(t)表示真实的动画进度。系统提供了很多插值器，我们也可以根据自己的需求来实现自己的插值器。下面分别是线性、加速和减速插值器,可以直观感受下：</p>
-<ul>
-<li>线性插值器，插值函数为f(t) = t;<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC%E5%99%A8.gif" alt="线性插值器"></li>
-<li>加速插值器,默认情况下，插值函数为f(t)=t*t;<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%8A%A0%E9%80%9F%E6%8F%92%E5%80%BC%E5%99%A8.gif" alt="加速插值器"></li>
-<li>减速插值器,默认情况下，插值函数为f(t)=1 - (1 - t)*(1 - t);<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%87%8F%E9%80%9F%E6%8F%92%E5%80%BC%E5%99%A8.gif" alt="减速插值器"></li>
-</ul>
-<p>关于Tween Animation，到这里基本分析完了，我们简单总结下：</p>
-<ol>
-<li>Tween Animation不是通过子View来实现的，而是通过ParentView不断调整ChildView的画布坐标系来实现的，即改变的仅仅是子view的绘制位置。而子View的left、top、right和bottom属性都没有改变，即子View的Layout位置并没有发生改变，因此，<code>子View的Event接收区域也没有发生改变</code>。假设：子View的left和top属性都为100，然后有一个位移动画使该子View移动（50，50）,那么当动画发生时，父ViewGroup首先会把子 traslate(left,top)，然后随着不同的动画帧到来，再traslate(deltaX,deltaY)，那么动画结束时，该子View的最终位置就是（150,150）了，但它的left和top还是100.</li>
-<li>如果要实现自己的Tween Animation，可以重写Animation.applyTransformation()方法来实现，如果要实现不同的动画变换速率，可以重写TimeInterpolator.getInterpolation(float input)方法来实现。</li>
-</ol>
-<p>其实，这里还有一个疑问，Tween Animation的重绘频率是多少？简单，自己重写Animation.applyTransformation方法打印出时间间隔就OK了，打印出的log如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/animation_log.png" width="400"></p>
-<p>由log可知，重绘的频率基本在16ms左右，这和Android系统的Vsync信号正好吻合。上面学习Drawable Animation时，我们提到了Choreographer类，该类负责控制用户的input事件、View的绘制和动画等行为，其实我们调用invalidate方法时，View不会立即重绘，而是等到Vsync信号到来时，由Choreographer驱动View绘制事件来实现View的绘制。而Vsync信号一般是60HZ，差不多是16ms一次信号，所以才显示出Tween Animation的绘制时间间隔为16ms左右。关于Choreographer类，我们在学习属性动画时，再详细的分析。</p>
-<blockquote>
-<p>Tween Animation的主要缺点：只能针对View体系作变换；只支持透明度、位移、缩放和旋转等动画；改变的只是绘制位置，View的真实属性并没有发生改变，处理Event事件的区域也没有发生变化；只支持动画的并行组合，不支持串行动画。</p>
-</blockquote>
-<p>（待续）</p>
+          
+        <p>最近，抽空看了下Android中的常用动画使用方式和实现机制，现整理如下：</p>
+<h2 id="Drawable-Animation-Frame-Animation"><a href="#Drawable-Animation-Frame-Animation" class="headerlink" title="Drawable Animation(Frame Animation)"></a>Drawable Animation(Frame Animation)</h2><p>帧动画，就是依次展示一系列Drawable，来模拟动画的效果，类似于GIF图片。</p>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p>帧动画的使用方式比较简单，可以通过XML资源文件或者Java Code来实现（对应于AnimationDrawable类），如下所示：</p>
+<p><strong>XML资源文件(放在anim或者Drawable目录下都可以)</strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">animation-list</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span> <span class="attr">android:oneshot</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/one"</span> <span class="attr">android:duration</span>=<span class="string">"100"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/two"</span> <span class="attr">android:duration</span>=<span class="string">"200"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/three"</span> <span class="attr">android:duration</span>=<span class="string">"300"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">animation-list</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>Java Code</strong></p>
+<pre><code class="java">AnimationDrawable anim = <span class="keyword">new</span> AnimationDrawable();
+anim.addFrame(getDrawable(R.drawable.one),<span class="number">100</span>);
+anim.addFrame(getDrawable(R.drawable.two),<span class="number">200</span>);
+anim.addFrame(getDrawable(R.drawable.three),<span class="number">300</span>);
+anim.setBounds(Rect);<span class="comment">//Draw区域，必须指定</span>
+</code></pre>
+<p>习惯上，我们把AnimationDrawable设置为View的背景，接着我们可以在Java Code中获取AnimationDrawable对象，然后通过start和stop方法来控制动画的播放。</p>
+<h3 id="实现机制"><a href="#实现机制" class="headerlink" title="实现机制"></a>实现机制</h3><p>至于AnimationDrawable是如何实现动画的？我首先想到的是：通过Handler根据每帧图片的持续时间，循环发送Message，定期处理Message，取出不同帧的Drawable进行draw。</p>
 
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://ltlovezh.github.io/2016/04/05/Android动画框架一/" data-id="cimn27up70000swt1i47jjucv" class="article-share-link">Delen</a>
+    
+    <div class="article-info article-info-index">
       
       
-    </footer>
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/动画框架/">动画框架</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
   </div>
   
 </article>
 
 
+
+
+
+
+
+
+
   
-    <article id="post-Hexo" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2016/04/05/Hexo/" class="article-date">
-  <time datetime="2016-04-05T06:31:07.000Z" itemprop="datePublished">2016-04-05</time>
+    <article id="post-Android动画" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/05/Android动画/" class="article-date">
+      <time datetime="2016-04-05T08:05:03.000Z" itemprop="datePublished">2016-04-05</time>
 </a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/04/05/Android动画/">Android动画</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <h2 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h2><p><strong>XML资源文件(放在anim或者Drawable目录下都可以)</strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">animation-list</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span> <span class="attr">android:oneshot</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/one"</span> <span class="attr">android:duration</span>=<span class="string">"100"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/two"</span> <span class="attr">android:duration</span>=<span class="string">"200"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/three"</span> <span class="attr">android:duration</span>=<span class="string">"300"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">animation-list</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p><strong>Java Code</strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">AnimationDrawable anim = <span class="keyword">new</span> AnimationDrawable();</span><br><span class="line">anim.addFrame(getDrawable(R.drawable.one),<span class="number">100</span>);</span><br><span class="line">anim.addFrame(getDrawable(R.drawable.two),<span class="number">200</span>);</span><br><span class="line">anim.addFrame(getDrawable(R.drawable.three),<span class="number">300</span>);</span><br><span class="line">anim.setBounds(Rect);<span class="comment">//Draw区域，必须指定</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/">Android</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
     
   </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-Hexo" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2016/04/05/Hexo/" class="article-date">
+      <time datetime="2016-04-05T07:37:02.000Z" itemprop="datePublished">2016-04-05</time>
+</a>
+    </div>
+  
   <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
     
     
       <header class="article-header">
@@ -167,9 +401,11 @@ return mMore;
   
 
       </header>
+      
     
     <div class="article-entry" itemprop="articleBody">
       
+          
         <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
@@ -179,108 +415,131 @@ return mMore;
 <p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+<h2 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">AnimationDrawable anim = <span class="keyword">new</span> AnimationDrawable();</span><br><span class="line">anim.addFrame(getDrawable(R.drawable.one),<span class="number">100</span>);</span><br><span class="line">anim.addFrame(getDrawable(R.drawable.two),<span class="number">200</span>);</span><br><span class="line">anim.addFrame(getDrawable(R.drawable.three),<span class="number">300</span>);</span><br></pre></td></tr></table></figure>
 
       
     </div>
-    <footer class="article-footer">
-      <a data-url="http://ltlovezh.github.io/2016/04/05/Hexo/" data-id="cimn27upd0001swt15hnlxoq4" class="article-share-link">Delen</a>
+    
+    <div class="article-info article-info-index">
       
       
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
 
-    </footer>
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
+    </div>
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
   </div>
   
 </article>
 
 
-  
 
-</section>
-        
-          <aside id="sidebar">
-  
-    
 
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Labels</h3>
-    <div class="widget">
-      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hexo/">Hexo</a></li></ul>
-    </div>
-  </div>
+
+
+
 
 
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Tag Cloud</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/Hexo/" style="font-size: 10px;">Hexo</a>
-    </div>
-  </div>
-
   
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Archieven</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">April 2016</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">Recente berichten</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2016/04/05/Android动画框架一/">(no title)</a>
-          </li>
-        
-          <li>
-            <a href="/2016/04/05/Hexo/">Hexo</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
+</div>
       <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      &copy; 2016 leon<br>
-      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2016 leon
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >本站到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
     </div>
-  </div>
 </footer>
+
     </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
+    <script src="http://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-
-
-  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
-  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 21;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
 
 
-<script src="/js/script.js"></script>
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
 
   </div>
 </body>
