@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="kotlin,jvm," />
 
 
 
@@ -57,16 +57,19 @@
 
 
 
-<meta name="description" content="简介姓名：leon">
-<meta property="og:type" content="website">
-<meta property="og:title" content="about">
-<meta property="og:url" content="http://ltlovezh.github.io/about/index.html">
+<meta name="description" content="Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。
+控制流if表达式在Kotlin 中，if是一个带有返回值的表达式（也可以是一般性语句）。因此，在Kotlin中没有三元操作符(condition ? then : else)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin基本语法">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/04/17/Kotlin基本语法/index.html">
 <meta property="og:site_name" content="风之谷">
-<meta property="og:description" content="简介姓名：leon">
-<meta property="og:updated_time" content="2016-04-06T14:25:14.000Z">
+<meta property="og:description" content="Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。
+控制流if表达式在Kotlin 中，if是一个带有返回值的表达式（也可以是一般性语句）。因此，在Kotlin中没有三元操作符(condition ? then : else)">
+<meta property="og:updated_time" content="2016-04-17T13:38:44.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="about">
-<meta name="twitter:description" content="简介姓名：leon">
+<meta name="twitter:title" content="Kotlin基本语法">
+<meta name="twitter:description" content="Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。
+控制流if表达式在Kotlin 中，if是一个带有返回值的表达式（也可以是一般性语句）。因此，在Kotlin中没有三元操作符(condition ? then : else)">
 
 
 
@@ -84,13 +87,7 @@
   };
 </script>
 
-  <title>
-  
-
-  
-    about | 风之谷
-  
-</title>
+  <title> Kotlin基本语法 | 风之谷 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -130,7 +127,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -240,10 +237,147 @@
 
   <div id="posts" class="posts-expand">
     
-    
-      <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>姓名：leon</p>
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Kotlin基本语法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-17T21:37:06+08:00" content="2016-04-17">
+              2016-04-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/17/Kotlin基本语法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/17/Kotlin基本语法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+          
+           
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。</p>
+<h2 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h2><h3 id="if表达式"><a href="#if表达式" class="headerlink" title="if表达式"></a>if表达式</h3><p>在Kotlin 中，if是一个带有返回值的表达式（也可以是一般性语句）。因此，在Kotlin中没有三元操作符(condition ? then : else)，因为<code>if表达式</code>就能胜任这项工作。</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kotlin/" rel="tag">#kotlin</a>
+          
+            <a href="/tags/jvm/" rel="tag">#jvm</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/06/Hexo/" rel="next" title="Hexo">
+                <i class="fa fa-chevron-left"></i> Hexo
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/04/17/Kotlin基本语法/"
+     data-title="Kotlin基本语法"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/04/17/Kotlin基本语法/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
   </div>
 
 
@@ -254,8 +388,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="about/index.html"
-           data-title="about" data-url="http://ltlovezh.github.io/about/index.html">
+      <div class="ds-thread" data-thread-key="2016/04/17/Kotlin基本语法/"
+           data-title="Kotlin基本语法" data-url="http://ltlovezh.github.io/2016/04/17/Kotlin基本语法/">
       </div>
     
   </div>
@@ -279,8 +413,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
@@ -393,6 +536,17 @@
       </section>
 
       
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#控制流"><span class="nav-number">1.</span> <span class="nav-text">控制流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#if表达式"><span class="nav-number">1.1.</span> <span class="nav-text">if表达式</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
 
     </div>
   </aside>
@@ -493,6 +647,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
 
   
 
