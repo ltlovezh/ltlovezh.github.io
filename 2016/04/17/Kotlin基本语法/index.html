@@ -1,0 +1,943 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="kotlin,jvm," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。
+控制流if表达式在Kotlin 中，if是一个带有返回值的表达式（也可以是一般性语句）。因此，在Kotlin中没有三元操作符(condition ? then : else)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kotlin基本语法">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/04/17/Kotlin基本语法/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。
+控制流if表达式在Kotlin 中，if是一个带有返回值的表达式（也可以是一般性语句）。因此，在Kotlin中没有三元操作符(condition ? then : else)">
+<meta property="og:updated_time" content="2016-04-17T14:01:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kotlin基本语法">
+<meta name="twitter:description" content="Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。
+控制流if表达式在Kotlin 中，if是一个带有返回值的表达式（也可以是一般性语句）。因此，在Kotlin中没有三元操作符(condition ? then : else)">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6226090551544907000,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Kotlin基本语法 | 风之谷 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">风之谷</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Kotlin基本语法
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-17T21:37:06+08:00" content="2016-04-17">
+              2016-04-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/17/Kotlin基本语法/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/17/Kotlin基本语法/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+      
+ 
+           
+              <span id="/2016/04/17/Kotlin基本语法/" class="leancloud_visitors" data-flag-title="Kotlin基本语法">
+                &nbsp; | &nbsp;
+            <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+                </span>
+               <span class="post-meta-item-text">阅读次数 </span>
+                <span class="leancloud-visitors-count"></span>                                                                                                 
+               </span>
+          
+
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。</p>
+<h2 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h2><h3 id="if表达式"><a href="#if表达式" class="headerlink" title="if表达式"></a>if表达式</h3><p>在Kotlin 中，if是一个带有返回值的表达式（也可以是一般性语句）。因此，在Kotlin中没有三元操作符(condition ? then : else)，因为<code>if表达式</code>就能胜任这项工作。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义变量</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> a</span> = <span class="number">1</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> b</span> = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//if作为表达式，此时必须有else分支</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> max</span> = <span class="keyword">if</span> (a &gt; b) a <span class="keyword">else</span> b</span><br><span class="line"></span><br><span class="line"><span class="comment">//if作为表达式，此时必须有else分支（此时分支是代码块，且代码块的最后一个表达式的值是当前代码块的值）</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> min</span> = <span class="keyword">if</span> (a &gt; b) &#123; </span><br><span class="line">    print(<span class="string">"Choose a"</span>) </span><br><span class="line">    b </span><br><span class="line">  &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">    print(<span class="string">"Choose b"</span>) </span><br><span class="line">    a </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>作为表达式时，一般是将<code>if表达式</code>（的值）赋值为变量，或者在函数中return<code>if表达式</code>（的值）。在这种情况下，<code>if表达式</code>必须包含else分支。</p>
+<p>除了作为表达式之外，<code>if</code>也可以实现一般性语句，此时则不必包含else分支。<br>例如：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">max</span><span class="params">(a: <span class="type">Int, b: Int</span>)</span>: <span class="keyword">Int</span> &#123;</span></span><br><span class="line">    <span class="keyword">if</span> (a &gt; b) &#123;</span><br><span class="line">        println(<span class="string">"a"</span>)</span><br><span class="line">        <span class="keyword">return</span> a</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="When表达式"><a href="#When表达式" class="headerlink" title="When表达式"></a>When表达式</h3><p>在Kotlin中，<code>when</code>是switch的替代品。<code>when</code>既可以作为表达式，也可以是一般性语句。<br>作为<code>when</code>表达式时，else分支是不可缺少的（除非编译器检测到前面的条件分支覆盖了所有的情况）。同时，最终匹配的条件分支的值就是整个<code>when表达式</code>的值。（和if表达式一样，when表达式中的分支也可以是代码块，代码块的值则是最后一条表达式的值）。<br>作为一般性语句时，则忽略每个分支的值。</p>
+<p><code>when表达式</code>中比较多变是分支条件（branch condition），可以是普通字面量、常量、表达式、范围判断以及类型判断等。例如:<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> x</span> = <span class="number">4</span></span><br><span class="line"><span class="keyword">when</span> (x) &#123;</span><br><span class="line">    <span class="comment">//字面量</span></span><br><span class="line">    <span class="number">3</span> -&gt; println(<span class="string">"常量"</span>)</span><br><span class="line">    <span class="comment">//表达式</span></span><br><span class="line">    <span class="keyword">if</span> (x &gt; <span class="number">0</span>) <span class="number">2</span> <span class="keyword">else</span> <span class="number">-1</span> -&gt; println(<span class="string">"表达式"</span>)</span><br><span class="line">    <span class="comment">//范围匹配</span></span><br><span class="line">    !<span class="keyword">in</span> <span class="number">1.</span><span class="number">.10</span> -&gt; println(<span class="string">"范围匹配"</span>)</span><br><span class="line">    <span class="comment">//类型判断</span></span><br><span class="line">    <span class="keyword">is</span> <span class="keyword">Int</span> -&gt; println(<span class="string">"类型判断"</span>)</span><br><span class="line">    <span class="keyword">else</span> -&gt; println(<span class="string">"else"</span>)</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>除此之外，<code>when</code>能够取代<code>if-else if</code>链。例如：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">when</span> &#123;</span><br><span class="line">  a &gt; b -&gt; print(<span class="string">"a &gt; b"</span>)</span><br><span class="line">  a <span class="type">&lt; b -&gt;</span> print(<span class="string">"a &lt; b"</span>)</span><br><span class="line">  <span class="keyword">else</span> -&gt; print(<span class="string">"a == b"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这种情况下，没有when参数，若分支条件为true，则匹配成功。</p>
+<h3 id="for循环"><a href="#for循环" class="headerlink" title="for循环"></a>for循环</h3><p>for操作符可以对任何提供迭代器的对象进行遍历（这点和Java类似）。例如：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (item <span class="keyword">in</span> collection)</span><br><span class="line">  println(item)</span><br></pre></td></tr></table></figure>
+<p>但是对数组的遍历，会被编译器优化成基于索引值来遍历，而不会创建迭代器对象。<br>当然，我们也可以显示的通过索引值来遍历一个数组，例如：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> array.indices)</span><br><span class="line">  println(array[i])</span><br></pre></td></tr></table></figure></p>
+<p>另外，针对数组，还有更方便的遍历方式，例如：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> array</span> = arrayOf(<span class="string">"leon"</span>, <span class="string">"lt"</span>, <span class="string">"zh"</span>)</span><br><span class="line"><span class="keyword">for</span> ((index, value) <span class="keyword">in</span> array.withIndex()) &#123;</span><br><span class="line">    println(<span class="string">"the element at $index is $value"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h3><p><code>while</code>和 <code>do..while</code>的使用方式和Java中相同，例如：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">    <span class="variable"><span class="keyword">var</span> a</span> = <span class="number">0</span>;</span><br><span class="line">    println(<span class="string">"a = $a"</span>)</span><br><span class="line">&#125; <span class="keyword">while</span> (a <span class="type">&lt; 0)//注意，这里变量a可以被访问，这点和java当中不同。</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="Null安全性"><a href="#Null安全性" class="headerlink" title="Null安全性"></a>Null安全性</h2><p>在Java中，出现频率最高的运行时异常应该就是<code>NullPointerException</code>。Kotlin致力于消除空指针异常，Kotlin类型系统将引用（reference）分为可空和不可空。</p>
+<p>默认情况下，变量是不可空类型，例如：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">var</span> a</span>: String = <span class="string">"abc"</span></span><br><span class="line">a = <span class="literal">null</span> <span class="comment">// compilation error</span></span><br></pre></td></tr></table></figure></p>
+<p>但是，我们可以通过在类型后面添加<code>?</code>，来明确声明一个可空的变量。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//此时变量的类型为String?，和String是不同，不可直接赋值</span></span><br><span class="line"><span class="variable"><span class="keyword">var</span> b</span>: String? = <span class="string">"abc"</span> </span><br><span class="line">b = <span class="literal">null</span> <span class="comment">// ok</span></span><br><span class="line"><span class="comment">//因为变量b可能为null，所以下面的语句是编译不过的</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> l</span> = b.length <span class="comment">//error: variable 'b' can be null</span></span><br></pre></td></tr></table></figure></p>
+<p>针对可空类型的变量，有两种方式来访问他们的属性和方法。</p>
+<ol>
+<li><p>明确地检测变量是否为Null</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> str</span>: String? = <span class="string">"abc"</span></span><br><span class="line">println(str.length) <span class="comment">//编译不通过，str可能为Null</span></span><br><span class="line"><span class="keyword">if</span> (str != <span class="literal">null</span>) &#123;</span><br><span class="line">    <span class="comment">//编译器检测到进行了非空检测，所以允许直接访问字符串的legth属性</span></span><br><span class="line">    println(str.length)</span><br><span class="line">&#125;</span><br><span class="line">println(str.length)<span class="comment">//编译不通过，str可能为Null</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>?.</code>安全的调用</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> str</span>: String? = <span class="string">"abc"</span></span><br><span class="line"><span class="comment">//如果str不为Null，就会返回字符串的长度，否则返回null。变量len的类型是Int?</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> len</span> = str?.length</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="针对可空变量的特殊操作符"><a href="#针对可空变量的特殊操作符" class="headerlink" title="针对可空变量的特殊操作符"></a>针对可空变量的特殊操作符</h3><h4 id="操作符"><a href="#操作符" class="headerlink" title="?:操作符"></a><code>?:</code>操作符</h4><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> str</span>: String? = <span class="string">"abc"</span></span><br><span class="line"><span class="comment">//str不为Null，则返回字符串长度，否则返回-1</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> len</span> = str?.length ?: <span class="number">-1</span></span><br></pre></td></tr></table></figure>
+<p>假如<code>?:</code>操作符左边的表达式是非空的，那么<code>?:</code>操作符就返回左边表达式的值, 否则就返回右边的内容。并且，仅在左侧值为Null时，右侧表达式才会进行计算。</p>
+<p>因为<code>throw</code>和<code>return</code>也是表达式，所以都可以使用在<code>?:</code>操作符的右侧，这在函数头部检查参数的合法性时，很有用。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">foo</span><span class="params">(node: <span class="type">Node</span>)</span>: String? &#123;</span></span><br><span class="line">  <span class="comment">//若node.getParent()为Null，那么函数直接返回Null</span></span><br><span class="line">  <span class="variable"><span class="keyword">val</span> parent</span> = node.getParent() ?: <span class="keyword">return</span> <span class="literal">null</span></span><br><span class="line">  <span class="comment">//若node.getName()为Null，那么函数直接抛出异常</span></span><br><span class="line">  <span class="variable"><span class="keyword">val</span> name</span> = node.getName() ?: <span class="keyword">throw</span> IllegalArgumentException(<span class="string">"name expected"</span>)</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h4 id="操作符-1"><a href="#操作符-1" class="headerlink" title="!!操作符"></a><code>!!</code>操作符</h4><p>如果你想要强制访问在一个可空变量的属性，那可以通过<code>!!</code>操作符来操作。但是这可能导致空指针异常，请谨慎使用！<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">val str: String? = &quot;abc&quot;</span><br><span class="line">//str不为Null，则返回字符串长度，否则抛出KotlinNullPointerException异常</span><br><span class="line">val len = str!!.length</span><br></pre></td></tr></table></figure></p>
+<h2 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h2><p>和Java中一样，kotlin中的字符串也是不可变的，但是我们可以直接通过索引运算符<code>[]</code>来访问字符串中的字符。</p>
+<p>在kotlin中，支持两种类型的字符串字面值：</p>
+<ol>
+<li><p><code>转义字符串</code><br><code>转义字符串</code>支持转义字符，类似于Java中的字符串</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> str</span> = <span class="string">"Hello, world!\nLeon"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>原生字符串</code><br><code>原生字符串</code>使用3个双引号<code>&quot;&quot;&quot;</code>括起来，内部不支持转义字符<code>\</code>，但是可以包含多行和任意字符。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">val text = """</span><br><span class="line">  for (c in "foo")</span><br><span class="line">    print(c)</span><br><span class="line">"""</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="字符串模板"><a href="#字符串模板" class="headerlink" title="字符串模板"></a>字符串模板</h3><p>kotlin中的两种字符串字面量都可以包含模板表达式，这里会计算出模板表达式的值，并插入在对应的字符串索引处（这对于在Java中拼接字符串来说简直是福音啊）。所谓模板表达式就是以<code>$</code>开头的表达式，包含两种形式：</p>
+<ul>
+<li><p><code>$</code> + 简单名称</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> i</span> = <span class="number">10</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> s</span> = <span class="string">"i = $i"</span> <span class="comment">// s为"i = 10"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>$</code> + {表达式}</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> str</span> = <span class="string">"abc"</span></span><br><span class="line"><span class="comment">//result为 "abc.length is 3"</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> result</span> = <span class="string">"$str.length is $&#123;str.length&#125;"</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>此外，因为原生字符串不支持转义字符<code>\</code>，因此可以使用<code>${&#39;$&#39;}</code>在原生字符串中表示<code>$</code>。</p>
+<hr>
+<p>未完待续…</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/kotlin/" rel="tag">#kotlin</a>
+          
+            <a href="/tags/jvm/" rel="tag">#jvm</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/06/Hexo/" rel="next" title="Hexo">
+                <i class="fa fa-chevron-left"></i> Hexo
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/17/Android动画框架一/" rel="prev" title="Android动画框架一">
+                Android动画框架一 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/04/17/Kotlin基本语法/"
+     data-title="Kotlin基本语法"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/04/17/Kotlin基本语法/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/04/17/Kotlin基本语法/"
+           data-title="Kotlin基本语法" data-url="http://ltlovezh.github.io/2016/04/17/Kotlin基本语法/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+               alt="leon" />
+          <p class="site-author-name" itemprop="name">leon</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/63230484/" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  douban
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">技术博文</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#控制流"><span class="nav-number">1.</span> <span class="nav-text">控制流</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#if表达式"><span class="nav-number">1.1.</span> <span class="nav-text">if表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#When表达式"><span class="nav-number">1.2.</span> <span class="nav-text">When表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#for循环"><span class="nav-number">1.3.</span> <span class="nav-text">for循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#while循环"><span class="nav-number">1.4.</span> <span class="nav-text">while循环</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Null安全性"><span class="nav-number">2.</span> <span class="nav-text">Null安全性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#针对可空变量的特殊操作符"><span class="nav-number">2.1.</span> <span class="nav-text">针对可空变量的特殊操作符</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#操作符"><span class="nav-number">2.1.1.</span> <span class="nav-text">?:操作符</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#操作符-1"><span class="nav-number">2.1.2.</span> <span class="nav-text">!!操作符</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#字符串"><span class="nav-number">3.</span> <span class="nav-text">字符串</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#字符串模板"><span class="nav-number">3.1.</span> <span class="nav-text">字符串模板</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+&nbsp;
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ltlovezh"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+	<!--	
+	<!-- custom analytics part create by xiamo -->
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+<script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+<script>
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+	$(".leancloud_visitors").each(function() {
+		var url = $(this).attr("id").trim();
+		query.equalTo("url", url);
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {
+					var content = '0 ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+					return;
+				}
+				for (var i = 0; i < results.length; i++) {
+					var object = results[i];
+					var content = object.get('time') + ' ' + $(document.getElementById(url)).text();
+					$(document.getElementById(url)).text(content);
+				}
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+
+	});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content =  counter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time') + ' ' + $(document.getElementById(url)).text();
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else if ($('.post-title-link').length > 1) {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+	
+-->
+</body>
+</html>
