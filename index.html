@@ -255,6 +255,114 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/17/Android动画框架一/" itemprop="url">
+                  Android动画框架一
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-17T22:04:49+08:00" content="2016-04-17">
+              2016-04-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/17/Android动画框架一/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/17/Android动画框架一/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+          
+           
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>最近，抽空看了下Android中的常用动画使用方式和实现机制，现整理如下：</p>
+<h2 id="Drawable-Animation-Frame-Animation"><a href="#Drawable-Animation-Frame-Animation" class="headerlink" title="Drawable Animation(Frame Animation)"></a>Drawable Animation(Frame Animation)</h2><p>帧动画，就是依次展示一系列Drawable，来模拟动画的效果，类似于GIF图片。</p>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p>帧动画的使用方式比较简单，可以通过XML资源文件或者Java Code来实现（对应于AnimationDrawable类），如下所示：</p>
+<ul>
+<li>XML资源文件(放在anim或者Drawable目录下都可以)<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">animation-list</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span> <span class="attr">android:oneshot</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/one"</span> <span class="attr">android:duration</span>=<span class="string">"100"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/two"</span> <span class="attr">android:duration</span>=<span class="string">"200"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/three"</span> <span class="attr">android:duration</span>=<span class="string">"300"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">animation-list</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">    其中android:oneshot表示是否仅播放一次，</span><br><span class="line">    android:drawable表示每一帧图片，</span><br><span class="line">    android:duration表示对应Drawable展示的持续时间。</span><br><span class="line">```       </span><br><span class="line">* Java Code</span><br><span class="line">``` java</span><br><span class="line">	AnimationDrawable anim = new AnimationDrawable();</span><br><span class="line">	anim.addFrame(getDrawable(R.drawable.one),100);</span><br><span class="line">	anim.addFrame(getDrawable(R.drawable.two),200);</span><br><span class="line">	anim.addFrame(getDrawable(R.drawable.three),300);</span><br><span class="line">	anim.setBounds(Rect);//Draw区域，必须指定</span><br><span class="line">```	</span><br><span class="line"></span><br><span class="line">习惯上，我们把AnimationDrawable设置为View的背景，接着我们可以在Java Code中获取AnimationDrawable对象，然后通过start和stop方法来控制动画的播放。</span><br><span class="line"></span><br><span class="line">## Tween Animation（View Animation）</span><br><span class="line">Tween Animation具有3个基本属性：开始帧、结束帧和动画持续时间，系统会根据这3个属性，计算出中间帧，实现渐变的效果。Tween Animation只能作用在View元素上，对于普通的类对象无能为力。</span><br><span class="line"></span><br><span class="line">### 使用方式</span><br><span class="line">补间动画包括4种变换，如下所示，分别指出了XML资源文件中的标签和对应的Java类：</span><br><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"http://7xs2qy.com1.z0.glb.clouddn.com/tween.png"</span> <span class="attr">width</span>=<span class="string">"620"</span> <span class="attr">height</span>=<span class="string">"250"</span>&gt;</span></span><br><span class="line">        </span><br><span class="line">Tween Animation可以通过Xml资源文件来定义，也可以直接创建对应的对象来操作，这里以位移动画为例简单介绍其使用方式。</span><br><span class="line">**XML资源文件（放在anim目录下）**</span><br><span class="line">``` XML</span><br><span class="line"><span class="tag">&lt;<span class="name">set</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">translate</span> </span><br><span class="line">	  <span class="attr">android:fromXDelta</span>=<span class="string">"20"</span> </span><br><span class="line">	  <span class="attr">android:toXDelta</span>=<span class="string">"60"</span> </span><br><span class="line">	  <span class="attr">android:fromYDelta</span>=<span class="string">"20"</span> </span><br><span class="line">	  <span class="attr">android:toYDelta</span>=<span class="string">"100"</span> </span><br><span class="line">	  <span class="attr">android:fillAfter</span>=<span class="string">"true"</span></span><br><span class="line">	  <span class="attr">android:duration</span>=<span class="string">"1000"</span> /&gt;</span> </span><br><span class="line">  <span class="tag">&lt;/<span class="name">set</span>&gt;</span> </span><br><span class="line">  </span><br><span class="line">	其中，fromXDelta,fromYDelta表示动画开始时X,Y座标;</span><br><span class="line">	toXDelta,toYDelta表示动画结束时X,Y的座标；</span><br><span class="line">	android:fillAfter="true"，表示这个动画执行完之后保持最后的状态；</span><br><span class="line">	android:duration表示动画持续的时间。</span><br><span class="line">``` </span><br><span class="line"></span><br><span class="line">然后就是加载资源文件，播放动画：</span><br><span class="line">``` java</span><br><span class="line">TranslateAnimation animation = AnimationUtils.loadAnimation(context,R.anim.XXX);</span><br><span class="line">view.startAnimation(animation);</span><br><span class="line">```		</span><br><span class="line"></span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">然后就是加载资源文件，播放动画：</span><br><span class="line">``` java</span><br><span class="line">	int in = 8;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/17/Kotlin基本语法/" itemprop="url">
                   Kotlin基本语法
                 </a>
@@ -496,120 +604,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/04/05/Android动画框架一/" itemprop="url">
-                  Android动画框架（1）
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-05T16:59:41+08:00" content="2016-04-05">
-              2016-04-05
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/04/05/Android动画框架一/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/05/Android动画框架一/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-          
-           
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>最近，抽空看了下Android中的常用动画使用方式和实现机制，现整理如下：</p>
-<h2 id="Drawable-Animation-Frame-Animation"><a href="#Drawable-Animation-Frame-Animation" class="headerlink" title="Drawable Animation(Frame Animation)"></a>Drawable Animation(Frame Animation)</h2><p>帧动画，就是依次展示一系列Drawable，来模拟动画的效果，类似于GIF图片。</p>
-<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p>帧动画的使用方式比较简单，可以通过XML资源文件或者Java Code来实现（对应于AnimationDrawable类），如下所示：</p>
-<p><strong>XML资源文件(放在anim或者Drawable目录下都可以)</strong><br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">animation-list</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span> <span class="attr">android:oneshot</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/one"</span> <span class="attr">android:duration</span>=<span class="string">"100"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/two"</span> <span class="attr">android:duration</span>=<span class="string">"200"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/three"</span> <span class="attr">android:duration</span>=<span class="string">"300"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">animation-list</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
-<p><strong>Java Code</strong></p>
-<pre><code class="java">AnimationDrawable anim = <span class="keyword">new</span> AnimationDrawable();
-anim.addFrame(getDrawable(R.drawable.one),<span class="number">100</span>);
-anim.addFrame(getDrawable(R.drawable.two),<span class="number">200</span>);
-anim.addFrame(getDrawable(R.drawable.three),<span class="number">300</span>);
-anim.setBounds(Rect);<span class="comment">//Draw区域，必须指定</span>
-</code></pre>
-<p>习惯上，我们把AnimationDrawable设置为View的背景，接着我们可以在Java Code中获取AnimationDrawable对象，然后通过start和stop方法来控制动画的播放。</p>
-<h3 id="实现机制"><a href="#实现机制" class="headerlink" title="实现机制"></a>实现机制</h3><p>至于AnimationDrawable是如何实现动画的？我首先想到的是：通过Handler根据每帧图片的持续时间，循环发送Message，定期处理Message，取出不同帧的Drawable进行draw。</p>
-
-          
-        
-      
-    </div>
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -787,10 +781,11 @@ anim.setBounds(Rect);<span class="comment">//Draw区域，必须指定</span>
   </a>
 </div>
 
+</br>
 <span id="busuanzi_container_site_pv">
     本站总访问量<span id="busuanzi_value_site_pv"></span>次
 </span>
-
+&nbsp;&nbsp;
 <span id="busuanzi_container_site_uv">
   本站访客数<span id="busuanzi_value_site_uv"></span>人次
 </span>
