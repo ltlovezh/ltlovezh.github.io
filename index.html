@@ -255,6 +255,125 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/24/Android中测量Text的宽度和高度/" itemprop="url">
+                  Android中测量Text的宽度和高度
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-24T22:38:18+08:00" content="2016-04-24">
+              2016-04-24
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/24/Android中测量Text的宽度和高度/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/24/Android中测量Text的宽度和高度/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/04/24/Android中测量Text的宽度和高度/" class="leancloud_visitors" data-flag-title="Android中测量Text的宽度和高度">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Android中，在自定义View中通过<code>Canvas</code>绘制文字时，经常需要测量文字的宽度和高度。这里记录下几种比较常用的方法，仅作备忘。</p>
+<h4 id="1-Paint-measureText-（测量文本的宽度）"><a href="#1-Paint-measureText-（测量文本的宽度）" class="headerlink" title="1. Paint.measureText  （测量文本的宽度）"></a>1. Paint.measureText  （测量文本的宽度）</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">paint.setTextSize(size);</span><br><span class="line"><span class="keyword">float</span> strWidth = paint.measureText(str);</span><br></pre></td></tr></table></figure>
+<h4 id="2-Paint-getTextBounds-获得文字所在矩形区域，可以得到宽高"><a href="#2-Paint-getTextBounds-获得文字所在矩形区域，可以得到宽高" class="headerlink" title="2. Paint.getTextBounds (获得文字所在矩形区域，可以得到宽高)"></a>2. Paint.getTextBounds (获得文字所在矩形区域，可以得到宽高)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">Rect rect = <span class="keyword">new</span> Rect();  </span><br><span class="line">paint.getTextBounds(str, <span class="number">0</span>, str.length(), rect);  </span><br><span class="line"><span class="keyword">int</span> w = rect.width();  </span><br><span class="line"><span class="keyword">int</span> h = rect.height();</span><br></pre></td></tr></table></figure>
+<h4 id="3-Paint-getTextWidths-获得每个字符的宽度"><a href="#3-Paint-getTextWidths-获得每个字符的宽度" class="headerlink" title="3. Paint.getTextWidths(获得每个字符的宽度)"></a>3. Paint.getTextWidths(获得每个字符的宽度)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> width = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> len = str.length();  </span><br><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line"><span class="keyword">float</span>[] widths = <span class="keyword">new</span> <span class="keyword">float</span>[len];  </span><br><span class="line">paint.getTextWidths(str, widths);  </span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;  </span><br><span class="line">     width += widths[i];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-通过Paint-FontMetrics-or-Paint-FontMetricsInt来获取高度"><a href="#4-通过Paint-FontMetrics-or-Paint-FontMetricsInt来获取高度" class="headerlink" title="4. 通过Paint.FontMetrics or Paint.FontMetricsInt来获取高度"></a>4. 通过Paint.FontMetrics or Paint.FontMetricsInt来获取高度</h4><p>这两者的含义相同，只不过精度不同，一个float、一个int。关于<code>Paint.FontMetrics</code>，可以参考<a href="http://mikewang.blog.51cto.com/3826268/871765" target="_blank" rel="external">这里</a>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">paint.setTextSize(size);<span class="comment">//设置字体大小</span></span><br><span class="line">paint.setTypeface(Typeface.xx);<span class="comment">//设置字体</span></span><br><span class="line">FontMetrics fontMetrics = getFontMetrics();</span><br><span class="line"><span class="keyword">float</span> height1 = fontMetrics.descent - fontMetrics.ascent;</span><br><span class="line"><span class="keyword">float</span> height2 = fontMetrics.bottom - fontMetrics.top;</span><br></pre></td></tr></table></figure>
+<p>这里获取的两个高度略有不同，height2的高度会略大于height1，这样在文本的顶部和底部就会有一些留白。具体使用哪个高度，要看具体需求了。</p>
+<p>此外，还可以通过<code>Paint.getFontSpacing</code>和<code>Paint.getFontMetrics(null)</code>来获得高度，其实前者也是调用后者来实现的。这里的值和通过<code>fontMetrics.descent - fontMetrics.ascent</code>获得的大小是一致的。</p>
+<h4 id="5-Layout-getDesiredWidth-获得宽度"><a href="#5-Layout-getDesiredWidth-获得宽度" class="headerlink" title="5. Layout.getDesiredWidth (获得宽度)"></a>5. Layout.getDesiredWidth (获得宽度)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TextPaint textPaint = <span class="keyword">new</span> TextPaint();</span><br><span class="line">paint.setTextSize(size);<span class="comment">//设置字体大小</span></span><br><span class="line">paint.setTypeface(Typeface.xx);<span class="comment">//设置字体</span></span><br><span class="line"><span class="keyword">float</span> width = Layout.getDesiredWidth(str,textPaint);</span><br></pre></td></tr></table></figure>
+<hr>
+<p>之前碰到一个问题，TextView在布局上占用的高度和属性textSize的大小不一样，要比textSize的值大一些（比如textSize=”12dp”，实际的高度大概有14-16dp），仔细看的话会发现文字的上方和下发留有空白。查了下文档，发现可以通过设置<code>android:includeFontPadding</code>来控制是否包含上下空白。</p>
+
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/17/Android动画框架一/" itemprop="url">
                   Android动画框架一
                 </a>
@@ -719,7 +838,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">4</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -729,7 +848,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">5</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

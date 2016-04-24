@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="FontMetrics,Paint," />
 
 
 
@@ -57,15 +57,22 @@
 
 
 
-<meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="风之谷">
-<meta property="og:url" content="http://ltlovezh.github.io/archives/index.html">
+<meta name="description" content="Android中，在自定义View中通过Canvas绘制文字时，经常需要测量文字的宽度和高度。这里记录下几种比较常用的方法，仅作备忘。
+1. Paint.measureText  （测量文本的宽度）123Paint paint = new Paint();paint.setTextSize(size);float strWidth = paint.measureText(str);
+2. Pain">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android中测量Text的宽度和高度">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/04/24/Android中测量Text的宽度和高度/index.html">
 <meta property="og:site_name" content="风之谷">
-<meta property="og:description">
+<meta property="og:description" content="Android中，在自定义View中通过Canvas绘制文字时，经常需要测量文字的宽度和高度。这里记录下几种比较常用的方法，仅作备忘。
+1. Paint.measureText  （测量文本的宽度）123Paint paint = new Paint();paint.setTextSize(size);float strWidth = paint.measureText(str);
+2. Pain">
+<meta property="og:updated_time" content="2016-04-24T14:45:27.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="风之谷">
-<meta name="twitter:description">
+<meta name="twitter:title" content="Android中测量Text的宽度和高度">
+<meta name="twitter:description" content="Android中，在自定义View中通过Canvas绘制文字时，经常需要测量文字的宽度和高度。这里记录下几种比较常用的方法，仅作备忘。
+1. Paint.measureText  （测量文本的宽度）123Paint paint = new Paint();paint.setTextSize(size);float strWidth = paint.measureText(str);
+2. Pain">
 
 
 
@@ -83,7 +90,7 @@
   };
 </script>
 
-  <title> 归档 | 风之谷 </title>
+  <title> Android中测量Text的宽度和高度 | 风之谷 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -123,7 +130,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  page-archive  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -231,177 +238,166 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
-
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 4 篇日志。 继续努力。
-    </span>
-
+  <div id="posts" class="posts-expand">
     
-
-      
-      
-      
-
-      
-        
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
-        </div>
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/24/Android中测量Text的宽度和高度/" itemprop="url">
-              
-                <span itemprop="name">Android中测量Text的宽度和高度</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-24T22:38:18+08:00"
-              content="2016-04-24" >
-          04-24
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/17/Android动画框架一/" itemprop="url">
-              
-                <span itemprop="name">Android动画框架一</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-17T22:04:49+08:00"
-              content="2016-04-17" >
-          04-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/17/Kotlin基本语法/" itemprop="url">
-              
-                <span itemprop="name">Kotlin基本语法</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-17T21:37:06+08:00"
-              content="2016-04-17" >
-          04-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/04/06/Hexo/" itemprop="url">
-              
-                <span itemprop="name">Hexo</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-04-06T22:32:31+08:00"
-              content="2016-04-06" >
-          04-06
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
 
   
+  
 
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android中测量Text的宽度和高度
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-24T22:38:18+08:00" content="2016-04-24">
+              2016-04-24
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/24/Android中测量Text的宽度和高度/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/24/Android中测量Text的宽度和高度/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/04/24/Android中测量Text的宽度和高度/" class="leancloud_visitors" data-flag-title="Android中测量Text的宽度和高度">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Android中，在自定义View中通过<code>Canvas</code>绘制文字时，经常需要测量文字的宽度和高度。这里记录下几种比较常用的方法，仅作备忘。</p>
+<h4 id="1-Paint-measureText-（测量文本的宽度）"><a href="#1-Paint-measureText-（测量文本的宽度）" class="headerlink" title="1. Paint.measureText  （测量文本的宽度）"></a>1. Paint.measureText  （测量文本的宽度）</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">paint.setTextSize(size);</span><br><span class="line"><span class="keyword">float</span> strWidth = paint.measureText(str);</span><br></pre></td></tr></table></figure>
+<h4 id="2-Paint-getTextBounds-获得文字所在矩形区域，可以得到宽高"><a href="#2-Paint-getTextBounds-获得文字所在矩形区域，可以得到宽高" class="headerlink" title="2. Paint.getTextBounds (获得文字所在矩形区域，可以得到宽高)"></a>2. Paint.getTextBounds (获得文字所在矩形区域，可以得到宽高)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">Rect rect = <span class="keyword">new</span> Rect();  </span><br><span class="line">paint.getTextBounds(str, <span class="number">0</span>, str.length(), rect);  </span><br><span class="line"><span class="keyword">int</span> w = rect.width();  </span><br><span class="line"><span class="keyword">int</span> h = rect.height();</span><br></pre></td></tr></table></figure>
+<h4 id="3-Paint-getTextWidths-获得每个字符的宽度"><a href="#3-Paint-getTextWidths-获得每个字符的宽度" class="headerlink" title="3. Paint.getTextWidths(获得每个字符的宽度)"></a>3. Paint.getTextWidths(获得每个字符的宽度)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> width = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> len = str.length();  </span><br><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line"><span class="keyword">float</span>[] widths = <span class="keyword">new</span> <span class="keyword">float</span>[len];  </span><br><span class="line">paint.getTextWidths(str, widths);  </span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;  </span><br><span class="line">     width += widths[i];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4-通过Paint-FontMetrics-or-Paint-FontMetricsInt来获取高度"><a href="#4-通过Paint-FontMetrics-or-Paint-FontMetricsInt来获取高度" class="headerlink" title="4. 通过Paint.FontMetrics or Paint.FontMetricsInt来获取高度"></a>4. 通过Paint.FontMetrics or Paint.FontMetricsInt来获取高度</h4><p>这两者的含义相同，只不过精度不同，一个float、一个int。关于<code>Paint.FontMetrics</code>，可以参考<a href="http://mikewang.blog.51cto.com/3826268/871765" target="_blank" rel="external">这里</a>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">paint.setTextSize(size);<span class="comment">//设置字体大小</span></span><br><span class="line">paint.setTypeface(Typeface.xx);<span class="comment">//设置字体</span></span><br><span class="line">FontMetrics fontMetrics = getFontMetrics();</span><br><span class="line"><span class="keyword">float</span> height1 = fontMetrics.descent - fontMetrics.ascent;</span><br><span class="line"><span class="keyword">float</span> height2 = fontMetrics.bottom - fontMetrics.top;</span><br></pre></td></tr></table></figure>
+<p>这里获取的两个高度略有不同，height2的高度会略大于height1，这样在文本的顶部和底部就会有一些留白。具体使用哪个高度，要看具体需求了。</p>
+<p>此外，还可以通过<code>Paint.getFontSpacing</code>和<code>Paint.getFontMetrics(null)</code>来获得高度，其实前者也是调用后者来实现的。这里的值和通过<code>fontMetrics.descent - fontMetrics.ascent</code>获得的大小是一致的。</p>
+<h4 id="5-Layout-getDesiredWidth-获得宽度"><a href="#5-Layout-getDesiredWidth-获得宽度" class="headerlink" title="5. Layout.getDesiredWidth (获得宽度)"></a>5. Layout.getDesiredWidth (获得宽度)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">TextPaint textPaint = <span class="keyword">new</span> TextPaint();</span><br><span class="line">paint.setTextSize(size);<span class="comment">//设置字体大小</span></span><br><span class="line">paint.setTypeface(Typeface.xx);<span class="comment">//设置字体</span></span><br><span class="line"><span class="keyword">float</span> width = Layout.getDesiredWidth(str,textPaint);</span><br></pre></td></tr></table></figure>
+<hr>
+<p>之前碰到一个问题，TextView在布局上占用的高度和属性textSize的大小不一样，要比textSize的值大一些（比如textSize=”12dp”，实际的高度大概有14-16dp），仔细看的话会发现文字的上方和下发留有空白。查了下文档，发现可以通过设置<code>android:includeFontPadding</code>来控制是否包含上下空白。</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/FontMetrics/" rel="tag">#FontMetrics</a>
+          
+            <a href="/tags/Paint/" rel="tag">#Paint</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/17/Android动画框架一/" rel="next" title="Android动画框架一">
+                <i class="fa fa-chevron-left"></i> Android动画框架一
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/04/24/Android中测量Text的宽度和高度/"
+     data-title="Android中测量Text的宽度和高度"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/04/24/Android中测量Text的宽度和高度/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
 
 
           </div>
@@ -409,6 +405,14 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/04/24/Android中测量Text的宽度和高度/"
+           data-title="Android中测量Text的宽度和高度" data-url="http://ltlovezh.github.io/2016/04/24/Android中测量Text的宽度和高度/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -428,8 +432,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
@@ -542,6 +555,17 @@
       </section>
 
       
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Paint-measureText-（测量文本的宽度）"><span class="nav-number">1.</span> <span class="nav-text">1. Paint.measureText  （测量文本的宽度）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-Paint-getTextBounds-获得文字所在矩形区域，可以得到宽高"><span class="nav-number">2.</span> <span class="nav-text">2. Paint.getTextBounds (获得文字所在矩形区域，可以得到宽高)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Paint-getTextWidths-获得每个字符的宽度"><span class="nav-number">3.</span> <span class="nav-text">3. Paint.getTextWidths(获得每个字符的宽度)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-通过Paint-FontMetrics-or-Paint-FontMetricsInt来获取高度"><span class="nav-number">4.</span> <span class="nav-text">4. 通过Paint.FontMetrics or Paint.FontMetricsInt来获取高度</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-Layout-getDesiredWidth-获得宽度"><span class="nav-number">5.</span> <span class="nav-text">5. Layout.getDesiredWidth (获得宽度)</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
 
     </div>
   </aside>
@@ -645,11 +669,9 @@
 
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
 
 
   
