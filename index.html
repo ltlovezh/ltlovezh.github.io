@@ -652,6 +652,12 @@
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Leontli</span></span>() &#123;</span><br><span class="line">    <span class="variable"><span class="keyword">var</span> isEmpty</span>: <span class="keyword">Boolean</span> = <span class="literal">false</span></span><br><span class="line">        <span class="keyword">get</span>() &#123;</span><br><span class="line">            <span class="keyword">return</span> field</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">set</span>(value) &#123;</span><br><span class="line">            field = <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">其中，filed称为backing field ,由编译器编译生成，仅仅可在<span class="keyword">get</span>()和<span class="keyword">set</span>(value)方法中被访问（若只是重写了<span class="keyword">get</span>和<span class="keyword">set</span>方法，而没有主动访问field字段，那么编译也不会主动生成该字段）</span><br></pre></td></tr></table></figure>
 <hr>
 <p>未完待续</p>
+<hr>
+<h5 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h5><ol>
+<li><a href="http://kotlinlang.org/" target="_blank" rel="external">kotlin官网</a></li>
+<li><a href="https://github.com/cctanfujun/kotlin-web-site-cn" target="_blank" rel="external">kotlin官网中文版</a></li>
+<li><a href="https://github.com/wangjiegulu/kotlin-for-android-developers-zh/blob/master/SUMMARY.md" target="_blank" rel="external">kotlin-for-android-developers-zh</a></li>
+</ol>
 
           
         
