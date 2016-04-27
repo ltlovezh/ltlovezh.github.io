@@ -74,7 +74,7 @@ XML资源文件 (放在anim或者Dr">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%8A%A0%E9%80%9F%E6%8F%92%E5%80%BC%E5%99%A8.gif">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%87%8F%E9%80%9F%E6%8F%92%E5%80%BC%E5%99%A8.gif">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/animation_log.png">
-<meta property="og:updated_time" content="2016-04-27T05:59:02.000Z">
+<meta property="og:updated_time" content="2016-04-27T06:02:24.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android动画框架一">
 <meta name="twitter:description" content="最近，抽空看了下Android中的常用动画使用方式和实现机制，现整理如下：
@@ -379,6 +379,7 @@ XML资源文件 (放在anim或者Dr">
 <li>Tween Animation不是通过子View来实现的，而是通过ParentView不断调整ChildView的画布坐标系来实现的，即改变的仅仅是子view的绘制位置。而子View的left、top、right和bottom属性都没有改变，即子View的Layout位置并没有发生改变，因此，<code>子View的Event接收区域也没有发生改变</code>。假设：子View的left和top属性都为100，然后有一个位移动画使该子View移动（50，50）,那么当动画发生时，父ViewGroup首先会把子 traslate(left,top)，然后随着不同的动画帧到来，再traslate(deltaX,deltaY)，那么动画结束时，该子View的最终位置就是（150,150）了，但它的left和top还是100.</li>
 <li>如果要实现自己的Tween Animation，可以重写Animation.applyTransformation()方法来实现，如果要实现不同的动画变换速率，可以重写TimeInterpolator.getInterpolation(float input)方法来实现。</li>
 </ol>
+<hr>
 <p>其实，这里还有一个疑问，Tween Animation的重绘频率是多少？简单，自己重写Animation.applyTransformation方法打印出时间间隔就OK了，打印出的log如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/animation_log.png" width="400"></p>
 <p>由log可知，重绘的频率基本在16ms左右，这和Android系统的Vsync信号正好吻合。上面学习Drawable Animation时，我们提到了Choreographer类，该类负责控制用户的input事件、View的绘制和动画等行为，其实我们调用invalidate方法时，View不会立即重绘，而是等到Vsync信号到来时，由Choreographer驱动View绘制事件来实现View的绘制。而Vsync信号一般是60HZ，差不多是16ms一次信号，所以才显示出Tween Animation的绘制时间间隔为16ms左右。关于Choreographer类，我们在学习属性动画时，再详细的分析。</p>
 <blockquote>
