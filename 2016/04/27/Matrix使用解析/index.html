@@ -1,0 +1,880 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,Matrix," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
+Matrix是一个3*3的矩阵，如图所示：
+我们可以直接通过Matrix.getValues方法获取Matrix的矩阵值（浮点型数组类型），然后修改矩阵值（Matrix类为每一个矩阵值提供了固定索引，如：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Matrix使用解析">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/04/27/Matrix使用解析/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
+Matrix是一个3*3的矩阵，如图所示：
+我们可以直接通过Matrix.getValues方法获取Matrix的矩阵值（浮点型数组类型），然后修改矩阵值（Matrix类为每一个矩阵值提供了固定索引，如：">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/matrix.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/translate.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/scale.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/rotate.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/skew.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/MatrixMul.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/invertMatrix.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Matrix%E6%AD%A3%E5%90%91.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/nothardwareAcceleration.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/hardwareAcceleration.png">
+<meta property="og:updated_time" content="2016-04-27T11:53:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Matrix使用解析">
+<meta name="twitter:description" content="Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
+Matrix是一个3*3的矩阵，如图所示：
+我们可以直接通过Matrix.getValues方法获取Matrix的矩阵值（浮点型数组类型），然后修改矩阵值（Matrix类为每一个矩阵值提供了固定索引，如：">
+<meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/matrix.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6226090551544907000,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> Matrix使用解析 | 风之谷 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">风之谷</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Matrix使用解析
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-27T19:43:06+08:00" content="2016-04-27">
+              2016-04-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/27/Matrix使用解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/27/Matrix使用解析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/04/27/Matrix使用解析/" class="leancloud_visitors" data-flag-title="Matrix使用解析">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。</p>
+<p>Matrix是一个3*3的矩阵，如图所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/matrix.png" alt="Matrix"></p>
+<p>我们可以直接通过<code>Matrix.getValues</code>方法获取Matrix的矩阵值（浮点型数组类型），然后修改矩阵值（Matrix类为每一个矩阵值提供了固定索引，如：MSCALE_X、MSKEW_X等），最后通过<code>Matrix.setValues</code>方法重新设置Matrix值，已达到修改Matrix的目的。这种方式要求我们对Matrix每一个值的作用都要十分了解，操作起来比较繁琐，但却是最灵活、最彻底的操作方式。</p>
+<p>具体要修改哪些Matrix值，则取决于要实现什么效果，从本质上这是一个数学问题，这里给出几种比较常见的方案：</p>
+<ol>
+<li><p>实现Translate操作<br>位移操作在Matrix中对应是<code>MTRANS_X</code>和<code>MTRANS_Y</code>值，分别表示X和Y轴上的位移量，假设在X和Y轴上分别位移100px，那么对应的Matrix就是<img src="http://7xs2qy.com1.z0.glb.clouddn.com/translate.png" alt="tranlate"></p>
+</li>
+<li><p>实现Scale操作<br>缩放操作在Matrix中对应的是<code>MSCALE_X</code>和<code>MSCALE_Y</code>值，分别表示X和Y轴上的缩放比例，假设在X和Y轴上分别放大2倍，那么对应的Matrix就是<img src="http://7xs2qy.com1.z0.glb.clouddn.com/scale.png" alt="scale"></p>
+</li>
+<li><p>实现Rotate操作<br>旋转操作在Matrix中对应是<code>MSCALE_X</code>、<code>MSCALE_Y</code>、<code>MSKEW_X</code>和<code>MSKEW_Y</code>值，假设我们要以坐标原点为中心，旋转A度，那么对应的Matrix就是<img src="http://7xs2qy.com1.z0.glb.clouddn.com/rotate.png" alt="rotate"></p>
+</li>
+<li><p>实现Skew操作<br>错切操作在Matrix中对应的是<code>MSKEW_X</code>和<code>MSKEW_Y</code>，分别表示X和Y轴上的错切系数，假设在X轴上错切系数为0.5，Y轴上为2，那么对应的Matrix就是<img src="http://7xs2qy.com1.z0.glb.clouddn.com/skew.png" alt="skew"><br>其他3种操作都比较常见，但是错切操作我们可能不是很熟悉。</p>
+<blockquote>
+<p>错切可分为水平错切和垂直错切。<br>水平错切表示变换后，Y坐标不变，X坐标则按比例发生平移，且平移的大小和Y坐标成正比，即新的坐标为<code>(X+Matrix[MSKEW_X] * Y,Y)</code>。<br>垂直错切表示变换后，X坐标不变，Y坐标则按比例发生平移，且平移的大小和X坐标成正比，即新的坐标为<code>(X,Y+Matrix[MSKEW_Y] * X)</code>。<br>当然，我们也可以同时实现水平错切和垂直错切。</p>
+</blockquote>
+</li>
+</ol>
+<p>关于为什么修改Matrix的这些值后，就实现了位移、缩放、旋转和错切操作，就主要是数学推导过程了，可以参考这篇文章—— <a href="http://blog.csdn.net/pathuang68/article/details/6991867" target="_blank" rel="external">Android中图像变换Matrix的原理</a>，讲解的非常详细，强烈推荐。</p>
+<p>除了可以直接修改Matrix值，Matrix类还提供了一些API来操作Matrix。这里主要介绍几类比较常用的API。</p>
+<h2 id="setXXX、preXXX和postXXX"><a href="#setXXX、preXXX和postXXX" class="headerlink" title="setXXX、preXXX和postXXX"></a><code>setXXX</code>、<code>preXXX</code>和<code>postXXX</code></h2><p>XXX可以是Translate、Rotate、Scale、Skew和Concat(表示直接操作Matrix矩阵)。我们主要搞清楚这3种API的区别就OK了。</p>
+<ol>
+<li><code>setXXX</code>，首先会将该Matrix设置为单位矩阵，即相当于调用reset()方法，然后再设置该Matrix的值。</li>
+<li><code>preXXX</code>，不会重置Matrix，而是被当前Matrix左乘（矩阵运算中，A左乘B等于A <em> B），即M’ = M </em> S(XXX)。</li>
+<li><code>postXXX</code>，不会重置Matrix，而是被当前Matrix右乘（矩阵运算中，A右乘B等于B <em> A），即M’ = S(XXX) </em> M。</li>
+</ol>
+<p>当这些API同时使用时，又会出现什么效果那，我们来看个例子：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Matrix matrix = <span class="keyword">new</span> Matrix();</span><br><span class="line"><span class="keyword">float</span>[] points = <span class="keyword">new</span> <span class="keyword">float</span>[] &#123; <span class="number">10.0f</span>, <span class="number">10.0f</span> &#125;;</span><br><span class="line">matrix.postScale(<span class="number">2.0f</span>, <span class="number">3.0f</span>);<span class="comment">// 第1步</span></span><br><span class="line">matrix.preRotate(<span class="number">90</span>);<span class="comment">// 第2步</span></span><br><span class="line">matrix.setScale(<span class="number">2f</span>, <span class="number">3f</span>);<span class="comment">// 第3步</span></span><br><span class="line">matrix.preTranslate(<span class="number">8.0f</span>, <span class="number">7.0f</span>);<span class="comment">// 第5步</span></span><br><span class="line">matrix.postTranslate(<span class="number">18.0f</span>, <span class="number">17.0f</span>);<span class="comment">// 第4步</span></span><br><span class="line">matrix.mapPoints(points);</span><br><span class="line">Log.i(<span class="string">"test"</span>, points[<span class="number">0</span>] + <span class="string">" : "</span> + points[<span class="number">1</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>最后得到的结果是：<code>54.0 : 68.0</code><br>可以发现，在第3步setScale之前的第1、2步根本就没有用，直接被第3步setScale覆盖了。所以最终的矩阵运算为 </p>
+<blockquote>
+<p><code>Translate(18,17) * Scale(2,3) * Translate(8,7) * (10,10)</code></p>
+</blockquote>
+<p>这样，就很容易得出最后的结果了。</p>
+<p>这里也许会有一个疑问，为什么坐标点(10,10)会被结果矩阵（矩阵运算虽然不满足交换律，但是满足结合律）左乘，而不是右乘。这一点我们看一下下面的矩阵运算就会明白。<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/MatrixMul.png" alt="Matrix相乘"><br>等号左边是变换后的坐标点，等号右边是Matrix矩阵左乘原始坐标点。因为Matrix是3行3列，坐标点是3行1列，所以正好可以相乘，但如果反过来，就不满足矩阵相乘的条件了（<code>左边矩阵的列数等于右边矩阵的行数</code>）。所以，就可以理解为什么是结果矩阵左乘原始坐标点了。</p>
+<p>也正因为这一点以及矩阵的结合律，所以我们可以理解上面矩阵运算的流程：</p>
+<blockquote>
+<p><strong><em>先对原始坐标点(10,10)进行Translate(8,7)位移，然后再对中间坐标点(18,17)进行Scale(2,3)放大，最后再次对中间坐标点(36,51)进行Translate(18,17)操作，就得到了最后的坐标点(54,68)</em></strong>。</p>
+</blockquote>
+<p><strong>这里还有一个小Tips</strong>：<br>当需要对Matrix矩阵进行比较复杂的设置时，可以把这些复杂的设置，拆分为多个步骤，每一个步骤都是一个简单的Matrix，然后再依据这些步骤的先后顺序，决定是通过左乘 or 右乘得到结果矩阵，最后通过结果矩阵左乘原始坐标就OK了（设计时，可以拆分之后理解，但最终运算时还是要得到一个结果矩阵，再去操作原始坐标）。</p>
+<p> 还有一点需要了解：Canvas里的scale、translate、rotate和concat都是preXXX方法，如果要进行更多的变换可以先从Canvas获得Matrix, 变换后再设置回Canvas. <strong>但是这里有个坑，最后会进行介绍</strong>。   <a href="#jump">点击这里跳转</a></p>
+<h2 id="mapPoints-mapRect-mapVectors"><a href="#mapPoints-mapRect-mapVectors" class="headerlink" title="mapPoints mapRect  mapVectors"></a><code>mapPoints</code> <code>mapRect</code>  <code>mapVectors</code></h2><p>这些API很简单，主要是根据当前Matrix矩阵对点、矩形区域和向量进行变换，以得到变换后的点、矩形区域和向量。经常和下面的<code>invert</code>方法结合使用。</p>
+<h2 id="invert"><a href="#invert" class="headerlink" title="invert"></a><code>invert</code></h2><p>通过上面的mapXXX方法，可以获取变换后的坐标或者矩形。但假设我们知道了变换后的坐标，如何计算Matrix变换前的坐标那？！<br>此时通过<code>invert</code>方法获取的逆矩阵就派上用场了。所谓逆矩阵，就是Matrix旋转了30度，逆Matrix就反向旋转30度，Matrix放大n倍，逆Matrix就缩小n倍。假设逆矩阵是invertMatrix，那么Matrix.preConcat(invertMatrix) 和 Matrix.postConcat(invertMatrix) 都应该等于单位矩阵（但实际上会有一些误差）。<br>所以，通过Matrix和invertMatrix对坐标进行变换的规则可总结如下：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/invertMatrix.png" alt="通过Matrix和invertMatrix对坐标进行变换的规则"></p>
+<p><strong>逆矩阵</strong>在进行自定义View Touch事件处理时很有用，假设我们在自定义View中，通过Matrix（包含了旋转、缩放和位移操作）绘制了Bitmap，现在想要判断Touch事件是否在变换后的Bitmap范围内，应该如何操作那？！<br>首先想到的可能是下面的方案：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">RectF rect = <span class="keyword">new</span> RectF(bitmap.getWidth(),bitmap.getHeight());</span><br><span class="line"><span class="comment">//假设matrix就是对bitmap进行变换的矩阵</span></span><br><span class="line">matrix.mapRect(rect);</span><br><span class="line"><span class="keyword">boolean</span> isTouchBitmap = rect.contains(touchX,touchY);</span><br></pre></td></tr></table></figure></p>
+<p>但是这种方式实际上不是非常的准确，通过matrix变换后的矩形区域并不是真实的Bitmap区域，而是包含bitmap的矩形区域（很难描述啊），看下图就知道了：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/Matrix%E6%AD%A3%E5%90%91.png" alt="Matrix正向操作"><br>图中的绿色矩形区域就是我们进行判断的rect区域，很明显误差很大哈。既然正向操作不可行，那就只能试下逆向操作了：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">RectF rect = <span class="keyword">new</span> RectF(bitmap.getWidth(),bitmap.getHeight());</span><br><span class="line"><span class="keyword">float</span> eventFloat[] = <span class="keyword">new</span> <span class="keyword">float</span>[]&#123;touchX,touchY&#125;;</span><br><span class="line"><span class="comment">//假设invertMatrix是matrix的逆矩阵,这里对Touch坐标进行逆向操作。</span></span><br><span class="line">invertMatrix.mapPoints(eventFloat);</span><br><span class="line"><span class="keyword">boolean</span> isTouchBitmap = rect.contains(eventFloat[<span class="number">0</span>],eventFloat[<span class="number">1</span>]);</span><br></pre></td></tr></table></figure></p>
+<p>通过这种方式，首先会对Touch坐标进行逆矩阵操作，然后再判断是否落在原始bitmap矩形区域内（上图中的小企鹅），就比较精确了。精妙哈！！！</p>
+<hr>
+<p><span id="jump"></span></p>
+<h2 id="Canvas-getMatrix的坑"><a href="#Canvas-getMatrix的坑" class="headerlink" title="Canvas.getMatrix的坑"></a><code>Canvas.getMatrix</code>的坑</h2><p>通过Canvas获取Matrix矩阵的拷贝，从API16开始，不再推荐使用。至于原因，可参考Google的解释<a href="https://code.google.com/p/android/issues/detail?id=24517" target="_blank" rel="external">Issue 24517:    Canvas getMatrix/setMatrix with hardware acceleration bug</a>，里面提供了示例代码。</p>
+<p>主要原因是，在开启硬件加速的情况下，<code>Canvas.getMatrix</code> 获取的矩阵是相对于Canvas所属View的，而<code>Canvas.setMatrix</code> 则会把所设置的矩阵当做相对于整个屏幕（包括系统栏）。</p>
+<p>所谓相对于某个View，就是说不管这个View在屏幕中的任何位置，通过这个View的Canvas获取的Matrix的X和Y位移都是0，也就是Matrix在当前View的本地坐标系中，和View的left和top值无关。</p>
+<p>所谓相对于整个屏幕，也就很好理解了，即获取的Matrix是在整个屏幕表示的世界坐标系中的，一般情况下，获取的矩阵的X位移为view.left值，Y位移为系统栏的高度 + view.top值。并且后续对Canvas的变换操作都是基于这个初始矩阵进行的。</p>
+<p>所以在硬件加速的情况下，调用<code>canvas.setMatrix(canvas.getMatrix())</code>后，就会导致View默认从屏幕左上角（包含了系统栏）开始绘制，这样就会有一部分内容被系统栏遮挡住。<br>这里对Google提供的示例代码进行了简化，就是把一个自定义View添加到带有系统栏的Activity中，自定义View的onDraw方法如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onDraw</span><span class="params">(Canvas canvas)</span> </span>&#123;</span><br><span class="line">   canvas.save(Canvas.MATRIX_SAVE_FLAG);</span><br><span class="line">   Matrix matrix = canvas.getMatrix();</span><br><span class="line">   <span class="comment">//查看获取的初始Matrix</span></span><br><span class="line">   Log.i(<span class="string">"matrix"</span>,matrix.toString());</span><br><span class="line">   <span class="comment">// This line changes the canvas' transformation when hardware acceleration is turned on (but shouldn't)</span></span><br><span class="line">   canvas.setMatrix(matrix);</span><br><span class="line">        </span><br><span class="line">   mPaint.setColor(Color.GREEN);</span><br><span class="line">   <span class="comment">//draw一个200*200的矩形区域</span></span><br><span class="line">   canvas.drawRect(<span class="number">0</span>, <span class="number">0</span>, <span class="number">200</span>, <span class="number">200</span>, mPaint);</span><br><span class="line">   canvas.restore();</span><br><span class="line"></span><br><span class="line">   <span class="comment">// here the bottom right corner of the green rectangle should lie(but doesn't)</span></span><br><span class="line">   mPaint.setColor(Color.RED);</span><br><span class="line">   canvas.drawPoint(<span class="number">210</span>, <span class="number">210</span>, mPaint);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在没有开启硬件加速的情况下，矩形区域和红点显示正常，<br>Canvas.getMatrix方法获取的Matrix也是在屏幕世界坐标系中的，即<code>Matrix{[1.0, 0.0, 0.0][0.0, 1.0, 60.0][0.0, 0.0, 1.0]}</code>，其中Y轴位移为60，表示的就是状态栏的高度。这样重新setMatrix之后，就不会出现问题，如图所示：<img src="http://7xs2qy.com1.z0.glb.clouddn.com/nothardwareAcceleration.png" alt="关闭硬件加速"></p>
+<p>但是在开启硬件加速的情况下，矩形区域有一部分被系统栏遮挡住了，可以对比下红点的位置就就知道了，同时获取的Matrix也是相对于当前View本地坐标系的，即<code>Matrix{[1.0, 0.0, 0.0][0.0, 1.0, 0.0][0.0, 0.0, 1.0]}</code>，没有产生任何位移。这样重新setMatrix之后，就会出现问题（因为对Matrix的理解不同），如图所示：<img src="http://7xs2qy.com1.z0.glb.clouddn.com/hardwareAcceleration.png" alt="开启硬件加速"></p>
+<p>既然，<code>Canvas.getMatrix</code>被废弃了，那有什么替换的方法嘛？！这里Google并没有明确的指出。但是我觉得有两种方式可以实现类似功能。</p>
+<ol>
+<li>不获取Matrix，直接通过Canvas提供的位移、旋转、缩放等API来实现类似功能。</li>
+<li>从API11开始，提供了View Properties，可以直接对View进行位移、旋转、缩放等操作，同时也提供了<code>View.getMatrix</code>方法来获取当前View的Matrix（也算是Canvas.getMatrix的替代方案了）。当然，这个Matrix也是相对于View本身本地坐标系的。</li>
+</ol>
+<hr>
+<p>本文简单介绍了Matrix的基本使用方法，关于Matrix的底层原理，还没有涉猎，后续深入研究后，再补充进来。</p>
+<p>最后推荐几篇比较好的Matrix相关的文章。</p>
+<ol>
+<li><a href="http://blog.csdn.net/pathuang68/article/details/6991867" target="_blank" rel="external">Android中图像变换Matrix的原理、代码验证和应用(一)</a></li>
+<li><a href="http://blog.csdn.net/zhaokaiqiang1992/article/details/47984915" target="_blank" rel="external">Android中图像变换Matrix的原理、代码验证和应用(二)</a></li>
+<li><a href="http://blog.csdn.net/pathuang68/article/details/6992085" target="_blank" rel="external"> Android中图像变换Matrix的原理、代码验证和应用(三)</a></li>
+</ol>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/Matrix/" rel="tag">#Matrix</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/27/Android动画框架三/" rel="next" title="Android动画框架三">
+                <i class="fa fa-chevron-left"></i> Android动画框架三
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/04/27/Matrix使用解析/"
+     data-title="Matrix使用解析"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/04/27/Matrix使用解析/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/04/27/Matrix使用解析/"
+           data-title="Matrix使用解析" data-url="http://ltlovezh.github.io/2016/04/27/Matrix使用解析/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+               alt="leon" />
+          <p class="site-author-name" itemprop="name">leon</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/63230484/" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  douban
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">技术博文</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#setXXX、preXXX和postXXX"><span class="nav-number">1.</span> <span class="nav-text">setXXX、preXXX和postXXX</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mapPoints-mapRect-mapVectors"><span class="nav-number">2.</span> <span class="nav-text">mapPoints mapRect  mapVectors</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#invert"><span class="nav-number">3.</span> <span class="nav-text">invert</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Canvas-getMatrix的坑"><span class="nav-number">4.</span> <span class="nav-text">Canvas.getMatrix的坑</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+&nbsp;
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ltlovezh"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+</body>
+</html>
