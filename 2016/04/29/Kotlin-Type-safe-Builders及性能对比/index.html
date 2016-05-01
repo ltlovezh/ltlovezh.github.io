@@ -67,7 +67,7 @@ Extensions在Kotlin中，我们可以在不继承类的基础上，对某个类�
 <meta property="og:description" content="本文承接上文Kotlin基本语法2，主要介绍扩展函数、Type-safe Builders以及使用Kotlin开发Android带来的安装包和方法数增量。
 Extensions在Kotlin中，我们可以在不继承类的基础上，对某个类添加函数和属性，即扩展函数和扩展属性。
 扩展函数扩展函数基本格式：123fun 被扩展类.扩展函数(函数参数...) : 返回类型&amp;#123;//代码块内，可以访问被扩展">
-<meta property="og:updated_time" content="2016-04-29T14:48:43.000Z">
+<meta property="og:updated_time" content="2016-05-01T09:38:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kotlin : Type-safe Builders及性能对比">
 <meta name="twitter:description" content="本文承接上文Kotlin基本语法2，主要介绍扩展函数、Type-safe Builders以及使用Kotlin开发Android带来的安装包和方法数增量。
@@ -422,6 +422,12 @@ Extensions在Kotlin中，我们可以在不继承类的基础上，对某个类�
 </tbody>
 </table>
 <p>Stdlib和Runtime是Kotlin必不可少的基础类库，方法数大概是7000个，还可以接受。<br>相对来说，Reflect类库的安装包和方法数增量都比较大，但是该类库不是必须的，可以选择使用(主要是为了处理kotlin反射和java反射之间的兼容性)。最后一个Anko是为了方便构建动态View层级，可视情况决定是否采用。</p>
+<hr>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ol>
+<li><a href="http://mp.weixin.qq.com/s?__biz=MzA3ODg4MDk0Ng==&amp;mid=403421478&amp;idx=1&amp;sn=ffaa512eaf23982c2da5e919694fd1ed&amp;scene=21#wechat_redirect" target="_blank" rel="external">实战Kotlin@Android（一）：项目配置和语言转换</a></li>
+<li><a href="http://mp.weixin.qq.com/s?__biz=MzA3ODg4MDk0Ng==&amp;mid=403568637&amp;idx=1&amp;sn=e6edfa6ef2029e0f6c1892ed7d2611d2&amp;scene=21#wechat_redirect" target="_blank" rel="external">实战Kotlin@Andorid（二）：界面构建与扩展方法</a></li>
+<li><a href="http://mp.weixin.qq.com/s?__biz=MzA3ODg4MDk0Ng==&amp;mid=2651112113&amp;idx=1&amp;sn=e7e3cffe60150e7db20ebd4f648b4c15&amp;scene=23&amp;srcid=04279tiwca4UACLXtISl5ktd#rd" target="_blank" rel="external">实战kotlin@android（三）：扩展变量与其它技巧</a></li>
+</ol>
 
       
     </div>
@@ -660,7 +666,7 @@ Extensions在Kotlin中，我们可以在不继承类的基础上，对某个类�
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Extensions"><span class="nav-number">1.</span> <span class="nav-text">Extensions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展函数"><span class="nav-number">1.1.</span> <span class="nav-text">扩展函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展属性"><span class="nav-number">1.2.</span> <span class="nav-text">扩展属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Type-safe-Builders"><span class="nav-number">2.</span> <span class="nav-text">Type-safe Builders</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法数和安装包"><span class="nav-number">3.</span> <span class="nav-text">方法数和安装包</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Extensions"><span class="nav-number">1.</span> <span class="nav-text">Extensions</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展函数"><span class="nav-number">1.1.</span> <span class="nav-text">扩展函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展属性"><span class="nav-number">1.2.</span> <span class="nav-text">扩展属性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Type-safe-Builders"><span class="nav-number">2.</span> <span class="nav-text">Type-safe Builders</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方法数和安装包"><span class="nav-number">3.</span> <span class="nav-text">方法数和安装包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
             
           </div>
         </section>
