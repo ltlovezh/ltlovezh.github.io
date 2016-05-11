@@ -67,7 +67,7 @@ Extensions在Kotlin中，我们可以在不继承类的基础上，对某个类�
 <meta property="og:description" content="本文承接上文Kotlin基本语法2，主要介绍扩展函数、Type-safe Builders以及使用Kotlin开发Android带来的安装包和方法数增量。
 Extensions在Kotlin中，我们可以在不继承类的基础上，对某个类添加函数和属性，即扩展函数和扩展属性。
 扩展函数扩展函数基本格式：123fun 被扩展类.扩展函数(函数参数...) : 返回类型&amp;#123;//代码块内，可以访问被扩展">
-<meta property="og:updated_time" content="2016-05-01T09:38:15.000Z">
+<meta property="og:updated_time" content="2016-05-11T13:02:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kotlin : Type-safe Builders及性能对比">
 <meta name="twitter:description" content="本文承接上文Kotlin基本语法2，主要介绍扩展函数、Type-safe Builders以及使用Kotlin开发Android带来的安装包和方法数增量。
@@ -324,6 +324,7 @@ Extensions在Kotlin中，我们可以在不继承类的基础上，对某个类�
 <li>扩展函数是静态解析的，不是虚函数，即不能被重写。</li>
 <li>当类的成员函数和扩展函数有相同函数签名时，成员函数会优先被调用。</li>
 </ol>
+<a id="more"></a>
 <h3 id="扩展属性"><a href="#扩展属性" class="headerlink" title="扩展属性"></a>扩展属性</h3><p>扩展属性基本格式：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">var</span> 被扩展类.扩展属性</span> : 扩展属性类型</span><br><span class="line">    <span class="keyword">set</span>(value)</span><br><span class="line">    <span class="keyword">get</span>()</span><br></pre></td></tr></table></figure></p>
 <p>实际上，扩展属性并没有真正的在类中新增属性，所以扩展属性没有<code>field</code>字段，即不能为扩展属性设置初始值。一般情况下，只能重写<code>set</code>和<code>get</code>方法，为扩展属性提供操作。看个官网的例子：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> &lt;T&gt; MutableList&lt;T&gt;.lastIndex</span>: <span class="keyword">Int</span></span><br><span class="line">  <span class="keyword">get</span>() = size - <span class="number">1</span></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">调用：  </span><br><span class="line"><span class="variable"><span class="keyword">var</span> mList</span> = mutableListOf(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>)</span><br><span class="line">println(mList.lastIndex)</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line"><span class="number">3</span></span><br></pre></td></tr></table></figure></p>
 <h2 id="Type-safe-Builders"><a href="#Type-safe-Builders" class="headerlink" title="Type-safe Builders"></a>Type-safe Builders</h2><p>个人感觉<code>Type-safe Builders</code>是kotlin中的一大特色。它让我们以陈述式语言风格来创建对象。非常适合于创建多级嵌套的数据结构，例如：XML文件、布局文件等。其语法类似于gradle，都是基于DSL构建。</p>

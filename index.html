@@ -255,6 +255,121 @@
             
               
                 
+                <a class="post-title-link" href="/2016/05/11/Hexo/" itemprop="url">
+                  Hexo
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-11T21:07:43+08:00" content="2016-05-11">
+              2016-05-11
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/11/Hexo/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/Hexo/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/05/11/Hexo/" class="leancloud_visitors" data-flag-title="Hexo">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/05/11/Hexo/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/05/09/Android事件分发机制/" itemprop="url">
                   Android事件分发机制
                 </a>
@@ -432,12 +547,16 @@
 
       
         
-          
-          本文承接上文Kotlin基本语法2，主要介绍扩展函数、Type-safe Builders以及使用Kotlin开发Android带来的安装包和方法数增量。
-Extensions在Kotlin中，我们可以在不继承类的基础上，对某个类添加函数和属性，即扩展函数和扩展属性。
-扩展函数扩展函数基本格式：12
-          ...
-
+          <p>本文承接上文<a href="http://ltlovezh.com/2016/04/27/Kotlin%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%952/">Kotlin基本语法2</a>，主要介绍扩展函数、Type-safe Builders以及使用Kotlin开发Android带来的安装包和方法数增量。</p>
+<h2 id="Extensions"><a href="#Extensions" class="headerlink" title="Extensions"></a>Extensions</h2><p>在Kotlin中，我们可以在不继承类的基础上，对某个类添加函数和属性，即扩展函数和扩展属性。</p>
+<h3 id="扩展函数"><a href="#扩展函数" class="headerlink" title="扩展函数"></a>扩展函数</h3><p>扩展函数基本格式：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> 被扩展类.扩展函数<span class="params">(函数参数...)</span> : 返回类型&#123;</span></span><br><span class="line"><span class="comment">//代码块内，可以访问被扩展类的成员属性和函数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我感觉扩展函数最大的特色就是可以访问被扩展类的成员属性和函数，这点太方便了。看个官网的例子：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="type">&lt;T&gt;</span> MutableList<span class="type">&lt;T&gt;</span>.<span class="title">swap</span><span class="params">(index1: <span class="type">Int, index2: Int</span>)</span> &#123;</span></span><br><span class="line">    <span class="comment">// 'this' corresponds to the list</span></span><br><span class="line">    <span class="variable"><span class="keyword">val</span> tmp</span> = this[index1] </span><br><span class="line">    this[index1] = this[index2]</span><br><span class="line">    this[index2] = tmp</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">调用:</span><br><span class="line"><span class="variable"><span class="keyword">var</span> mList</span> = mutableListOf(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>)</span><br><span class="line">mList.swap(<span class="number">1</span>,<span class="number">2</span>)</span><br><span class="line">println(mList)</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">[<span class="number">1</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">4</span>]</span><br></pre></td></tr></table></figure>
+<p>关于扩展函数有几点需要说明：</p>
+<ol>
+<li>扩展函数是静态解析的，不是虚函数，即不能被重写。</li>
+<li>当类的成员函数和扩展函数有相同函数签名时，成员函数会优先被调用。</li>
+</ol>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/29/Kotlin-Type-safe-Builders及性能对比/#more" rel="contents">
               阅读全文 &raquo;
@@ -548,12 +667,9 @@ Extensions在Kotlin中，我们可以在不继承类的基础上，对某个类�
 
       
         
-          
-          Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
-Matrix是一个3*3的矩阵，如图所示：
-我们可以直接通过Matrix.getValues方法获取Ma
-          ...
-
+          <p>Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。</p>
+<p>Matrix是一个3*3的矩阵，如图所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/matrix.png" alt="Matrix"></p>
+<p>我们可以直接通过<code>Matrix.getValues</code>方法获取Matrix的矩阵值（浮点型数组类型），然后修改矩阵值（Matrix类为每一个矩阵值提供了固定索引，如：MSCALE_X、MSKEW_X等），最后通过<code>Matrix.setValues</code>方法重新设置Matrix值，已达到修改Matrix的目的。这种方式要求我们对Matrix每一个值的作用都要十分了解，操作起来比较繁琐，但却是最灵活、最彻底的操作方式。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/27/Matrix使用解析/#more" rel="contents">
               阅读全文 &raquo;
@@ -664,10 +780,16 @@ Matrix是一个3*3的矩阵，如图所示：
 
       
         
-          
-          本篇接Android动画框架二,前两篇文章主要介绍了Frame Animation、Tween Animation和Property Animator的使用方式和实现机制。本篇主要学习下Android中布局动画的使用和实现机制。其中，不管是哪种动画的实现机制，最终都会和Choreographer关联
-          ...
-
+          <p>本篇接Android动画框架二,前两篇文章主要介绍了Frame Animation、Tween Animation和Property Animator的使用方式和实现机制。本篇主要学习下Android中布局动画的使用和实现机制。其中，不管是哪种动画的实现机制，最终都会和Choreographer关联起来。关于Choreographer机制，网上有一篇文章讲解的很详细，本文就不再赘述。</p>
+<h2 id="Choreographer机制"><a href="#Choreographer机制" class="headerlink" title="Choreographer机制"></a>Choreographer机制</h2><p>Google在Android4.1上增加了Choreographer机制，用于和Vsync机制配合，实现对用户输入、动画以及布局和绘图的控制。关于Choreographer机制的详细实现，可以参考<a href="http://blog.csdn.net/yangwen123/article/details/39518923">Android系统Choreographer机制实现过程</a>。</p>
+<p>Choreographer机制对外的接口就是它的各种postCallbackXX和postFrameCallbackXX方法，在源码中搜下这几个方法的调用，就可以知道哪里使用了Choreographer机制。其中有我们比较熟悉的：</p>
+<ul>
+<li>View.scheduleTraversals方法，实现View的绘制流程（也实现了Tween Animation）；</li>
+<li>ValueAnimator.AnimationHandler.scheduleAnimation方法，实现Property Animator；</li>
+<li>View.scheduleDrawable方法，实现Frame Animation；</li>
+<li>View.postOnAnimation和View.postOnAnimationDelayed方法，实现自定义的动画。</li>
+</ul>
+<p>其他的调用，此处不再赘述。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/27/Android动画框架三/#more" rel="contents">
               阅读全文 &raquo;
@@ -778,11 +900,8 @@ Matrix是一个3*3的矩阵，如图所示：
 
       
         
-          
-          本篇接Android动画框架一,上篇文章主要介绍了Frame Animation和Tween Animation的使用方式和实现机制。本篇主要介绍Property Animator.
-Property Animator之前我们学习的Frame Animation和Tween Animation是An
-          ...
-
+          <p>本篇接Android动画框架一,上篇文章主要介绍了Frame Animation和Tween Animation的使用方式和实现机制。本篇主要介绍Property Animator.</p>
+<h2 id="Property-Animator"><a href="#Property-Animator" class="headerlink" title="Property Animator"></a>Property Animator</h2><p>之前我们学习的Frame Animation和Tween Animation是Android3.0之前就存在的动画，但是他们存在着一些不足。因此，从Android3.0开始，Google为Android系统添加了更加强大的动画，即属性动画，它可以改变任何对象的属性，可谓动画界的终极武器哈！Property Animator更改的是对象的实际属性，而Tween Animation改变的则是View的绘制效果，真正的View的属性保持不变。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/27/Android动画框架二/#more" rel="contents">
               阅读全文 &raquo;
@@ -893,11 +1012,14 @@ Property Animator之前我们学习的Frame Animation和Tween Animation是An
 
       
         
-          
-          本文承接上文Kotlin基本语法1，继续介绍kotlin基础语法。
-类在kotlin中，类的定义包含类名、类头和类体。1234567891011class 类名 修饰符[public,internal,protected,private] constructor（参数：参数类型）&#123;  in
-          ...
-
+          <p>本文承接上文<a href="http://ltlovezh.com/2016/04/17/Kotlin%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%951/">Kotlin基本语法1</a>，继续介绍kotlin基础语法。</p>
+<h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><p>在kotlin中，类的定义包含类名、类头和类体。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> 类名 修饰符[<span class="title">public</span>,<span class="type">internal</span>,<span class="type">protected</span>,<span class="type">private] constructor（参数：参数类型）&#123;</span></span></span><br><span class="line">  init&#123;</span><br><span class="line">    initializer blocks</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//二级构造函数，调用了主构造函数</span></span><br><span class="line">  constructor(参数：参数类型) : this(参数) &#123;</span><br><span class="line">        parent.children.add(this)</span><br><span class="line">  &#125;</span><br><span class="line">类体</span><br><span class="line">&#125;</span><br><span class="line">其中，类头和类体都是可选的。</span><br></pre></td></tr></table></figure></p>
+<p>kotlin中的Class有两种构造函数：主构造函数和二级构造函数。上述<code>constructor（参数：参数类型）</code>就指定了主构造函数，它是类头的一部分。</p>
+<p>主构造函数不能包含任何代码。任何初始化操作只能在<code>initializer blocks</code>中进行（可以直接引用主构造函数中的参数值）。</p>
+<p>二级构造函数通过<code>constructor</code>关键字进行定义，所有的二级构造函数必须直接或者间接的调用主构造函数（通过this关键字）。</p>
+<p>我们在java代码中，经常在类中定义多个属性变量，然后在构造函数中分别初始化它们。对于这种行为，kotlin提供了更加简单的方式：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>(<span class="variable"><span class="keyword">val</span> name</span>: String = 默认参数值, <span class="variable"><span class="keyword">var</span> age</span>: <span class="keyword">Int</span> = 默认参数值) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述User类定义了两个成员变量，并在主构造函数中完成了初始化。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/27/Kotlin基本语法2/#more" rel="contents">
               阅读全文 &raquo;
@@ -1120,12 +1242,13 @@ Property Animator之前我们学习的Frame Animation和Tween Animation是An
 
       
         
-          
-          最近，抽空看了下Android中的常用动画使用方式和实现机制，现整理如下：
-Drawable Animation(Frame Animation)帧动画，就是依次展示一系列Drawable，来模拟动画的效果，类似于GIF图片。
-使用方式帧动画的使用方式比较简单，可以通过XML资源文件或者Java C
-          ...
-
+          <p>最近，抽空看了下Android中的常用动画使用方式和实现机制，现整理如下：</p>
+<h2 id="Drawable-Animation-Frame-Animation"><a href="#Drawable-Animation-Frame-Animation" class="headerlink" title="Drawable Animation(Frame Animation)"></a>Drawable Animation(Frame Animation)</h2><p>帧动画，就是依次展示一系列Drawable，来模拟动画的效果，类似于GIF图片。</p>
+<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p>帧动画的使用方式比较简单，可以通过XML资源文件或者Java Code来实现（对应于AnimationDrawable类）。</p>
+<h4 id="XML资源文件-放在anim或者Drawable目录下都可以"><a href="#XML资源文件-放在anim或者Drawable目录下都可以" class="headerlink" title="XML资源文件 (放在anim或者Drawable目录下都可以)"></a>XML资源文件 (放在anim或者Drawable目录下都可以)</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">animation-list</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span> <span class="attr">android:oneshot</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/one"</span> <span class="attr">android:duration</span>=<span class="string">"100"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/two"</span> <span class="attr">android:duration</span>=<span class="string">"200"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">item</span> <span class="attr">android:drawable</span>=<span class="string">"@drawable/three"</span> <span class="attr">android:duration</span>=<span class="string">"300"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">animation-list</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其中android:oneshot表示是否仅播放一次，android:drawable表示每一帧图片，android:duration表示对应Drawable展示的持续时间。</p>
+<h4 id="Java-Code"><a href="#Java-Code" class="headerlink" title="Java Code"></a>Java Code</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">AnimationDrawable anim = <span class="keyword">new</span> AnimationDrawable();</span><br><span class="line">anim.addFrame(getDrawable(R.drawable.one),<span class="number">100</span>);</span><br><span class="line">anim.addFrame(getDrawable(R.drawable.two),<span class="number">200</span>);</span><br><span class="line">anim.addFrame(getDrawable(R.drawable.three),<span class="number">300</span>);</span><br><span class="line"> <span class="comment">//Draw区域，必须指定</span></span><br><span class="line">anim.setBounds(Rect);</span><br></pre></td></tr></table></figure>
+<p>习惯上，我们把AnimationDrawable设置为View的背景，接着我们可以在Java Code中获取AnimationDrawable对象，然后通过start和stop方法来控制动画的播放。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/17/Android动画框架一/#more" rel="contents">
               阅读全文 &raquo;
@@ -1236,127 +1359,12 @@ Drawable Animation(Frame Animation)帧动画，就是依次展示一系列Drawab
 
       
         
-          
-          Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。
-控制流if表达式在Kotlin 中，if是一个带有返回值的表达式（也可以是
-          ...
-
+          <p>Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。</p>
+<h2 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h2><h3 id="if表达式"><a href="#if表达式" class="headerlink" title="if表达式"></a>if表达式</h3><p>在Kotlin 中，if是一个带有返回值的表达式（也可以是一般性语句）。因此，在Kotlin中没有三元操作符(condition ? then : else)，因为<code>if表达式</code>就能胜任这项工作。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义变量</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> a</span> = <span class="number">1</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> b</span> = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//if作为表达式，此时必须有else分支</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> max</span> = <span class="keyword">if</span> (a &gt; b) a <span class="keyword">else</span> b</span><br><span class="line"></span><br><span class="line"><span class="comment">//if作为表达式，此时必须有else分支（此时分支是代码块，且代码块的最后一个表达式的值是当前代码块的值）</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> min</span> = <span class="keyword">if</span> (a &gt; b) &#123; </span><br><span class="line">    print(<span class="string">"Choose a"</span>) </span><br><span class="line">    b </span><br><span class="line">  &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">    print(<span class="string">"Choose b"</span>) </span><br><span class="line">    a </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>作为表达式时，一般是将<code>if表达式</code>（的值）赋值为变量，或者在函数中return<code>if表达式</code>（的值）。在这种情况下，<code>if表达式</code>必须包含else分支。</p>
+<p>除了作为表达式之外，<code>if</code>也可以实现一般性语句，此时则不必包含else分支。<br>例如：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">max</span><span class="params">(a: <span class="type">Int, b: Int</span>)</span>: <span class="keyword">Int</span> &#123;</span></span><br><span class="line">    <span class="keyword">if</span> (a &gt; b) &#123;</span><br><span class="line">        println(<span class="string">"a"</span>)</span><br><span class="line">        <span class="keyword">return</span> a</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/04/17/Kotlin基本语法1/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/04/06/Hexo/" itemprop="url">
-                  Hexo
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-06T22:32:31+08:00" content="2016-04-06">
-              2016-04-06
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/04/06/Hexo/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/06/Hexo/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-     
-         
-        
-          <span id="/2016/04/06/Hexo/" class="leancloud_visitors" data-flag-title="Hexo">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in 
-          ...
-
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/04/06/Hexo/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>

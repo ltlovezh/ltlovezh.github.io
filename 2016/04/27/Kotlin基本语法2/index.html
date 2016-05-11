@@ -65,7 +65,7 @@
 <meta property="og:site_name" content="风之谷">
 <meta property="og:description" content="本文承接上文Kotlin基本语法1，继续介绍kotlin基础语法。
 类在kotlin中，类的定义包含类名、类头和类体。1234567891011class 类名 修饰符[public,internal,protected,private] constructor（参数：参数类型）&amp;#123;  init&amp;#123;    initializer blocks  &amp;#125;  //二级构造函数，调">
-<meta property="og:updated_time" content="2016-04-27T02:28:52.000Z">
+<meta property="og:updated_time" content="2016-05-11T13:06:27.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Kotlin基本语法2">
 <meta name="twitter:description" content="本文承接上文Kotlin基本语法1，继续介绍kotlin基础语法。
@@ -319,6 +319,7 @@
 <p>我们在java代码中，经常在类中定义多个属性变量，然后在构造函数中分别初始化它们。对于这种行为，kotlin提供了更加简单的方式：</p>
 <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>(<span class="variable"><span class="keyword">val</span> name</span>: String = 默认参数值, <span class="variable"><span class="keyword">var</span> age</span>: <span class="keyword">Int</span> = 默认参数值) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>上述User类定义了两个成员变量，并在主构造函数中完成了初始化。</p>
+<a id="more"></a>
 <h2 id="类的组成"><a href="#类的组成" class="headerlink" title="类的组成"></a>类的组成</h2><p>在kotlin中，一个Class可以包含以下几类成员：</p>
 <ol>
 <li><p>Constructors and initializer blocks<br>构造函数和初始化代码块，上面已经介绍过了。</p>

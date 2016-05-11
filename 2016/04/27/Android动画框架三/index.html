@@ -65,7 +65,7 @@ Choreo">
 <meta property="og:site_name" content="风之谷">
 <meta property="og:description" content="本篇接Android动画框架二,前两篇文章主要介绍了Frame Animation、Tween Animation和Property Animator的使用方式和实现机制。本篇主要学习下Android中布局动画的使用和实现机制。其中，不管是哪种动画的实现机制，最终都会和Choreographer关联起来。关于Choreographer机制，网上有一篇文章讲解的很详细，本文就不再赘述。
 Choreo">
-<meta property="og:updated_time" content="2016-04-27T11:37:36.000Z">
+<meta property="og:updated_time" content="2016-05-11T13:02:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android动画框架三">
 <meta name="twitter:description" content="本篇接Android动画框架二,前两篇文章主要介绍了Frame Animation、Tween Animation和Property Animator的使用方式和实现机制。本篇主要学习下Android中布局动画的使用和实现机制。其中，不管是哪种动画的实现机制，最终都会和Choreographer关联起来。关于Choreographer机制，网上有一篇文章讲解的很详细，本文就不再赘述。
@@ -321,6 +321,7 @@ Choreo">
 <li>View.postOnAnimation和View.postOnAnimationDelayed方法，实现自定义的动画。</li>
 </ul>
 <p>其他的调用，此处不再赘述。</p>
+<a id="more"></a>
 <h2 id="布局动画"><a href="#布局动画" class="headerlink" title="布局动画"></a>布局动画</h2><p>布局动画是指ViewGroup在布局时产生的动画效果。</p>
 <h3 id="LayoutTransition"><a href="#LayoutTransition" class="headerlink" title="LayoutTransition"></a>LayoutTransition</h3><p>LayoutTransition表示对ViewGroup中的子View进行动画显示，一般用在对ViewGroup添加、删除、隐藏、显示子View时添加过渡动画，避免僵硬的显示过程。</p>
 <h4 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h4><p>需要明确一点：LayoutTransition是设置给ViewGroup对象的，而非它的子View。<br>当一个ViewGroup发生以下情况时，会对子View产生动画效果：</p>

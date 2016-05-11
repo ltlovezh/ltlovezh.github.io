@@ -77,7 +77,7 @@ Matrix是一个3*3的矩阵，如图所示：
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Matrix%E6%AD%A3%E5%90%91.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/nothardwareAcceleration.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/hardwareAcceleration.png">
-<meta property="og:updated_time" content="2016-04-27T11:53:48.000Z">
+<meta property="og:updated_time" content="2016-05-11T13:07:08.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Matrix使用解析">
 <meta name="twitter:description" content="Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
@@ -328,6 +328,7 @@ Matrix是一个3*3的矩阵，如图所示：
         <p>Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。</p>
 <p>Matrix是一个3*3的矩阵，如图所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/matrix.png" alt="Matrix"></p>
 <p>我们可以直接通过<code>Matrix.getValues</code>方法获取Matrix的矩阵值（浮点型数组类型），然后修改矩阵值（Matrix类为每一个矩阵值提供了固定索引，如：MSCALE_X、MSKEW_X等），最后通过<code>Matrix.setValues</code>方法重新设置Matrix值，已达到修改Matrix的目的。这种方式要求我们对Matrix每一个值的作用都要十分了解，操作起来比较繁琐，但却是最灵活、最彻底的操作方式。</p>
+<a id="more"></a>
 <p>具体要修改哪些Matrix值，则取决于要实现什么效果，从本质上这是一个数学问题，这里给出几种比较常见的方案：</p>
 <ol>
 <li><p>实现Translate操作<br>位移操作在Matrix中对应是<code>MTRANS_X</code>和<code>MTRANS_Y</code>值，分别表示X和Y轴上的位移量，假设在X和Y轴上分别位移100px，那么对应的Matrix就是<img src="http://7xs2qy.com1.z0.glb.clouddn.com/translate.png" alt="tranlate"></p>

@@ -65,7 +65,7 @@ Property Animator之前我们学习的Frame Animation和Tween Animation是Androi
 <meta property="og:site_name" content="风之谷">
 <meta property="og:description" content="本篇接Android动画框架一,上篇文章主要介绍了Frame Animation和Tween Animation的使用方式和实现机制。本篇主要介绍Property Animator.
 Property Animator之前我们学习的Frame Animation和Tween Animation是Android3.0之前就存在的动画，但是他们存在着一些不足。因此，从Android3.0开始，Goog">
-<meta property="og:updated_time" content="2016-04-27T06:56:08.000Z">
+<meta property="og:updated_time" content="2016-05-11T13:04:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android动画框架二">
 <meta name="twitter:description" content="本篇接Android动画框架一,上篇文章主要介绍了Frame Animation和Tween Animation的使用方式和实现机制。本篇主要介绍Property Animator.
@@ -313,6 +313,7 @@ Property Animator之前我们学习的Frame Animation和Tween Animation是Androi
       
         <p>本篇接Android动画框架一,上篇文章主要介绍了Frame Animation和Tween Animation的使用方式和实现机制。本篇主要介绍Property Animator.</p>
 <h2 id="Property-Animator"><a href="#Property-Animator" class="headerlink" title="Property Animator"></a>Property Animator</h2><p>之前我们学习的Frame Animation和Tween Animation是Android3.0之前就存在的动画，但是他们存在着一些不足。因此，从Android3.0开始，Google为Android系统添加了更加强大的动画，即属性动画，它可以改变任何对象的属性，可谓动画界的终极武器哈！Property Animator更改的是对象的实际属性，而Tween Animation改变的则是View的绘制效果，真正的View的属性保持不变。</p>
+<a id="more"></a>
 <h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p>Property Animator中有两个类可以实现属性的改变，分别是：ObjectAnimator和ValueAnimator，其中ValueAnimator是ObjectAnimator的父类，它是Property Animator的时间引擎，负责计算各个帧的属性值。ValueAnimator定义了属性动画的绝大部分核心功能，包括计算各帧的相关属性值，负责处理属性更新事件，按属性值的类型控制计算规则等。属性动画主要由两部分构成：</p>
 <ol>
 <li>计算各帧的相关属性值。</li>
