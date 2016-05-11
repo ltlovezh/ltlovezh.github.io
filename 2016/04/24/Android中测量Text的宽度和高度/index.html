@@ -58,21 +58,18 @@
 
 
 <meta name="description" content="Android中，在自定义View中通过Canvas绘制文字时，经常需要测量文字的宽度和高度。这里记录下几种比较常用的方法，仅作备忘。
-1. Paint.measureText  （测量文本的宽度）123Paint paint = new Paint();paint.setTextSize(size);float strWidth = paint.measureText(str);
-2. Pain">
+1. Paint.measureText  （测量文本的宽度）123Paint paint = new Paint();paint.setTextSize(size);float strWidth = paint.measureText(str);">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android中测量Text的宽度和高度">
 <meta property="og:url" content="http://ltlovezh.github.io/2016/04/24/Android中测量Text的宽度和高度/index.html">
 <meta property="og:site_name" content="风之谷">
 <meta property="og:description" content="Android中，在自定义View中通过Canvas绘制文字时，经常需要测量文字的宽度和高度。这里记录下几种比较常用的方法，仅作备忘。
-1. Paint.measureText  （测量文本的宽度）123Paint paint = new Paint();paint.setTextSize(size);float strWidth = paint.measureText(str);
-2. Pain">
-<meta property="og:updated_time" content="2016-04-24T14:45:27.000Z">
+1. Paint.measureText  （测量文本的宽度）123Paint paint = new Paint();paint.setTextSize(size);float strWidth = paint.measureText(str);">
+<meta property="og:updated_time" content="2016-05-11T12:38:59.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android中测量Text的宽度和高度">
 <meta name="twitter:description" content="Android中，在自定义View中通过Canvas绘制文字时，经常需要测量文字的宽度和高度。这里记录下几种比较常用的方法，仅作备忘。
-1. Paint.measureText  （测量文本的宽度）123Paint paint = new Paint();paint.setTextSize(size);float strWidth = paint.measureText(str);
-2. Pain">
+1. Paint.measureText  （测量文本的宽度）123Paint paint = new Paint();paint.setTextSize(size);float strWidth = paint.measureText(str);">
 
 
 
@@ -316,6 +313,7 @@
       
         <p>Android中，在自定义View中通过<code>Canvas</code>绘制文字时，经常需要测量文字的宽度和高度。这里记录下几种比较常用的方法，仅作备忘。</p>
 <h4 id="1-Paint-measureText-（测量文本的宽度）"><a href="#1-Paint-measureText-（测量文本的宽度）" class="headerlink" title="1. Paint.measureText  （测量文本的宽度）"></a>1. Paint.measureText  （测量文本的宽度）</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">paint.setTextSize(size);</span><br><span class="line"><span class="keyword">float</span> strWidth = paint.measureText(str);</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
 <h4 id="2-Paint-getTextBounds-获得文字所在矩形区域，可以得到宽高"><a href="#2-Paint-getTextBounds-获得文字所在矩形区域，可以得到宽高" class="headerlink" title="2. Paint.getTextBounds (获得文字所在矩形区域，可以得到宽高)"></a>2. Paint.getTextBounds (获得文字所在矩形区域，可以得到宽高)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line">Rect rect = <span class="keyword">new</span> Rect();  </span><br><span class="line">paint.getTextBounds(str, <span class="number">0</span>, str.length(), rect);  </span><br><span class="line"><span class="keyword">int</span> w = rect.width();  </span><br><span class="line"><span class="keyword">int</span> h = rect.height();</span><br></pre></td></tr></table></figure>
 <h4 id="3-Paint-getTextWidths-获得每个字符的宽度"><a href="#3-Paint-getTextWidths-获得每个字符的宽度" class="headerlink" title="3. Paint.getTextWidths(获得每个字符的宽度)"></a>3. Paint.getTextWidths(获得每个字符的宽度)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">float</span> width = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> len = str.length();  </span><br><span class="line">Paint paint = <span class="keyword">new</span> Paint();</span><br><span class="line"><span class="keyword">float</span>[] widths = <span class="keyword">new</span> <span class="keyword">float</span>[len];  </span><br><span class="line">paint.getTextWidths(str, widths);  </span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;  </span><br><span class="line">     width += widths[i];  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h4 id="4-通过Paint-FontMetrics-or-Paint-FontMetricsInt来获取高度"><a href="#4-通过Paint-FontMetrics-or-Paint-FontMetricsInt来获取高度" class="headerlink" title="4. 通过Paint.FontMetrics or Paint.FontMetricsInt来获取高度"></a>4. 通过Paint.FontMetrics or Paint.FontMetricsInt来获取高度</h4><p>这两者的含义相同，只不过精度不同，一个float、一个int。关于<code>Paint.FontMetrics</code>，可以参考<a href="http://mikewang.blog.51cto.com/3826268/871765" target="_blank" rel="external">这里</a>。</p>

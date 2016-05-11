@@ -67,7 +67,7 @@
 基础知识1、所有的Touch事件都会被封装成MotionEvent对象，该对象代表了Touch事件的坐标、动作等基本信息。2、一般情况下，每一个Touch事件，总是以ACTION_DOWN事件开始，中间穿插着一些ACTION_MOVE事件（取决于是否有手势的移动），然后以ACTION_UP事件结束，之">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png">
-<meta property="og:updated_time" content="2016-05-09T05:52:26.000Z">
+<meta property="og:updated_time" content="2016-05-11T12:39:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android事件分发机制">
 <meta name="twitter:description" content="最近做需求时，对Android的事件分发机制产生了一些困惑，所以周末详细学习了一下，现总结如下：
@@ -323,6 +323,7 @@
 </ol>
 <p>4、一般情况下，处理View事件时，我们会给View注册OnTouchListener、OnClickListener等事件监听器，我们注意到onTouch回调方法会有布尔返回值，而onClick回调方法则返回void。经测试发现，如果onTouch返回false，那么才会回调onClick方法，若返回true，则不会回调Click事件。</p>
 <p>好了，熟悉这些基本用法，应付一般的Coding就没问题了。不过作为有追求的猿们，我们要从源码层面揭开事件分发机制的神秘面纱。</p>
+<a id="more"></a>
 <h2 id="事件分发层级关系"><a href="#事件分发层级关系" class="headerlink" title="事件分发层级关系"></a>事件分发层级关系</h2><p>Touch事件首先会被传递给当前的Activity，接着由Activity向下传递给ViewGroup1，然后是ViewGroup2， … ，最后传递给目标View。若目标View没有消费该Touch事件，那么事件又会向上回传，直到某个ViewGroup消费了该事件，或者没有ViewGroup消费事件，那么最终Touch事件会回到当前Activity，触发Activity的onTouchEvent方法。</p>
 <p>在一系列Touch事件中，<code>ACTION_DOWN</code>是比较特殊的一个，若<code>ACTION_DOWN</code>事件没有被消费，则说明Touch事件没有找到目标View，那么后续的Touch事件不会继续下发，在Activity层就停止了。如下所示：<br><code>ACTION_DOWN</code>没有被目标View消费的情况下：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png" alt="目标View没有消费ACTION_DOWN事件"></p>
 <p><code>ACTION_DOWN</code>被目标View消费的情况下：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png" alt="目标View消费ACTION_DOWN事件"></p>
