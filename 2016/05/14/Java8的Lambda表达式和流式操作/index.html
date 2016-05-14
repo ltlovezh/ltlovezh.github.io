@@ -1,0 +1,845 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Java8,Lambda," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="Java8在2014年就已经发布了，但是直到Android N宣布支持Java8，我才开始关注Java8的一些新特性。本篇主要介绍Java8中的Lambda表达式相关的特性。
+Lambda和函数接口不像Groovy、Scala和Kotlin等语言，一开始就支持Lambda表达式。在Java8之前，Java一直是使用匿名内部类实现类似功能。所以如果要在Java中实现Lambda，需要借助于函数式接口">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java8的Lambda表达式和流式操作">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/05/14/Java8的Lambda表达式和流式操作/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="Java8在2014年就已经发布了，但是直到Android N宣布支持Java8，我才开始关注Java8的一些新特性。本篇主要介绍Java8中的Lambda表达式相关的特性。
+Lambda和函数接口不像Groovy、Scala和Kotlin等语言，一开始就支持Lambda表达式。在Java8之前，Java一直是使用匿名内部类实现类似功能。所以如果要在Java中实现Lambda，需要借助于函数式接口">
+<meta property="og:updated_time" content="2016-05-14T09:18:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java8的Lambda表达式和流式操作">
+<meta name="twitter:description" content="Java8在2014年就已经发布了，但是直到Android N宣布支持Java8，我才开始关注Java8的一些新特性。本篇主要介绍Java8中的Lambda表达式相关的特性。
+Lambda和函数接口不像Groovy、Scala和Kotlin等语言，一开始就支持Lambda表达式。在Java8之前，Java一直是使用匿名内部类实现类似功能。所以如果要在Java中实现Lambda，需要借助于函数式接口">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6226090551544907000,
+      author: 'leon'
+    }
+  };
+</script>
+
+  <title> Java8的Lambda表达式和流式操作 | 风之谷 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">风之谷</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Java8的Lambda表达式和流式操作
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-14T17:16:41+08:00" content="2016-05-14">
+              2016-05-14
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/14/Java8的Lambda表达式和流式操作/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/14/Java8的Lambda表达式和流式操作/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/05/14/Java8的Lambda表达式和流式操作/" class="leancloud_visitors" data-flag-title="Java8的Lambda表达式和流式操作">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Java8在2014年就已经发布了，但是直到Android N宣布支持Java8，我才开始关注Java8的一些新特性。本篇主要介绍Java8中的Lambda表达式相关的特性。</p>
+<h2 id="Lambda和函数接口"><a href="#Lambda和函数接口" class="headerlink" title="Lambda和函数接口"></a>Lambda和函数接口</h2><p>不像<code>Groovy</code>、<code>Scala</code>和<code>Kotlin</code>等语言，一开始就支持Lambda表达式。在Java8之前，Java一直是使用匿名内部类实现类似功能。所以如果要在Java中实现Lambda，需要借助于函数式接口（Functional Interface)。<br>所谓函数接口，就是只包含一个方法的接口（排除默认方法和静态方法） 。一般情况下，函数接口使用Java8新提供的注解<code>@FunctionalInterface</code>进行修饰，防止开发者往函数接口中添加更多的方法。</p>
+<p>Lambda表达式让我们能够将函数作为方法参数，或者将代码作为数据对待。能够简化冗余代码，增加可读性。在Java8中，Lambda表达式主要由参数列表、分隔符<code>-&gt;</code>和方法体三部分构成，其格式如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(parameters) -&gt; expression</span><br><span class="line"></span><br><span class="line">(parameters) -&gt; &#123; statements; &#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中，前者表示方法体为表达式，即该表达式的值就是Lambda的返回值；后者表示方法体是代码块，需要通过return关键字明确指定返回值（返回值为void的除外）。<br>根据以往经验，<code>Runnable</code>是最明显的函数接口。下面我们分别通过匿名内部类和Lambda来创建一个线程，如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//匿名内部类</span></span><br><span class="line"><span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                System.out.println(<span class="string">"匿名内部类"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;).start();</span><br><span class="line"></span><br><span class="line"><span class="comment">//Lambda表达式</span></span><br><span class="line"><span class="keyword">new</span> Thread(() -&gt; System.out.println(<span class="string">"Lambda"</span>)).start();</span><br></pre></td></tr></table></figure></p>
+<p>因为<code>Runnable.run</code>方法没有参数，所以参数列表为<code>()</code>。可见，其实Lambda表达式就是以简化方式实现了函数式接口中的唯一方法。</p>
+<p>因为只有当方法参数是函数式接口时，我们才能使用Lambda。所以Java8在java.util.function包中为我们增加了一些通用的函数式接口。这里仅列出常用的几个：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//默认方法</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Function</code>函数式接口提供了apply方法，接收T类型参数，返回R类型值。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Predicate</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">test</span><span class="params">(T t)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//默认方法</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line">``` </span><br><span class="line">`Predicate`函数式接口提供了test方法，接收T类型参数，返回布尔值，通常在过滤数据的时候使用。</span><br><span class="line"></span><br><span class="line">``` java</span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Supplier</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">T <span class="title">get</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Supplier</code>函数式接口提供了get方法，无参数，返回T类型值，通常在创建类实例的时候使用。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Consumer</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">accept</span><span class="params">(T t)</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//默认方法</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>Consumer</code>函数式接口，接收T类型参数，无返回值。</p>
+<h2 id="流式操作（Stream）"><a href="#流式操作（Stream）" class="headerlink" title="流式操作（Stream）"></a>流式操作（Stream）</h2><p>Java8在java.util.stream包中，为集合引入了流式操作（Stream）。该操作结合Lambda，可以实现对集合（Collection）的并行处理和函数式操作。</p>
+<p>这里要明确Stream和Collection集合的区别：Collection是一种静态数据结构，存储在内存中；而Stream仅仅代表着数据流，没有数据结构，是面向CPU计算的。</p>
+<h3 id="函数式操作"><a href="#函数式操作" class="headerlink" title="函数式操作"></a>函数式操作</h3><p>根据流式操作的返回值，可以将流式操作划分为<code>中间操作</code>和<code>最终操作</code>。中间操作返回流本身，这样就可以将多个操作依次串联起来。而最终操作则返回结果值。而根据流的并发性，又可以将流分为串行和并行两种。下面分别介绍几种流式操作。</p>
+<h4 id="中间操作"><a href="#中间操作" class="headerlink" title="中间操作"></a>中间操作</h4><p>中间操作返回流本身，可以促成链式代码结构，几种常见中间操作的定义如下所示：</p>
+<ul>
+<li><p>过滤</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//过滤操作，根据函数的返回值，决定是否包含集合元素</span></span><br><span class="line"><span class="function">Stream&lt;T&gt; <span class="title">filter</span><span class="params">(Predicate&lt;? <span class="keyword">super</span> T&gt; predicate)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>排序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//根据自然顺序对集合元素进行排序</span></span><br><span class="line"><span class="function">Stream&lt;T&gt; <span class="title">sorted</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//根据Comparator定义的排序规则进行排序</span></span><br><span class="line"><span class="function">Stream&lt;T&gt; <span class="title">sorted</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> T&gt; comparator)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>元素映射</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//把T类型输入值，映射到R类型返回值</span></span><br><span class="line">&lt;R&gt; <span class="function">Stream&lt;R&gt; <span class="title">map</span><span class="params">(Function&lt;? <span class="keyword">super</span> T, ? extends R&gt; mapper)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>可见，这些中间操作的方法参数都是我们上面介绍的函数式接口，所以我们可以用Lambda表达式作为实参进行调用。最后，我们利用上面的流式操作对集合元素进行处理：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">6</span>, <span class="number">5</span>, <span class="number">4</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">1</span>, <span class="number">4</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">list.stream()</span><br><span class="line">    .distinct() <span class="comment">//去重</span></span><br><span class="line">    .sorted() <span class="comment">//默认排序</span></span><br><span class="line">    .filter((it) -&gt; it % <span class="number">2</span> == <span class="number">0</span>) <span class="comment">//找出偶数</span></span><br><span class="line">    .map((it) -&gt; it * <span class="number">2</span>) <span class="comment">//把元素都乘以2</span></span><br><span class="line">    .forEach((it) -&gt; System.out.println(it)); <span class="comment">//遍历最终元素</span></span><br><span class="line">    </span><br><span class="line">输出：</span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="number">8</span></span><br><span class="line"><span class="number">12</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="最终操作"><a href="#最终操作" class="headerlink" title="最终操作"></a>最终操作</h4><p>最终操作是流式操作的最后一步，基本上就是提取上述操作的结果。</p>
+<ul>
+<li><p>对结果遍历</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//通过action接口实例，对元素进行遍历</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">forEach</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>把结果导出到数组</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object[] toArray();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取元素个数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">long</span> <span class="title">count</span><span class="params">()</span></span>;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>最终操作都比较简单，就不再举例了，可参见上面的示例。</p>
+<h3 id="串行和并行流"><a href="#串行和并行流" class="headerlink" title="串行和并行流"></a>串行和并行流</h3><p>串行流是在一个线程上对元素逐个遍历，可以通过stream.sequential()方法获取，而并行流则是在多个线程上同时执行，可以充分发挥多核CPU的优势，可以通过stream.parallel()方法获取。</p>
+<p>并行流的工作原理应当是把数据分割为几部分，然后交给多个线程去处理，最后再合并成最终的结果。类似于hadoop的MapReduce思想。</p>
+<p>下面通过示例程序，测试下两者的性能：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000000</span>; i++) &#123;</span><br><span class="line">        <span class="keyword">double</span> d = Math.random() * <span class="number">1000</span>;</span><br><span class="line">        list.add(d + <span class="string">""</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">long</span> start = System.nanoTime();</span><br><span class="line"><span class="comment">//并行流</span></span><br><span class="line">((Stream) list.stream().parallel()).sorted().count();</span><br><span class="line"><span class="comment">//串行流</span></span><br><span class="line"><span class="comment">//((Stream) list.stream().sequential()).sorted().count();</span></span><br><span class="line"><span class="keyword">long</span> end = System.nanoTime();</span><br><span class="line"><span class="keyword">long</span> ms = TimeUnit.NANOSECONDS.toMillis(end - start);</span><br><span class="line">System.out.println(ms + <span class="string">"ms"</span>);</span><br></pre></td></tr></table></figure></p>
+<p>上述代码分别对1000000个随机数进行排序，其中串行情况下大概需要1000ms，而并行情况下大概需要700ms。</p>
+<h2 id="Java8和Kotlin的Lambda表达式在语法上的区别"><a href="#Java8和Kotlin的Lambda表达式在语法上的区别" class="headerlink" title="Java8和Kotlin的Lambda表达式在语法上的区别"></a>Java8和Kotlin的Lambda表达式在语法上的区别</h2><p>Kotlin中的Lambda表达式可参考<a href="http://ltlovezh.com/2016/04/17/Kotlin%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%951/" target="_blank" rel="external">这里</a>。</p>
+<p>Java8中的Lambda没有大括号包裹，且不管有没有参数，参数列表都不能省略。<br>Kotlin中的Lambda外层有大括号包裹，在没有参数的情况下，可以省略参数列表，在只有一个参数的情况下，也可以省略参数列表，此时使用默认参数<code>it</code>表示该唯一参数。<br>在Kotlin中，Lambda表达式作为函数的最后一个参数时，可以写在参数列表外面，这点Java8并不支持。</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java8/" rel="tag">#Java8</a>
+          
+            <a href="/tags/Lambda/" rel="tag">#Lambda</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/11/Hexo/" rel="next" title="Hexo">
+                <i class="fa fa-chevron-left"></i> Hexo
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/05/14/Java8的Lambda表达式和流式操作/"
+     data-title="Java8的Lambda表达式和流式操作"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/05/14/Java8的Lambda表达式和流式操作/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/14/Java8的Lambda表达式和流式操作/"
+           data-title="Java8的Lambda表达式和流式操作" data-url="http://ltlovezh.github.io/2016/05/14/Java8的Lambda表达式和流式操作/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+               alt="leon" />
+          <p class="site-author-name" itemprop="name">leon</p>
+          <p class="site-description motion-element" itemprop="description">技术实践者</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">11</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/63230484/" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  douban
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">技术博文</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lambda和函数接口"><span class="nav-number">1.</span> <span class="nav-text">Lambda和函数接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#流式操作（Stream）"><span class="nav-number">2.</span> <span class="nav-text">流式操作（Stream）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#函数式操作"><span class="nav-number">2.1.</span> <span class="nav-text">函数式操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#中间操作"><span class="nav-number">2.1.1.</span> <span class="nav-text">中间操作</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最终操作"><span class="nav-number">2.1.2.</span> <span class="nav-text">最终操作</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#串行和并行流"><span class="nav-number">2.2.</span> <span class="nav-text">串行和并行流</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java8和Kotlin的Lambda表达式在语法上的区别"><span class="nav-number">3.</span> <span class="nav-text">Java8和Kotlin的Lambda表达式在语法上的区别</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+&nbsp;
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ltlovezh"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+</body>
+</html>
