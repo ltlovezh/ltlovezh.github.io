@@ -313,11 +313,8 @@
 
       
         
-          
-          Java8在2014年就已经发布了，但是直到Android N宣布支持Java8，我才开始关注Java8的一些新特性。本篇主要介绍Java8中的Lambda表达式相关的特性。
-Lambda和函数接口不像Groovy、Scala和Kotlin等语言，一开始就支持Lambda表达式。在Java8之前，J
-          ...
-
+          <p>Java8在2014年就已经发布了，但是直到Android N宣布支持Java8，我才开始关注Java8的一些新特性。本篇主要介绍Java8中的Lambda表达式相关的特性。</p>
+<h2 id="Lambda和函数接口"><a href="#Lambda和函数接口" class="headerlink" title="Lambda和函数接口"></a>Lambda和函数接口</h2><p>不像<code>Groovy</code>、<code>Scala</code>和<code>Kotlin</code>等语言，一开始就支持Lambda表达式。在Java8之前，Java一直是使用匿名内部类实现类似功能。所以如果要在Java中实现Lambda，需要借助于函数式接口（Functional Interface)。<br>所谓函数接口，就是只包含一个方法的接口（排除默认方法和静态方法） 。一般情况下，函数接口使用Java8新提供的注解<code>@FunctionalInterface</code>进行修饰，防止开发者往函数接口中添加更多的方法。</p>
           <div class="post-more-link text-center">
             <a class="btn" href="/2016/05/14/Java8的Lambda表达式和流式操作/#more" rel="contents">
               阅读全文 &raquo;
