@@ -62,8 +62,7 @@
 Bitmap到底占多大内存
 Bitmap复用的限制
 
-OK，开始之前先介绍下解码图片时的控制类BitmapFactory.Options。
-BitmapFactory.Options类解析Options是Bitma">
+OK，开始之前先介绍下解码图片时的控制类BitmapFactory.Options。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android Bitmap那些事">
 <meta property="og:url" content="http://ltlovezh.github.io/2016/05/31/Android-Bitmap那些事/index.html">
@@ -73,9 +72,8 @@ BitmapFactory.Options类解析Options是Bitma">
 Bitmap到底占多大内存
 Bitmap复用的限制
 
-OK，开始之前先介绍下解码图片时的控制类BitmapFactory.Options。
-BitmapFactory.Options类解析Options是Bitma">
-<meta property="og:updated_time" content="2016-05-31T12:31:36.000Z">
+OK，开始之前先介绍下解码图片时的控制类BitmapFactory.Options。">
+<meta property="og:updated_time" content="2016-05-31T12:37:03.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android Bitmap那些事">
 <meta name="twitter:description" content="在平时的开发中，Bitmap是我们接触最多的话题之一，因为它时不时地就来个OOM，让我们猝不及防。因此有必要来一次彻底的学习，搞清楚Bitmap的一些本质。本文主要想讲清楚两点内容：
@@ -83,8 +81,7 @@ BitmapFactory.Options类解析Options是Bitma">
 Bitmap到底占多大内存
 Bitmap复用的限制
 
-OK，开始之前先介绍下解码图片时的控制类BitmapFactory.Options。
-BitmapFactory.Options类解析Options是Bitma">
+OK，开始之前先介绍下解码图片时的控制类BitmapFactory.Options。">
 
 
 
@@ -332,6 +329,7 @@ BitmapFactory.Options类解析Options是Bitma">
 <li>Bitmap复用的限制</li>
 </ol>
 <p>OK，开始之前先介绍下解码图片时的控制类<code>BitmapFactory.Options</code>。</p>
+<a id="more"></a>
 <h2 id="BitmapFactory-Options类解析"><a href="#BitmapFactory-Options类解析" class="headerlink" title="BitmapFactory.Options类解析"></a>BitmapFactory.Options类解析</h2><p><code>Options</code>是<code>BitmapFactory</code>从输入源中decode Bitmap的控制参数，其主要属性可以参见源码，此处给出一些常用属性的用法。</p>
 <h3 id="inMutable"><a href="#inMutable" class="headerlink" title="inMutable"></a>inMutable</h3><p>若为true，则返回的Bitmap是可变的，可以作为Canvas的底层Bitmap使用。<br>若为false，则返回的Bitmap是不可变的，只能进行读操作。<br>如果要修改Bitmap，那就必须返回可变的bitmap，例如:修改某个像素的颜色值(setPixel)</p>
 <h3 id="inJustDecodeBounds、outWidth、outHeight"><a href="#inJustDecodeBounds、outWidth、outHeight" class="headerlink" title="inJustDecodeBounds、outWidth、outHeight"></a>inJustDecodeBounds、outWidth、outHeight</h3><p>获取Bitmap的宽度和高度最好的方式：<br>若inJustDecodeBounds为true，则不会把bitmap加载到内存(<strong>实际是在Native层解码了图片，但是没有生成Java层的Bitmap</strong>)，只是获取该bitmap的<strong>原始</strong>宽（outWidth）和高（outHeight）。例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line"><span class="comment">/* 这里返回的bmp是null */</span></span><br><span class="line">Bitmap bmp = BitmapFactory.decodeFile(path, options);</span><br><span class="line"><span class="keyword">int</span> width = options.outWidth;</span><br><span class="line"><span class="keyword">int</span> height = options.outHeight;</span><br></pre></td></tr></table></figure></p>
