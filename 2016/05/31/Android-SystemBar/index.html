@@ -1,0 +1,925 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,SystemBar," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="SystemBar是用来展示通知、表现设备状态和完成设备导航的屏幕区域。主要包括状态栏（1：status bar）和导航栏（2：navigation bar）。借用官方的图，如下所示，我们可以根据需要对SystemBar进行一些操作，满足自己的需求。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android SystemBar">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/05/31/Android-SystemBar/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="SystemBar是用来展示通知、表现设备状态和完成设备导航的屏幕区域。主要包括状态栏（1：status bar）和导航栏（2：navigation bar）。借用官方的图，如下所示，我们可以根据需要对SystemBar进行一些操作，满足自己的需求。">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%AE%98%E6%96%B9.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%B7%A1%E5%8C%96SystemBar.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%B2%A1%E6%9C%89%E6%B7%A1%E5%8C%96SystemBar.png">
+<meta property="og:updated_time" content="2016-05-31T13:08:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android SystemBar">
+<meta name="twitter:description" content="SystemBar是用来展示通知、表现设备状态和完成设备导航的屏幕区域。主要包括状态栏（1：status bar）和导航栏（2：navigation bar）。借用官方的图，如下所示，我们可以根据需要对SystemBar进行一些操作，满足自己的需求。">
+<meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%AE%98%E6%96%B9.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6226090551544907000,
+      author: 'leon'
+    }
+  };
+</script>
+
+  <title> Android SystemBar | 风之谷 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">风之谷</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android SystemBar
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-31T20:42:10+08:00" content="2016-05-31">
+              2016-05-31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/31/Android-SystemBar/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/31/Android-SystemBar/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/05/31/Android-SystemBar/" class="leancloud_visitors" data-flag-title="Android SystemBar">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>SystemBar是用来展示通知、表现设备状态和完成设备导航的屏幕区域。主要包括状态栏（1：status bar）和导航栏（2：navigation bar）。借用官方的图，如下所示，我们可以根据需要对SystemBar进行一些操作，满足自己的需求。<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%AE%98%E6%96%B9.png" alt="SystemBar"><br><a id="more"></a></p>
+<h3 id="淡化SystemBar-View-SYSTEM-UI-FLAG-LOW-PROFILE"><a href="#淡化SystemBar-View-SYSTEM-UI-FLAG-LOW-PROFILE" class="headerlink" title="淡化SystemBar (View.SYSTEM_UI_FLAG_LOW_PROFILE)"></a>淡化SystemBar (View.SYSTEM_UI_FLAG_LOW_PROFILE)</h3><p>从API14，即4.0开始，我们可以借助<code>View.SYSTEM_UI_FLAG_LOW_PROFILE</code>来淡化SystemBar，以突出内容区域。</p>
+<p>当你使用这个方法的时候，内容区域的大小并不会发生变化，只是系统栏的图标会收起来。一旦用户触摸状态栏或者是导航栏的时候，这两个系统栏就又都会完全显示（无透明度）。<br>这种方法的优势是SystemBar仍然可见，但是它们的细节被隐藏掉了，因此可以在不牺牲快捷访问系统栏的情况下创建一个沉浸式的体验。<br>设置代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);</span><br></pre></td></tr></table></figure></p>
+<p>如图所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%B7%A1%E5%8C%96SystemBar.png" width="300"></p>
+<p>一旦用户触摸到状态栏或者是系统栏，这个标签就会被清除，使系统栏重新显现（无透明度）。在标签被清除的情况下，如果你想重新淡化系统栏就必须重新设定这个标签。</p>
+<p>或者我们也可以通过代码直接清除该标志：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);</span><br></pre></td></tr></table></figure></p>
+<p>如图所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%B2%A1%E6%9C%89%E6%B7%A1%E5%8C%96SystemBar.png" width="300"><br><code>View.SYSTEM_UI_FLAG_VISIBLE</code>表示请求系统显示SystemBar.</p>
+<h3 id="隐藏SystemBar"><a href="#隐藏SystemBar" class="headerlink" title="隐藏SystemBar"></a>隐藏SystemBar</h3><p>在Api15及其之下，可以通过设置Window的Flag标志来达到全屏目的,一般两个标志位同时设置：<br><code>getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)</code></p>
+<ol>
+<li><p>WindowManager.LayoutParams.FLAG_FULLSCREEN</p>
+<blockquote>
+<p>设置全屏模式，隐藏窗口装饰。除了动态设置外，还可以在主题中设置windowFullscreen属性来达到全屏目的。</p>
+</blockquote>
+</li>
+<li><p>WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN</p>
+<blockquote>
+<p>设置了FLAG_LAYOUT_IN_SCREEN之后，可以拥有与启用FLAG_FULLSCREEN相同的屏幕区域。这个方法防止了状态栏隐藏和显示时，内容区域的大小变化。但是此时，状态栏应该是在压在内容区域之上，所以需要自己处理布局，防止状态栏遮盖重要的内容区域。</p>
+</blockquote>
+</li>
+</ol>
+<p>当你设置WindowManager标签之后（无论是通过Activity主题还是动态设置），这个标签都会一直生效直到你清除它。这点和View.setSystemUiVisibility设置有本质的区别。</p>
+<p>在Api16及其之上，可以通过View.setSystemUiVisibility来设置。该方法可以用来控制SystemBar的显示和隐藏，下面简单介绍下其可以设置的Flag：<br>最重要的两个Flag：</p>
+<ol>
+<li><p>View.SYSTEM_UI_FLAG_IMMERSIVE <code>Api19</code> (控制SYSTEM_UI_FLAG_HIDE_NAVIGATION flag是否能被用户交互行为所清除) </p>
+<blockquote>
+<p><strong>If this flag is not set, SYSTEM_UI_FLAG_HIDE_NAVIGATION will be force cleared by the system on any user interaction</strong>。如果没有设置该flag，那么任何用户交互行为都会清除SYSTEM_UI_FLAG_HIDE_NAVIGATION flag，从而导致导航栏重新显示出来。</p>
+<p>Since this flag is a modifier for SYSTEM_UI_FLAG_HIDE_NAVIGATION, it only has an effect when used in combination with that flag.</p>
+</blockquote>
+</li>
+<li><p>View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY <code>Api19</code>（控制SYSTEM_UI_FLAG_FULLSCREEN和SYSTEM_UI_FLAG_HIDE_NAVIGATION flag是否能被用户交互行为所清除）</p>
+<blockquote>
+<p><strong>If this flag is not set, SYSTEM_UI_FLAG_HIDE_NAVIGATION will be force cleared by the system on any user interaction, and SYSTEM_UI_FLAG_FULLSCREEN will be force-cleared by the system if the user swipes from the top of the screen</strong>.如果没有设置该flag，那么任何用户交互行为都会清除SYSTEM_UI_FLAG_HIDE_NAVIGATION flag，同时从边缘区域向内滑动则会清除SYSTEM_UI_FLAG_FULLSCREEN flag，从而导致状态栏和导航栏重新显示出来。</p>
+<p>When system bars are hidden in immersive mode, they can be revealed temporarily(临时显示) with system gestures, such as swiping from the top of the screen. These transient system bars will overlay app’s content, may have some degree of transparency, and will automatically hide after a short timeout.这种模式下的SystemBar，是半透明的，在显示出来后，隔一段时间会自动隐藏，不会清除SYSTEM_UI_FLAG_HIDE_NAVIGATION和SYSTEM_UI_FLAG_FULLSCREEN flag。</p>
+<p>Since this flag is a modifier for SYSTEM_UI_FLAG_FULLSCREEN and SYSTEM_UI_FLAG_HIDE_NAVIGATION, it only has an effect when used in combination with one or both of those flags.</p>
+</blockquote>
+</li>
+</ol>
+<ul>
+<li><p>若仅仅设置了<code>View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION</code>，那么用户点击内容区域的任何位置都会唤出SystemBar，清除SYSTEM_UI_FLAG_FULLSCREEN和SYSTEM_UI_FLAG_HIDE_NAVIGATION标志位。这不是真正的沉浸式，因为在这种全屏模式下，用户无法和内容区域进行交互。</p>
+</li>
+<li><p>若是设置了<code>View.SYSTEM_UI_FLAG_IMMERSIVE |  View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION</code>，那么用户只有在从边缘区域向内滑动时，才能让SystemBar显示。这算是沉浸式了，用户可以和内容区域直接交互了。只有特定的操作(从边缘区域向内滑动)，才会清除标志位，重新唤出SystemBar。</p>
+</li>
+<li><p>若是设置了<code>View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |  View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION</code>，那么唤出SystemBar的方式和<code>SYSTEM_UI_FLAG_IMMERSIVE</code>相同，只不过唤出的SystemBar是半透明的，淡化的SystemBar，并且不再会清除SYSTEM_UI_FLAG_FULLSCREEN和SYSTEM_UI_FLAG_HIDE_NAVIGATION标志位，在几秒后，SystemBar又会重新隐藏。这个算不算沉浸式那，算吧。</p>
+</li>
+</ul>
+<p>除了<code>SYSTEM_UI_FLAG_IMMERSIVE_STICKY</code>之外，其他两种模式在SystemBar的可见性发生改变时，都可以通过<code>View.OnSystemUiVisibilityChangeListener</code>监听器来获得通知。</p>
+<p>请注意，若带有<code>SYSTEM_UI_FLAG_IMMERSIVE_STICKY</code>标签，则不会触发任何的监听器，因为在这种模式下展示的SystemBar是处于暂时(transient)的状态。<br>实际使用中，需要根据具体需求，来选择三种不同的用户交互模式。</p>
+<p>其他的Flag如下所示：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Flag</th>
+<th style="text-align:left">Comment</th>
+<th style="text-align:center">API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">SYSTEM_UI_FLAG_VISIBLE</td>
+<td style="text-align:left">View已经设置SystemBar是可见的</td>
+<td style="text-align:center">14</td>
+</tr>
+<tr>
+<td style="text-align:center">SYSTEM_UI_FLAG_LOW_PROFILE</td>
+<td style="text-align:left">这种模式下，所有的SystemBar都会变淡，但不会隐藏。一旦用户触摸到了状态栏或者导航栏，这个标签就会被清除，使SystemBar重新显示出来。在标签被清除的情况下，如果你想重新淡化SystemBar，就必须重新设定它。</td>
+<td style="text-align:center">14</td>
+</tr>
+<tr>
+<td style="text-align:center">SYSTEM_UI_FLAG_HIDE_NAVIGATION</td>
+<td style="text-align:left">临时性的隐藏导航栏。因为导航栏是如此重要，因此最少的用户交互也会导致该标志和SYSTEM_UI_FLAG_FULLSCREEN标志被清除，相应的，状态栏和导航栏也会重新显示出来。</td>
+<td style="text-align:center">14</td>
+</tr>
+<tr>
+<td style="text-align:center">SYSTEM_UI_FLAG_FULLSCREEN</td>
+<td style="text-align:left">请求隐藏状态栏，若只设置了该标志位，没有设置SYSTEM_UI_FLAG_HIDE_NAVIGATION，那么用户可以和内容区域进行正常的交互。（除了从顶部边缘区域向内滑动时，会清除该标志位，同时重新显示状态栏），也正因为如此，我们需要提供更直观的方式，来让用户更方便地退出全屏模式（例如：点击屏幕区域，主动清除该标志位，以重新显示状态栏）。若同时设置了SYSTEM_UI_FLAG_HIDE_NAVIGATION，那么就以上面介绍的为准。</td>
+<td style="text-align:center">16</td>
+</tr>
+<tr>
+<td style="text-align:center">SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION</td>
+<td style="text-align:left">内容区域占据status bar的位置，但是status bar还是显示，并且覆盖在内容区域上面。</td>
+<td style="text-align:center">16</td>
+</tr>
+<tr>
+<td style="text-align:center">SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN</td>
+<td style="text-align:left">内容区域占据navigation bar的位置，但是navigation bar还是显示，并且覆盖在内容区域上面。</td>
+<td style="text-align:center">16</td>
+</tr>
+<tr>
+<td style="text-align:center">SYSTEM_UI_FLAG_LAYOUT_STABLE</td>
+<td style="text-align:left">一般和SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN、SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION 一起使用，提供稳定的SystemBar隐藏和显示。</td>
+<td style="text-align:center">16</td>
+</tr>
+<tr>
+<td style="text-align:center">SYSTEM_UI_FLAG_LIGHT_STATUS_BAR</td>
+<td style="text-align:left">Requests the status bar to draw in a mode that is compatible with light status bar backgrounds。要想该标志起作用，the window must request FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS but not FLAG_TRANSLUCENT_STATUS</td>
+<td style="text-align:center">23</td>
+</tr>
+</tbody>
+</table>
+<h4 id="关于WindowManager-LayoutParams-FLAG-FULLSCREEN和View-SYSTEM-UI-FLAG-FULLSCREEN"><a href="#关于WindowManager-LayoutParams-FLAG-FULLSCREEN和View-SYSTEM-UI-FLAG-FULLSCREEN" class="headerlink" title="关于WindowManager.LayoutParams.FLAG_FULLSCREEN和View.SYSTEM_UI_FLAG_FULLSCREEN"></a>关于WindowManager.LayoutParams.FLAG_FULLSCREEN和View.SYSTEM_UI_FLAG_FULLSCREEN</h4><p>两者达到的目标效果是一致的，都可以隐藏status bar，但存在着一些区别：</p>
+<ol>
+<li>FLAG_FULLSCREEN从Api1开始就有了，不存在版本兼容问题；而SYSTEM_UI_FLAG_FULLSCREEN则是从Api16开始才有的，存在着兼容问题。</li>
+<li>FLAG_FULLSCREEN是通过Window添加到对应Window的布局参数WindowManager.LayoutParams中；而SYSTEM_UI_FLAG_FULLSCREEN则是作用某个可见的View。</li>
+<li><strong>最重要的区别</strong>：FLAG_FULLSCREEN的作用是持久的，一经设置，永久有效（除非主动清除<code>clearFlags</code>）;而SYSTEM_UI_FLAG_FULLSCREEN则是临时性的，通过用户交互操作，可以直接清除标志。</li>
+<li>若设置FLAG_FULLSCREEN，需要单独处理ActionBar；而若ActionBar设置了Window.FEATURE_ACTION_BAR_OVERLAY，那么再设置SYSTEM_UI_FLAG_FULLSCREEN时，会同时隐藏ActionBar。</li>
+</ol>
+<h3 id="关于View-setFitsSystemWindows和View-fitSystemWindows"><a href="#关于View-setFitsSystemWindows和View-fitSystemWindows" class="headerlink" title="关于View.setFitsSystemWindows和View.fitSystemWindows"></a>关于View.setFitsSystemWindows和View.fitSystemWindows</h3><p>当我们通过设置上述Flag，来让Content View延伸到SystemBar时，SystemBar会覆盖在Content View之上，这会带来一些不好的体验。</p>
+<p>Android本身给我们提供了解决方案，即调用<code>View.setFitsSystemWindows</code>或者设置属性<code>android:fitsSystemWindows=&quot;true&quot;</code>。这样，Android系统会调用<code>View.fitSystemWindows</code>来修复SystemBar覆盖Content View的情况。简单来说，<code>fitsSystemWindow=&quot;true&quot;</code> 会使得屏幕上的Content View位于状态栏下方与导航栏上方的区域。</p>
+<p>View.fitSystemWindows方法会接收Rect类型的参数，表示Current content insets of the window。fitSystemWindows方法最终会将Rect参数设置到当前View的Padding中，已达到调整Content View的内边距，保证Content View不会被SystemBar覆盖的目的。因此，我感觉Rect.top应该表示Status Bar的高度（不包含ActionBar的情况下），Rect.bottom应该对应Navigation Bar的高度，下面会验证下。<br>View.fitSystemWindows修改View Padding的核心代码如下所示，<br>View.fitSystemWindows -&gt; View.internalSetPadding：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//left、top、right和bottom即为Rect参数对应的值</span></span><br><span class="line"><span class="keyword">if</span> (mPaddingLeft != left) &#123;</span><br><span class="line">    mPaddingLeft = left;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">if</span> (mPaddingTop != top) &#123;</span><br><span class="line">    mPaddingTop = top;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">if</span> (mPaddingRight != right) &#123;</span><br><span class="line">    mPaddingRight = right;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">if</span> (mPaddingBottom != bottom) &#123;</span><br><span class="line">    mPaddingBottom = bottom;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>做了一下实验，主要是验证下fitSystemWindows方法中的Rect参数的取值和SystemBar高度的关系：<br>设置SystemBar的代码如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在mMyRelativeLayout中重写fitSystemWindows,查看Rect参数</span></span><br><span class="line">mMyRelativeLayout.setFitsSystemWindows(<span class="keyword">true</span>);</span><br><span class="line"><span class="comment">//设置Flag，控制SystemBar的可见性</span></span><br><span class="line">mMyRelativeLayout.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |  View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE)</span><br></pre></td></tr></table></figure></p>
+<p>获取状态栏和导航栏的高度：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取状态栏高度</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getStatusBarHeight</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">        Resources resources = context.getResources();</span><br><span class="line">        <span class="keyword">int</span> resourceId = resources.getIdentifier(<span class="string">"status_bar_height"</span>, <span class="string">"dimen"</span>, <span class="string">"android"</span>);</span><br><span class="line">        <span class="keyword">if</span> (resourceId &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            result = resources.getDimensionPixelSize(resourceId);</span><br><span class="line">        &#125;</span><br><span class="line">        Log.d(<span class="string">"leon"</span>, <span class="string">"getStatusBarHeight = "</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//获取导航栏的高度   </span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getNavigationBarHeight</span><span class="params">(Context context)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">        Resources resources = context.getResources();</span><br><span class="line">        <span class="keyword">int</span> resourceId = resources.getIdentifier(<span class="string">"navigation_bar_height"</span>, <span class="string">"dimen"</span>, <span class="string">"android"</span>);</span><br><span class="line">        <span class="keyword">if</span> (resourceId &gt; <span class="number">0</span>) &#123;</span><br><span class="line">            result = resources.getDimensionPixelSize(resourceId);</span><br><span class="line">        &#125;</span><br><span class="line">        Log.d(<span class="string">"leon"</span>, <span class="string">"getNavigationBarHeight = "</span> + result);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后，对比Rect的取值和SystemBar的高度：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//rect参数取值</span></span><br><span class="line">insets = Rect(<span class="number">0</span>, <span class="number">50</span> - <span class="number">0</span>, <span class="number">96</span>)</span><br><span class="line"><span class="comment">//status bar的高度</span></span><br><span class="line">getStatusBarHeight = <span class="number">50</span></span><br><span class="line"><span class="comment">//navigation bar的高度</span></span><br><span class="line">getNavigationBarHeight = <span class="number">96</span></span><br><span class="line"><span class="comment">//修改后的mMyRelativeLayout的topPadding</span></span><br><span class="line">topPadding = <span class="number">50</span></span><br><span class="line"><span class="comment">//修改后的mMyRelativeLayout的bottomPadding</span></span><br><span class="line">bottomPadding = <span class="number">96</span></span><br></pre></td></tr></table></figure></p>
+<p>从上述结果对比来看，验证了我们之前的猜测，参数Rect的取值和状态栏和导航栏的高度相关。</p>
+<p>此外，如果fitSystemWindows方法的默认行为无法满足我们的需求，那么我们可以重写该方法，参考Rect的取值，自己决定如何修改mMyRelativeLayout的的padding.</p>
+<hr>
+<p>从Api20开始，fitSystemWindows方法被废弃了，提供了新的方法dispatchApplyWindowInsets(WindowInsets)、 onApplyWindowInsets(WindowInsets)  和setOnApplyWindowInsetsListener(android.view.View.OnApplyWindowInsetsListener)来实现类似功能，这部分后续再看下吧。</p>
+<h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h3><ol>
+<li><a href="http://hukai.me/android-training-course-in-chinese/ui/system-ui/index.html" target="_blank" rel="external">android-training-course-in-chinese之管理系统UI</a></li>
+<li><a href="http://developer.android.com/intl/zh-cn/reference/android/view/View.html#fitSystemWindows(android.graphics.Rect" target="_blank" rel="external">官方文档</a>)</li>
+<li><a href="http://www.cnblogs.com/zhengxt/p/3536905.html" target="_blank" rel="external">透明状态栏和透明导航栏</a></li>
+<li><a href="http://www.cnblogs.com/zhengxt/p/3508485.html" target="_blank" rel="external">沉浸模式</a></li>
+</ol>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/SystemBar/" rel="tag">#SystemBar</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/31/Android-Bitmap那些事/" rel="next" title="Android Bitmap那些事">
+                <i class="fa fa-chevron-left"></i> Android Bitmap那些事
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/05/31/Android-SystemBar/"
+     data-title="Android SystemBar"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/05/31/Android-SystemBar/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/31/Android-SystemBar/"
+           data-title="Android SystemBar" data-url="http://ltlovezh.github.io/2016/05/31/Android-SystemBar/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+               alt="leon" />
+          <p class="site-author-name" itemprop="name">leon</p>
+          <p class="site-description motion-element" itemprop="description">技术实践者</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/63230484/" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  douban
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">技术博文</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#淡化SystemBar-View-SYSTEM-UI-FLAG-LOW-PROFILE"><span class="nav-number">1.</span> <span class="nav-text">淡化SystemBar (View.SYSTEM_UI_FLAG_LOW_PROFILE)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#隐藏SystemBar"><span class="nav-number">2.</span> <span class="nav-text">隐藏SystemBar</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#关于WindowManager-LayoutParams-FLAG-FULLSCREEN和View-SYSTEM-UI-FLAG-FULLSCREEN"><span class="nav-number">2.1.</span> <span class="nav-text">关于WindowManager.LayoutParams.FLAG_FULLSCREEN和View.SYSTEM_UI_FLAG_FULLSCREEN</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于View-setFitsSystemWindows和View-fitSystemWindows"><span class="nav-number">3.</span> <span class="nav-text">关于View.setFitsSystemWindows和View.fitSystemWindows</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+&nbsp;
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ltlovezh"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+</body>
+</html>
