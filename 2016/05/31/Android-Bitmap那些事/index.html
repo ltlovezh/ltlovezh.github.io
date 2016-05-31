@@ -1,0 +1,933 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,Bitmap," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="在平时的开发中，Bitmap是我们接触最多的话题之一，因为它时不时地就来个OOM，让我们猝不及防。因此有必要来一次彻底的学习，搞清楚Bitmap的一些本质。本文主要想讲清楚两点内容：
+
+Bitmap到底占多大内存
+Bitmap复用的限制
+
+OK，开始之前先介绍下解码图片时的控制类BitmapFactory.Options。
+BitmapFactory.Options类解析Options是Bitma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android Bitmap那些事">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/05/31/Android-Bitmap那些事/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="在平时的开发中，Bitmap是我们接触最多的话题之一，因为它时不时地就来个OOM，让我们猝不及防。因此有必要来一次彻底的学习，搞清楚Bitmap的一些本质。本文主要想讲清楚两点内容：
+
+Bitmap到底占多大内存
+Bitmap复用的限制
+
+OK，开始之前先介绍下解码图片时的控制类BitmapFactory.Options。
+BitmapFactory.Options类解析Options是Bitma">
+<meta property="og:updated_time" content="2016-05-31T12:31:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android Bitmap那些事">
+<meta name="twitter:description" content="在平时的开发中，Bitmap是我们接触最多的话题之一，因为它时不时地就来个OOM，让我们猝不及防。因此有必要来一次彻底的学习，搞清楚Bitmap的一些本质。本文主要想讲清楚两点内容：
+
+Bitmap到底占多大内存
+Bitmap复用的限制
+
+OK，开始之前先介绍下解码图片时的控制类BitmapFactory.Options。
+BitmapFactory.Options类解析Options是Bitma">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6226090551544907000,
+      author: 'leon'
+    }
+  };
+</script>
+
+  <title> Android Bitmap那些事 | 风之谷 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">风之谷</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android Bitmap那些事
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-31T17:45:22+08:00" content="2016-05-31">
+              2016-05-31
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/05/31/Android-Bitmap那些事/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/31/Android-Bitmap那些事/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/05/31/Android-Bitmap那些事/" class="leancloud_visitors" data-flag-title="Android Bitmap那些事">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在平时的开发中，Bitmap是我们接触最多的话题之一，因为它时不时地就来个OOM，让我们猝不及防。因此有必要来一次彻底的学习，搞清楚Bitmap的一些本质。<br>本文主要想讲清楚两点内容：</p>
+<ol>
+<li>Bitmap到底占多大内存</li>
+<li>Bitmap复用的限制</li>
+</ol>
+<p>OK，开始之前先介绍下解码图片时的控制类<code>BitmapFactory.Options</code>。</p>
+<h2 id="BitmapFactory-Options类解析"><a href="#BitmapFactory-Options类解析" class="headerlink" title="BitmapFactory.Options类解析"></a>BitmapFactory.Options类解析</h2><p><code>Options</code>是<code>BitmapFactory</code>从输入源中decode Bitmap的控制参数，其主要属性可以参见源码，此处给出一些常用属性的用法。</p>
+<h3 id="inMutable"><a href="#inMutable" class="headerlink" title="inMutable"></a>inMutable</h3><p>若为true，则返回的Bitmap是可变的，可以作为Canvas的底层Bitmap使用。<br>若为false，则返回的Bitmap是不可变的，只能进行读操作。<br>如果要修改Bitmap，那就必须返回可变的bitmap，例如:修改某个像素的颜色值(setPixel)</p>
+<h3 id="inJustDecodeBounds、outWidth、outHeight"><a href="#inJustDecodeBounds、outWidth、outHeight" class="headerlink" title="inJustDecodeBounds、outWidth、outHeight"></a>inJustDecodeBounds、outWidth、outHeight</h3><p>获取Bitmap的宽度和高度最好的方式：<br>若inJustDecodeBounds为true，则不会把bitmap加载到内存(<strong>实际是在Native层解码了图片，但是没有生成Java层的Bitmap</strong>)，只是获取该bitmap的<strong>原始</strong>宽（outWidth）和高（outHeight）。例如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">options.inJustDecodeBounds = <span class="keyword">true</span>;</span><br><span class="line"><span class="comment">/* 这里返回的bmp是null */</span></span><br><span class="line">Bitmap bmp = BitmapFactory.decodeFile(path, options);</span><br><span class="line"><span class="keyword">int</span> width = options.outWidth;</span><br><span class="line"><span class="keyword">int</span> height = options.outHeight;</span><br></pre></td></tr></table></figure></p>
+<p>这里若<code>inJustDecodeBounds</code>为true，则<code>outWidth</code>表示没有经过Scale的Bitmap的原始宽高（即我们通过图片编辑软件看到的宽高），否则则为加载到内存后，真实的Bitmap宽高（经过Scale之后的宽高）。</p>
+<h3 id="outMimeType"><a href="#outMimeType" class="headerlink" title="outMimeType"></a>outMimeType</h3><p>表示被加载图片的格式，例如：若加载png格式的图片，则为<br><code>image/png</code>;若加载jpg格式的图片，则为<code>image/jpeg</code>。</p>
+<h3 id="inPurgeable、inInputShareable"><a href="#inPurgeable、inInputShareable" class="headerlink" title="inPurgeable、inInputShareable"></a>inPurgeable、inInputShareable</h3><p>从API21开始，这两个属性被废弃了。<br>在API19及以下，则表示以下含义：<br>若inPurgeable为true，则表示BitmapFactory创建的用于存储Bitmap Pixel的内存空间，可以在系统内存不足时被回收。</p>
+<p>当APP需要再次访问Bitmap的Pixel时（例如：绘制Bitmap或是调用getPixel)，系统会再次调用BitmapFactory decode方法重新生成Bitmap的Pixel数组。</p>
+<p>inInputShareable表示是否进行深拷贝，与inPurgeable结合使用，inPurgeable为false时，该参数无意义。<br>若为true，share a reference to the input data (inputstream, array, etc.) ，即浅拷贝。<br>若为false，must make a deep copy.即深拷贝。</p>
+<h3 id="inPreferredConfig"><a href="#inPreferredConfig" class="headerlink" title="inPreferredConfig"></a>inPreferredConfig</h3><p>表示一个像素需要多大的存储空间：<br>默认为ARGB_8888: 每个像素4字节. 共32位。<br>Alpha_8: 只保存透明度，共8位，1字节。<br>ARGB_4444: 共16位，2字节。<br>RGB_565:共16位，2字节，只存储RGB值。</p>
+<h3 id="inBitmap"><a href="#inBitmap" class="headerlink" title="inBitmap"></a>inBitmap</h3><p>Android在API11添加的属性，用于重用已有的Bitmap，这样可以减少内存的分配与回收，提高性能。但是使用该属性存在很多限制：<br>在API19及以上，存在两个限制条件：</p>
+<blockquote>
+<ol>
+<li>被复用的Bitmap必须是Mutable。违反此限制，不会抛出异常，且会返回新申请内存的Bitmap。</li>
+<li>被复用的Bitmap的<strong>内存大小</strong>（通过Bitmap.getAllocationByteCount方法获得，API19及以上才有）必须大于等于被加载的Bitmap的内存大小。违反此限制，将会导致复用失败，抛出异常IllegalArgumentException(Problem decoding into existing bitmap）</li>
+</ol>
+</blockquote>
+<p>在API11 ~ API19之间，还存在额外的限制：</p>
+<blockquote>
+<ol>
+<li>被复用的Bitmap的<strong>宽高</strong>必须等于被加载的Bitmap的<strong>原始宽高</strong>。（注意这里是指原始宽高，即没进行缩放之前的宽高）</li>
+<li>被加载Bitmap的Options.inSampleSize必须明确指定为1。</li>
+<li>被加载Bitmap的Options.inPreferredConfig字段设置无效，因为会被被复用的Bitmap的inPreferredConfig值所覆盖（不然，所占内存可能就不一样了）</li>
+</ol>
+</blockquote>
+<p>关于<code>inBitmap</code>属性，后面会进行详细的介绍，此处不再赘述。</p>
+<h3 id="inScaled、inDensity、inTargetDensity、inScreenDensity"><a href="#inScaled、inDensity、inTargetDensity、inScreenDensity" class="headerlink" title="inScaled、inDensity、inTargetDensity、inScreenDensity"></a>inScaled、inDensity、inTargetDensity、inScreenDensity</h3><p>这几个属性值控制了如何对Bitmap进行<code>缩放</code>,以及决定了bitmap的密度<code>density</code>。<br><code>inScaled</code>表示是否进行缩放:<br>若为true，且inDensity和inTargetDensity不为0，那么缩放因子等于(<strong>inTargetDensity/inDensity</strong>)，并且bitmap的density等于inTargetDensity。<br>若为false，则不会进行缩放，并且bitmap的density等于inDensity(不为0的前提下),否则就是系统默认密度（160）。</p>
+<p><code>inScaled</code>属性默认为true，<br>当从Drawable资源文件夹加载图片资源时（通过BitmapFactory.decodeResource方法加载），<code>inDensity</code>默认初始化为图片所在文件夹对应的密度，而<code>inTargetDensity</code>则初始化为当前系统密度。</p>
+<p>当从SD卡 or 二进制流加载图片资源时，这两个属性都默认为0（即不会对图片资源进行缩放），需要我们根据实际情况进行设置，一般把<code>inTargetDensity</code>设置为当前系统密度，<code>inDensity</code>则需要根据图片实际尺寸和需求进行设置了。</p>
+<h3 id="inSampleSize"><a href="#inSampleSize" class="headerlink" title="inSampleSize"></a>inSampleSize</h3><p>主要用于获取Bitmap的缩略图，例如：inSampleSize=2，那么bitmap的宽度和高度为原来尺寸的1/2。像素总数则为原来的1/4。Any value &lt;= 1 is treated the same as 1.<br>看了下代码，在Native层解码生成<code>SKBitmap</code>的像素数据时，会根据图片原始宽高除以inSampleSize，得到缩略图的宽高。</p>
+<h2 id="Bitmap的内存占用"><a href="#Bitmap的内存占用" class="headerlink" title="Bitmap的内存占用"></a>Bitmap的内存占用</h2><p>首先要明确一点，图片在内存和文件系统中的大小是两个不同的概念。这里我们主要考虑Bitmap占用内存的大小。（文件系统中的大小是单独的话题，后续会进行介绍）<br>决定Bitmap占用内存大小的关键因素有以下几点：</p>
+<ol>
+<li>图片的原始宽高（即我们在图片编辑软件中看到的宽高）</li>
+<li>解码图片时的Config配置（即每个像素占用几个字节）</li>
+<li>解码图片时的缩放因子（即<code>inTargetDensity/inDensity</code>）</li>
+</ol>
+<p>所以Bitmap的内存计算公式时<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">originWidth * originHeight * (inTargetDensity/inDensity) * (inTargetDensity/inDensity) * 每像素占用字节数</span><br></pre></td></tr></table></figure></p>
+<p>其实，Bitmap在API12提供了<code>getByteCount</code>方法获取占用内存,如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getByteCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//getHeight()表示Bitmap的宽度（单位px）</span></span><br><span class="line">    <span class="keyword">return</span> getRowBytes() * getHeight();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>其中getRowBytes()会调用到Native层处理，其实就是表示一行像素所占的内存大小，即<code>width * 每像素占用字节数</code>。</p>
+<p>在API19提供了<code>getAllocationByteCount</code>方法获取实际占用的内存，如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAllocationByteCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//mBuffer表示存储Bitmap像素数据的字节数组。</span></span><br><span class="line">    <span class="keyword">if</span> (mBuffer == <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> getByteCount();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> mBuffer.length;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>mBuffer.length</code>实际获取的就是用来存储Bitmap像素数据的字节数组的长度。（若是通过复用其他Bitmap来解码图片，那么这个字节数组存储新Bitmap的像素数据时，可能并没有用完）</p>
+<p>一般情况下，两者是相同的。但若是通过复用Bitmap来解码图片，那么前者表示新解码图片占用内存的大小（并非实际内存大小），后者表示被复用Bitmap真实占用的内存大小（即mBuffer的长度）。<br>来看个例子吧：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//首先以原尺寸加载图片a，这里图片a和图片b的尺寸相同</span></span><br><span class="line">BitmapFactory.Options options = <span class="keyword">new</span> BitmapFactory.Options();</span><br><span class="line">options.inMutable = <span class="keyword">true</span>;</span><br><span class="line">options.inDensity = <span class="number">160</span>;</span><br><span class="line">options.inTargetDensity = <span class="number">160</span>;</span><br><span class="line">Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.a, options);</span><br><span class="line">Log.i(TAG, <span class="string">"bitmap = "</span> + bitmap);</span><br><span class="line">Log.i(TAG, <span class="string">"bitmap.size = "</span> + bitmap.getByteCount());</span><br><span class="line">Log.i(TAG, <span class="string">"bitmap.allocSize = "</span> + bitmap.getAllocationByteCount());</span><br><span class="line"></span><br><span class="line"><span class="comment">//然后复用a图片，解码b图片。</span></span><br><span class="line">options.inBitmap = bitmap;</span><br><span class="line"><span class="comment">//注意这里解码得到的图片宽高为原始尺寸的一半</span></span><br><span class="line">options.inDensity = <span class="number">160</span>;</span><br><span class="line">options.inTargetDensity = <span class="number">80</span>;</span><br><span class="line">options.inMutable = <span class="keyword">true</span>;</span><br><span class="line">options.inSampleSize = <span class="number">1</span>;</span><br><span class="line">Bitmap bitmapAIO = BitmapFactory.decodeResource(getResources(), R.drawable.b, options);</span><br><span class="line">Log.i(TAG, <span class="string">"bitmapAIO = "</span> + bitmapAIO);</span><br><span class="line">Log.i(TAG, <span class="string">"bitmap.size = "</span> + bitmap.getByteCount());</span><br><span class="line">Log.i(TAG, <span class="string">"bitmap.allocSize = "</span> + bitmap.getAllocationByteCount());</span><br><span class="line">Log.i(TAG, <span class="string">"bitmapAIO.size = "</span> + bitmapAIO.getByteCount());</span><br><span class="line">Log.i(TAG, <span class="string">"bitmapAIO.allocSize = "</span> + bitmapAIO.getAllocationByteCount());</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">bitmap = android.graphics.Bitmap@<span class="number">9f</span>b5d09</span><br><span class="line">bitmap.size = <span class="number">8294400</span></span><br><span class="line">bitmap.allocSize = <span class="number">8294400</span></span><br><span class="line"></span><br><span class="line">bitmapAIO = android.graphics.Bitmap@<span class="number">9f</span>b5d09</span><br><span class="line">bitmap.size = <span class="number">2073600</span></span><br><span class="line">bitmap.allocSize = <span class="number">8294400</span></span><br><span class="line">bitmapAIO.size = <span class="number">2073600</span></span><br><span class="line">bitmapAIO.allocSize = <span class="number">8294400</span></span><br></pre></td></tr></table></figure></p>
+<p>从上述demo，可以得出：</p>
+<ol>
+<li>Bitmap复用成功了，因为bitmap和bitmapAIO是相同的对象。</li>
+<li>图片a占用内存8294400，图片b（宽和高各缩小一半）占用内存2073600，正好是图片a所占内存的1/4。</li>
+<li>getByteCount方法返回当前图片应当所占内存大小，getAllocationByteCount返回被复用Bitmap真实占用内存大小。</li>
+</ol>
+<h2 id="缩放因子和Bitmap复用限制的由来"><a href="#缩放因子和Bitmap复用限制的由来" class="headerlink" title="缩放因子和Bitmap复用限制的由来"></a>缩放因子和Bitmap复用限制的由来</h2><p>在上述计算Bitmap占用内存的公式中，有一个缩放因子，决定了对原始图片Scale多少倍。下面我们看看Android API18和API19两个版本是如何处理对原始图片的缩放操作的（其实就是处理inTargetDensity/inDensity）。同时也从源码层面上，验证下上文提及的不同Android版本对Bitmap复用限制的差异。</p>
+<p>因为通过<code>BitmapFactory</code>解码图片的方法很多，这里我们选择从Drawable文件夹解码的方法<code>decodeResource</code>来进行分析。</p>
+<h3 id="Android4-3-API18"><a href="#Android4-3-API18" class="headerlink" title="Android4.3 API18"></a>Android4.3 API18</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">decodeResource(Resources res, <span class="keyword">int</span> id, Options opts) &#123;</span><br><span class="line">    Bitmap bm = <span class="keyword">null</span>;</span><br><span class="line">    InputStream is = <span class="keyword">null</span>; </span><br><span class="line">    <span class="keyword">final</span> TypedValue value = <span class="keyword">new</span> TypedValue();</span><br><span class="line">    is = res.openRawResource(id, value);</span><br><span class="line">    <span class="comment">//关键的代码这里</span></span><br><span class="line">    bm = decodeResourceStream(res, value, is, <span class="keyword">null</span>, opts);</span><br><span class="line">    <span class="comment">//这里很重要，说明若是Bitmap复用失败，会抛出异常，并返回null值，所以在复用Bitmap时要特别留意。</span></span><br><span class="line">    <span class="keyword">if</span> (bm == <span class="keyword">null</span> &amp;&amp; opts != <span class="keyword">null</span> &amp;&amp; opts.inBitmap != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Problem decoding into existing bitmap"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> bm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>下面继续看<code>decodeResourceStream</code>方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">decodeResourceStream(Resources res, TypedValue value,</span><br><span class="line">            InputStream is, Rect pad, Options opts) &#123;</span><br><span class="line">    <span class="keyword">if</span> (opts == <span class="keyword">null</span>) &#123;</span><br><span class="line">        opts = <span class="keyword">new</span> Options();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//正常情况下，opts.inDensity会被赋值为图片所在Drawable文件表示的屏幕密度。</span></span><br><span class="line">    <span class="keyword">if</span> (opts.inDensity == <span class="number">0</span> &amp;&amp; value != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> density = value.density;<span class="comment">//图片所在Drawable文件夹决定了density</span></span><br><span class="line">        <span class="keyword">if</span> (density == TypedValue.DENSITY_DEFAULT) &#123;</span><br><span class="line">            opts.inDensity = DisplayMetrics.DENSITY_DEFAULT;<span class="comment">//特殊情况下，inDensity为默认值160</span></span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (density != TypedValue.DENSITY_NONE) &#123;</span><br><span class="line">            opts.inDensity = density;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//正常情况下，opts.inTargetDensity会被赋值为手机系统密度</span></span><br><span class="line">    <span class="keyword">if</span> (opts.inTargetDensity == <span class="number">0</span> &amp;&amp; res != <span class="keyword">null</span>) &#123;</span><br><span class="line">        opts.inTargetDensity = res.getDisplayMetrics().densityDpi;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//这里是关键代码，继续往下走       </span></span><br><span class="line">    <span class="keyword">return</span> decodeStream(is, pad, opts);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>下面继续看<code>decodeStream</code>方法（极度精简之后的）：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">boolean</span> finish = <span class="keyword">true</span>; </span><br><span class="line"><span class="comment">//若是没有复用已有Bitmap，则走这个逻辑，此时会在native层处理对图片的缩放</span></span><br><span class="line"><span class="keyword">if</span> (opts == <span class="keyword">null</span> || (opts.inScaled &amp;&amp; opts.inBitmap == <span class="keyword">null</span>)) &#123;</span><br><span class="line">    <span class="keyword">float</span> scale = <span class="number">1.0f</span>;</span><br><span class="line">    <span class="keyword">int</span> targetDensity = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span> (opts != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="keyword">final</span> <span class="keyword">int</span> density = opts.inDensity;</span><br><span class="line">        targetDensity = opts.inTargetDensity;</span><br><span class="line">        <span class="keyword">if</span> (density != <span class="number">0</span> &amp;&amp; targetDensity != <span class="number">0</span>) &#123;</span><br><span class="line">            scale = targetDensity / (<span class="keyword">float</span>) density;<span class="comment">//求出缩放因子</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//通过native方法解码图片，并在native层完成对图片的缩放</span></span><br><span class="line">    bm = nativeDecodeStream(is, tempStorage, outPadding, opts, <span class="keyword">true</span>, scale);</span><br><span class="line">    <span class="comment">//设置解码出的Bitmap的密度</span></span><br><span class="line">    <span class="keyword">if</span> (bm != <span class="keyword">null</span> &amp;&amp; targetDensity != <span class="number">0</span>) bm.setDensity(targetDensity);</span><br><span class="line"></span><br><span class="line">    finish = <span class="keyword">false</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">//若复用已有Bitmap来解码图片，那么就不支持在native层对图片进行缩放</span></span><br><span class="line">    bm = nativeDecodeStream(is, tempStorage, outPadding, opts);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这里很重要，说明若是Bitmap复用失败，会抛出异常，并返回null值，所以在复用Bitmap时要特别留意。</span></span><br><span class="line"><span class="keyword">if</span> (bm == <span class="keyword">null</span> &amp;&amp; opts != <span class="keyword">null</span> &amp;&amp; opts.inBitmap != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Problem decoding into existing bitmap"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="comment">//若没有在native层完成对图片的缩放，则会通过finishDecode方法在java层完成对图片的缩放（显然这种方式会重新分配内存）。</span></span><br><span class="line"><span class="keyword">return</span> finish ? finishDecode(bm, outPadding, opts) : bm;</span><br></pre></td></tr></table></figure></p>
+<p><code>decodeStream</code>方法很关键，从中可以获取几点关键信息：</p>
+<ol>
+<li>若是直接解码图片（不复用已有图片，即opts.inBitmap为null），那么通过native方法解码图片时，支持把缩放因子作为参数传递到native层，并且后续在java层直接返回了native层解码出来的Bitmap。<font color="#ff0000"><strong>说明在native层处理了对图片的缩放</strong>。</font></li>
+<li>若是通过复用已有Bitmap来解码图片，那么通过native方法解码图片时，就不支持传递缩放因子参数了，并且后续在java层，通过<code>finishDecode</code>方法完成了对图片的缩放。<font color="#ff0000"><strong>说明若复用已有Bitmap解码图片，则不支持在native层对图片进行缩放处理，需要在java层单独对图片进行缩放处理</strong>。</font><blockquote>
+<p>简单概括下：Android API18及之前的版本，不支持在native层同时使用Bitmap复用和进行缩放处理。（API18及之后是可以的，下面会介绍）</p>
+</blockquote>
+</li>
+</ol>
+<p>下面我们先看下，<code>finishDecode</code>方法是怎么在java层完成对Bitmap的缩放处理的，再看下native层的解码方法。<br>首先看下<code>finishDecode</code>方法，如下所示(精简之后)：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">finishDecode(Bitmap bm, Rect outPadding, Options opts) &#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> density = opts.inDensity;</span><br><span class="line">    <span class="keyword">if</span> (density == <span class="number">0</span>) &#123; <span class="comment">//检查参数是否合法</span></span><br><span class="line">        <span class="keyword">return</span> bm;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    bm.setDensity(density);</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> targetDensity = opts.inTargetDensity;</span><br><span class="line">    <span class="comment">//检查是否需要进行缩放处理</span></span><br><span class="line">    <span class="keyword">if</span> (targetDensity == <span class="number">0</span> || density == targetDensity || density == opts.inScreenDensity) &#123;</span><br><span class="line">            <span class="keyword">return</span> bm;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (opts.inScaled || isNinePatch) &#123;</span><br><span class="line">        <span class="keyword">float</span> scale = targetDensity / (<span class="keyword">float</span>) density;<span class="comment">//计算缩放因子</span></span><br><span class="line">        <span class="keyword">if</span> (scale != <span class="number">1.0f</span>) &#123;</span><br><span class="line">            <span class="keyword">final</span> Bitmap oldBitmap = bm;</span><br><span class="line">            <span class="comment">//这里很关键哈，根据缩放因子，在原图的基础上，直接创建了一个新的Bitmap,并且把原图给回收了。</span></span><br><span class="line">            bm = Bitmap.createScaledBitmap(oldBitmap,</span><br><span class="line">                        Math.max(<span class="number">1</span>, (<span class="keyword">int</span>) (bm.getWidth() * scale + <span class="number">0.5f</span>)),</span><br><span class="line">                        Math.max(<span class="number">1</span>, (<span class="keyword">int</span>) (bm.getHeight() * scale + <span class="number">0.5f</span>)), <span class="keyword">true</span>);</span><br><span class="line">            <span class="keyword">if</span> (bm != oldBitmap) oldBitmap.recycle();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//设置缩放后的Bitmap的密度</span></span><br><span class="line">        bm.setDensity(targetDensity);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> bm;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><code>finishDecode</code>方法很简单，就是根据缩放因子，在原来Bitmap的基础上，又新建了一个Bitmap，然后把原图回收了。这里新创建的Bitmap就是最终的Bitmap。这种方式会造成在java层重新分配内存，显然不是很好。所以在Android4.4之后，都是在native层完成对Bitmap的缩放处理的。（也就是Android4.4之后，同时支持复用已有Bitmap和在native层对原图进行缩放处理，后面进行介绍）。<br>下面看下native层的解码方法：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> jobject <span class="title">doDecode</span><span class="params">(JNIEnv* env, SkStream* stream, jobject padding,</span><br><span class="line">        jobject options, <span class="keyword">bool</span> allowPurgeable, <span class="keyword">bool</span> forcePurgeable = <span class="literal">false</span>,</span><br><span class="line">        <span class="keyword">bool</span> applyScale = <span class="literal">false</span>, <span class="keyword">float</span> scale = <span class="number">1.0f</span>)</span> </span>&#123;</span><br><span class="line"><span class="keyword">int</span> sampleSize = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">bool</span> isMutable = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">bool</span> willScale = applyScale &amp;&amp; scale != <span class="number">1.0f</span>;</span><br><span class="line"><span class="comment">//获取java类Options中的配置</span></span><br><span class="line">prefConfig = GraphicsJNI::getNativeBitmapConfig(env, jconfig);</span><br><span class="line">isMutable = env-&gt;GetBooleanField(options, gOptions_mutableFieldID);</span><br><span class="line"><span class="comment">//希望被复用的java层Bitmap</span></span><br><span class="line">javaBitmap = env-&gt;GetObjectField(options, gOptions_bitmapFieldID);</span><br><span class="line"><span class="comment">//可见，在native层不支持既进行缩放又进行Bitmap复用。</span></span><br><span class="line"><span class="keyword">if</span> (willScale &amp;&amp; javaBitmap != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> nullObjectReturn(<span class="string">"Cannot pre-scale a reused bitmap"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//获取图片解码器，png，jpeg等图片格式都有不同的实现类</span></span><br><span class="line">SkImageDecoder* decoder = SkImageDecoder::Factory(stream);</span><br><span class="line">decoder-&gt;setSampleSize(sampleSize);</span><br><span class="line"><span class="comment">//java堆内存分配器</span></span><br><span class="line"><span class="function">JavaPixelAllocator <span class="title">javaAllocator</span><span class="params">(env)</span></span>;</span><br><span class="line">SkBitmap* bitmap;</span><br><span class="line"><span class="keyword">bool</span> useExistingBitmap = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">if</span> (javaBitmap == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    bitmap = <span class="keyword">new</span> SkBitmap;<span class="comment">//若没有复用的Bitmap，则创建一个新的SkBitmap</span></span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (sampleSize != <span class="number">1</span>) &#123; <span class="comment">//可见sampleSize必须为1</span></span><br><span class="line">        <span class="keyword">return</span> nullObjectReturn(<span class="string">"SkImageDecoder: Cannot reuse bitmap with sampleSize != 1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//获取被复用的native层Bitmap</span></span><br><span class="line">    bitmap = (SkBitmap*) env-&gt;GetIntField(javaBitmap, gBitmap_nativeBitmapFieldID);</span><br><span class="line">    <span class="comment">// only reuse the provided bitmap if it is immutable</span></span><br><span class="line">    <span class="keyword">if</span> (!bitmap-&gt;isImmutable()) &#123; <span class="comment">//可见只有可变的bitmap才能被复用</span></span><br><span class="line">        useExistingBitmap = <span class="literal">true</span>;</span><br><span class="line">        <span class="comment">// options.config，会被被复用的bitmap的配置所替代</span></span><br><span class="line">        prefConfig = bitmap-&gt;getConfig();</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        ALOGW(<span class="string">"Unable to reuse an immutable bitmap as an image decoder target."</span>);</span><br><span class="line">        bitmap = <span class="keyword">new</span> SkBitmap;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">SkBitmap* decoded;</span><br><span class="line"><span class="keyword">if</span> (willScale) &#123; <span class="comment">//有缩放，说明没有bitmap复用，直接创建新的</span></span><br><span class="line">    decoded = <span class="keyword">new</span> SkBitmap;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    decoded = bitmap;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//解码得到原始尺寸的Bitmap</span></span><br><span class="line"><span class="keyword">if</span> (!decoder-&gt;decode(stream, decoded, prefConfig, decodeMode, javaBitmap != <span class="literal">NULL</span>)) &#123;</span><br><span class="line">    <span class="keyword">return</span> nullObjectReturn(<span class="string">"decoder-&gt;decode returned false"</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> scaledWidth = decoded-&gt;width();</span><br><span class="line"><span class="keyword">int</span> scaledHeight = decoded-&gt;height();</span><br><span class="line"><span class="comment">//计算缩放后的Bitmap的宽度和高度</span></span><br><span class="line"><span class="keyword">if</span> (willScale &amp;&amp; mode != SkImageDecoder::kDecodeBounds_Mode) &#123;</span><br><span class="line">    <span class="comment">//这里在计算缩放后的宽高时，有个精度问题</span></span><br><span class="line">    scaledWidth = <span class="keyword">int</span>(scaledWidth * scale + <span class="number">0.5f</span>);</span><br><span class="line">    scaledHeight = <span class="keyword">int</span>(scaledHeight * scale + <span class="number">0.5f</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// update options (if any)</span></span><br><span class="line"><span class="keyword">if</span> (options != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="comment">//这里主要是把Bitmap的宽度，高度和图片类型设置到java层的Options里面</span></span><br><span class="line">    env-&gt;SetIntField(options, gOptions_widthFieldID, scaledWidth);</span><br><span class="line">    env-&gt;SetIntField(options, gOptions_heightFieldID, scaledHeight);</span><br><span class="line">    env-&gt;SetObjectField(options, gOptions_mimeFieldID,getMimeTypeString(env, decoder-&gt;getFormat()));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// if we're in justBounds mode, return now (skip the java bitmap)</span></span><br><span class="line"><span class="comment">//可见若java层Options.inJustDecodeBounds为true，则就直接返回了，不在生成java层的bitmap</span></span><br><span class="line"><span class="keyword">if</span> (mode == SkImageDecoder::kDecodeBounds_Mode) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (willScale) &#123;</span><br><span class="line">    <span class="comment">//计算出缩放因子</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span> sx = scaledWidth / <span class="keyword">float</span>(decoded-&gt;width());</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span> sy = scaledHeight / <span class="keyword">float</span>(decoded-&gt;height());</span><br><span class="line">    SkBitmap::Config config = decoded-&gt;config();</span><br><span class="line">    <span class="keyword">switch</span> (config) &#123;</span><br><span class="line">        <span class="keyword">case</span> SkBitmap::kNo_Config:</span><br><span class="line">        <span class="keyword">case</span> SkBitmap::kIndex8_Config:</span><br><span class="line">        <span class="keyword">case</span> SkBitmap::kRLE_Index8_Config:</span><br><span class="line">            config = SkBitmap::kARGB_8888_Config;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//这里操作的时bitmap变量哈，设置缩放后的宽高</span></span><br><span class="line">        bitmap-&gt;setConfig(config, scaledWidth, scaledHeight);</span><br><span class="line">        bitmap-&gt;setIsOpaque(decoded-&gt;isOpaque());</span><br><span class="line">        <span class="comment">//根据新的宽高，重新分配存储像素数据的空间</span></span><br><span class="line">        <span class="keyword">if</span> (!bitmap-&gt;allocPixels(&amp;javaAllocator, <span class="literal">NULL</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> nullObjectReturn(<span class="string">"allocation failed for scaled bitmap"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        bitmap-&gt;eraseColor(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        SkPaint paint;</span><br><span class="line">        paint.setFilterBitmap(<span class="literal">true</span>);</span><br><span class="line">        <span class="comment">//这里把解码出来的原始尺寸的decoded Bitmap draw到缩放（sx, sy）倍后的bitmap上，最终完成了对原始图片的缩放</span></span><br><span class="line">        <span class="function">SkCanvas <span class="title">canvas</span><span class="params">(*bitmap)</span></span>;</span><br><span class="line">        canvas.scale(sx, sy);</span><br><span class="line">        canvas.drawBitmap(*decoded, <span class="number">0.0f</span>, <span class="number">0.0f</span>, &amp;paint);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//若复用了bitmap，那么返回被复用的java层bitmap（也就是说复用成功后，返回的Bitmap就是被复用的Bitmap，只不过底层的像素数据都发生了改变）</span></span><br><span class="line"><span class="keyword">if</span> (useExistingBitmap) &#123;</span><br><span class="line">    <span class="comment">// If a java bitmap was passed in for reuse, pass it back</span></span><br><span class="line">    <span class="keyword">return</span> javaBitmap;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// now create the java bitmap</span></span><br><span class="line"><span class="comment">//否则，根据缩放后的native层bitmap（SkBitmap）生成java层Bitmap并返回（这里是调用到了java层Bitmap的私有构造函数）</span></span><br><span class="line"><span class="keyword">return</span> GraphicsJNI::createBitmap(env, bitmap, javaAllocator.getStorageObj(),</span><br><span class="line">            isMutable, ninePatchChunk, layoutBounds, <span class="number">-1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>OK，通过上述代码，我们了解到以下几点信息：</p>
+<ol>
+<li>Android 4.3在native层不支持即复用已有Bitmap，又进行缩放。</li>
+<li>若缩放因子为1，那么在进行Bitmap复用时（假设满足复用条件），会直接在被复用Bitmap上进行解码操作（主要是修改被复用Bitmap的像素数据信息），同时返回到java层的就是被复用的Bitmap。（即如果被复用的Bitmap == 返回的被加载的Bitmap，那么说明复用成功了）。</li>
+<li>若缩放因子大于1，且没有Bitmap复用，那么首先会解码生成一个图片原始宽高的<code>SkBitmap</code>,然后在再根据缩放因子，通过绘制的方式，把原始宽高的Bitmap会绘制到经过Scale之后的<code>SkCanvas</code>上，以得到一个缩放后的<code>SkBitmap</code>，最后调用java层bitmap的构造方法，创建java层的Bitmap，然后返回到放大调用处。</li>
+</ol>
+<p>上面我们提出了几点在Android4.4之前复用Bitmap的限制，在<code>doDecode</code>方法中基本都得到了验证。唯独对<strong>宽高必须相等</strong>的限制没有见到。其实这个限制是在解码得到原始宽高的Bitmap时进行的，即上面代码中的<code>decoder-&gt;decode</code>方法中。这里的decoder解码器（SkImageDecoder是父类型）根据解码不同格式的图片，是不同的实现类对象。下面我们看一下<code>SkImageDecoder_libpng</code>类的实现（png格式的解码器）<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> SkPNGImageDecoder::onDecode(SkStream* sk_stream, SkBitmap* decodedBitmap,</span><br><span class="line">                                 Mode mode) &#123;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> sampleSize = <span class="keyword">this</span>-&gt;getSampleSize();</span><br><span class="line"><span class="comment">//origWidth和origHeight表示被解码图片的原始宽高</span></span><br><span class="line"><span class="function">SkScaledBitmapSampler <span class="title">sampler</span><span class="params">(origWidth, origHeight, sampleSize)</span></span>;</span><br><span class="line"><span class="comment">//decodedBitmap-&gt;getPexels() 尝试获取位图的像素缓冲区首地址，如果取出来为 NULL，说明这个bitmap是新创建的,因为new SkBitmap只创建对象，不分配保存像素的缓冲区，否则就说明这个是可以复用的位图。</span></span><br><span class="line">decodedBitmap-&gt;lockPixels();</span><br><span class="line"><span class="keyword">void</span>* rowptr = (<span class="keyword">void</span>*) decodedBitmap-&gt;getPixels();</span><br><span class="line"><span class="keyword">bool</span> reuseBitmap = (rowptr != <span class="literal">NULL</span>);</span><br><span class="line">decodedBitmap-&gt;unlockPixels();</span><br><span class="line"><span class="comment">//若是复用已有的位图，那么这里就会进行宽高必须相等的判断。</span></span><br><span class="line"><span class="keyword">if</span> (reuseBitmap &amp;&amp; (sampler.scaledWidth() != decodedBitmap-&gt;width() ||</span><br><span class="line">            sampler.scaledHeight() != decodedBitmap-&gt;height())) &#123;</span><br><span class="line">    <span class="comment">// Dimensions must match</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//若不是复用已有Bitmap，那么就需要设置SkBitmap的宽、高、config等配置信息。</span></span><br><span class="line"><span class="keyword">if</span> (!reuseBitmap) &#123;</span><br><span class="line">    decodedBitmap-&gt;setConfig(config, sampler.scaledWidth(),sampler.scaledHeight(), <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//若是Options.inJustDecodeBounds为true，那么到此就结束了，因为上面宽和高已经计算出来了。</span></span><br><span class="line"><span class="keyword">if</span> (SkImageDecoder::kDecodeBounds_Mode == mode) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//若不是复用已有Bitmap，则说明还没有存储像素数据的内存空间，因此这里需要进行内存分配</span></span><br><span class="line"><span class="keyword">if</span> (!reuseBitmap) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!<span class="keyword">this</span>-&gt;allocPixelRef(decodedBitmap,SkBitmap::kIndex8_Config == config ? colorTable : <span class="literal">NULL</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="comment">//后续代码应该就是真正去解码png格式图片，生成像素数据的核心逻辑了，这块暂时不进行介绍</span></span><br></pre></td></tr></table></figure></p>
+<p>上述代码就是解码png格式图片的关键代码，里面印证了复用Bitmap时，宽高必须相等的说法。</p>
+<p>通过上述代码的分析，我们可以有以下（反复强调）结论：</p>
+<blockquote>
+<ol>
+<li>若是直接解码图片（不复用已有图片，即opts.inBitmap为null），则是在naive层处理对原图的缩放操作。</li>
+<li>若是通过复用已有Bitmap来解码图片，则是在java层处理对原图的缩放操作（finishDecode方法）。</li>
+</ol>
+</blockquote>
+<h3 id="Android4-4-API19"><a href="#Android4-4-API19" class="headerlink" title="Android4.4 API19"></a>Android4.4 API19</h3><p>Android从API19开始，放宽了对Bitmap复用的限制。下面我们看下API19对Bitmap复用的两个限制是在哪里实现的，以及该版本是如何对原图进行缩放的。<br>从<code>decodeResource -&gt; decodeResourceStream</code>方法的实现和API18类似，这里不再赘述，差异点出现在<code>decodeStream</code>方法。如下所示(精简后)：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Bitmap <span class="title">decodeStream</span><span class="params">(InputStream is, Rect outPadding, Options opts)</span> </span>&#123;</span><br><span class="line"><span class="comment">//最终调用到native层进行解码</span></span><br><span class="line">Bitmap bm = decodeStreamInternal(is, outPadding, opts);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//这里很重要，说明若是Bitmap复用失败，会抛出异常，并返回null值，所以在复用Bitmap时要特别留意。</span></span><br><span class="line"><span class="keyword">if</span> (bm == <span class="keyword">null</span> &amp;&amp; opts != <span class="keyword">null</span> &amp;&amp; opts.inBitmap != <span class="keyword">null</span>) &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Problem decoding into existing bitmap"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//该方法做了finishDecode方法除了缩放Bitmap之外所有的事</span></span><br><span class="line">setDensityFromOptions(bm, opts);</span><br><span class="line"><span class="keyword">return</span> bm;</span><br></pre></td></tr></table></figure></p>
+<p>API19版本的decodeStream和API18相比，最明显的就是删除了Java层缩放Bitmap的逻辑（finishDecode方法），因此可以确定对Bitmap的缩放处理都是在native层处理的。下面我们继续看下native方法的实现（极度精简）：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> jobject <span class="title">doDecode</span><span class="params">(JNIEnv* env, SkStreamRewindable* stream, jobject padding,</span><br><span class="line">        jobject options, <span class="keyword">bool</span> allowPurgeable, <span class="keyword">bool</span> forcePurgeable = <span class="literal">false</span>)</span> </span>&#123;</span><br><span class="line">SkBitmap::Config prefConfig = SkBitmap::kARGB_8888_Config;<span class="comment">//默认conifg配置</span></span><br><span class="line"><span class="keyword">bool</span> isMutable = <span class="literal">false</span>;</span><br><span class="line"><span class="keyword">float</span> scale = <span class="number">1.0f</span>;</span><br><span class="line">jobject javaBitmap = <span class="literal">NULL</span>;</span><br><span class="line">sampleSize = env-&gt;GetIntField(options, gOptions_sampleSizeFieldID);</span><br><span class="line"><span class="keyword">if</span> (optionsJustBounds(env, options)) &#123;</span><br><span class="line">    mode = SkImageDecoder::kDecodeBounds_Mode;<span class="comment">//是否只获取图片的宽高</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (options != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    sampleSize = env-&gt;GetIntField(options, gOptions_sampleSizeFieldID);</span><br><span class="line">    <span class="keyword">if</span> (optionsJustBounds(env, options)) &#123;</span><br><span class="line">        mode = SkImageDecoder::kDecodeBounds_Mode;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// initialize these, in case we fail later on</span></span><br><span class="line">    env-&gt;SetIntField(options, gOptions_widthFieldID, <span class="number">-1</span>);</span><br><span class="line">    env-&gt;SetIntField(options, gOptions_heightFieldID, <span class="number">-1</span>);</span><br><span class="line">    env-&gt;SetObjectField(options, gOptions_mimeFieldID, <span class="number">0</span>);</span><br><span class="line">    <span class="comment">//获取一些java层Options的属性值</span></span><br><span class="line">    jobject jconfig = env-&gt;GetObjectField(options, gOptions_configFieldID);</span><br><span class="line">    prefConfig = GraphicsJNI::getNativeBitmapConfig(env, jconfig);</span><br><span class="line">    isMutable = env-&gt;GetBooleanField(options, gOptions_mutableFieldID);</span><br><span class="line">    <span class="comment">//获取被复用的java层bitmap</span></span><br><span class="line">    javaBitmap = env-&gt;GetObjectField(options, gOptions_bitmapFieldID);</span><br><span class="line">    <span class="comment">//若java层options.inScaled为true，则进行缩放处理</span></span><br><span class="line">    <span class="keyword">if</span> (env-&gt;GetBooleanField(options, gOptions_scaledFieldID)) &#123; </span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">int</span> density = env-&gt;GetIntField(options, gOptions_densityFieldID);</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">int</span> targetDensity = env-&gt;GetIntField(options, gOptions_targetDensityFieldID);</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">int</span> screenDensity = env-&gt;GetIntField(options, gOptions_screenDensityFieldID);</span><br><span class="line">        <span class="comment">//这里很关键，缩放因子是targetDensity / density</span></span><br><span class="line">        <span class="keyword">if</span> (density != <span class="number">0</span> &amp;&amp; targetDensity != <span class="number">0</span> &amp;&amp; density != screenDensity) &#123;</span><br><span class="line">                scale = (<span class="keyword">float</span>) targetDensity / density;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">bool</span> willScale = scale != <span class="number">1.0f</span>;</span><br><span class="line">SkImageDecoder* decoder = SkImageDecoder::Factory(stream);<span class="comment">//创建解码器</span></span><br><span class="line"><span class="comment">//为解码器设置一些属性</span></span><br><span class="line">decoder-&gt;setSampleSize(sampleSize);</span><br><span class="line"></span><br><span class="line">SkBitmap* outputBitmap = <span class="literal">NULL</span>;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span> existingBufferSize = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">if</span> (javaBitmap != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="comment">//获取被复用的native层Skbitmap</span></span><br><span class="line">    outputBitmap = (SkBitmap*) env-&gt;GetIntField(javaBitmap, gBitmap_nativeBitmapFieldID);</span><br><span class="line">    <span class="keyword">if</span> (outputBitmap-&gt;isImmutable()) &#123; <span class="comment">//API19还存在的限制，被复用的bitmap必须是可变的</span></span><br><span class="line">        ALOGW(<span class="string">"Unable to reuse an immutable bitmap as an image decoder target."</span>);</span><br><span class="line">        javaBitmap = <span class="literal">NULL</span>;</span><br><span class="line">        outputBitmap = <span class="literal">NULL</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">//获取被复用bitmap存储像素数据的缓冲区大小，即有多少内存可以被复用（作为后续判断是否可被复用的依据）。</span></span><br><span class="line">        existingBufferSize = GraphicsJNI::getBitmapAllocationByteCount </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//若没有可被复用的bitmap，那就直接创建一个。</span></span><br><span class="line">SkAutoTDelete&lt;SkBitmap&gt; adb(outputBitmap == <span class="literal">NULL</span> ? <span class="keyword">new</span> SkBitmap : <span class="literal">NULL</span>);</span><br><span class="line"><span class="keyword">if</span> (outputBitmap == <span class="literal">NULL</span>) outputBitmap = adb.get();</span><br><span class="line"><span class="comment">//Java堆像素内存分配器</span></span><br><span class="line"><span class="function">JavaPixelAllocator <span class="title">javaAllocator</span><span class="params">(env)</span></span>;</span><br><span class="line"><span class="comment">//循环复用的像素内存分配器(接收被复用Bitmap的像素缓冲区首地址和大小作为参数)</span></span><br><span class="line"><span class="function">RecyclingPixelAllocator <span class="title">recyclingAllocator</span><span class="params">(outputBitmap-&gt;pixelRef（）, existingBufferSize)</span></span>;</span><br><span class="line"><span class="comment">//带缩放检查的像素内存分配器</span></span><br><span class="line"><span class="function">ScaleCheckingAllocator <span class="title">scaleCheckingAllocator</span><span class="params">(scale, existingBufferSize)</span></span>;</span><br><span class="line"><span class="comment">//如果设置了Options.inBitmap就使用 RecyclingPixelAllocator，否则使用默认的JavaPixelAllocator</span></span><br><span class="line">SkBitmap::Allocator* outputAllocator = (javaBitmap != <span class="literal">NULL</span>) ? (SkBitmap::Allocator*)&amp;recyclingAllocator : (SkBitmap::Allocator*)&amp;javaAllocator;</span><br><span class="line"><span class="keyword">if</span> (decodeMode != SkImageDecoder::kDecodeBounds_Mode) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!willScale) &#123;</span><br><span class="line">        <span class="comment">//若不需要缩放处理，就是用上面的outputAllocator</span></span><br><span class="line">        decoder-&gt;setSkipWritingZeroes(outputAllocator == &amp;javaAllocator);</span><br><span class="line">        decoder-&gt;setAllocator(outputAllocator);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (javaBitmap != <span class="literal">NULL</span>) &#123; <span class="comment">//否则若复用bitmap，则使用scaleCheckingAllocator</span></span><br><span class="line">        decoder-&gt;setAllocator(&amp;scaleCheckingAllocator);</span><br><span class="line">    &#125;</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">SkBitmap decodingBitmap;</span><br><span class="line"><span class="comment">//解码图片decodingBitmap（这里的decodingBitmap只考虑了sampleSize，但是没有考虑缩放因子）</span></span><br><span class="line"><span class="keyword">if</span> (!decoder-&gt;decode(stream, &amp;decodingBitmap, prefConfig, decodeMode)) &#123;</span><br><span class="line">    <span class="keyword">return</span> nullObjectReturn(<span class="string">"decoder-&gt;decode returned false"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//此时解码出来的是图片的原始宽高（但是会考虑sampleSize）</span></span><br><span class="line"><span class="keyword">int</span> scaledWidth = decodingBitmap.width();</span><br><span class="line"><span class="keyword">int</span> scaledHeight = decodingBitmap.height();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (willScale &amp;&amp; mode != SkImageDecoder::kDecodeBounds_Mode) &#123;</span><br><span class="line">    <span class="comment">//计算出缩放后的宽度和高度</span></span><br><span class="line">    scaledWidth = <span class="keyword">int</span>(scaledWidth * scale + <span class="number">0.5f</span>);</span><br><span class="line">    scaledHeight = <span class="keyword">int</span>(scaledHeight * scale + <span class="number">0.5f</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//把最终的宽度/高度/图片格式信息更新到java层Options累里面</span></span><br><span class="line"><span class="keyword">if</span> (options != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    env-&gt;SetIntField(options, gOptions_widthFieldID, scaledWidth);</span><br><span class="line">    env-&gt;SetIntField(options, gOptions_heightFieldID, scaledHeight);</span><br><span class="line">    env-&gt;SetObjectField(options, gOptions_mimeFieldID,getMimeTypeString(env, decoder-&gt;getFormat()));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> <span class="keyword">if</span> (willScale) &#123; <span class="comment">//开始进行缩放处理了。</span></span><br><span class="line">    <span class="comment">//首先计算出在X和Y轴上的缩放倍数</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span> sx = scaledWidth / <span class="keyword">float</span>(decodingBitmap.width());</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span> sy = scaledHeight / <span class="keyword">float</span>(decodingBitmap.height());</span><br><span class="line">    SkBitmap::Config config = configForScaledOutput(decodingBitmap.config());</span><br><span class="line">    <span class="comment">//对最终生成的Bitmap设置配置信息（作为下面分配像素数据的依据哈）</span></span><br><span class="line">    outputBitmap-&gt;setConfig(config, scaledWidth, scaledHeight, <span class="number">0</span>,decodingBitmap.alphaType());</span><br><span class="line">    <span class="comment">//这里为最终的Bitmap分配像素数据</span></span><br><span class="line">    <span class="keyword">if</span> (!outputBitmap-&gt;allocPixels(outputAllocator, <span class="literal">NULL</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span> nullObjectReturn(<span class="string">"allocation failed for scaled bitmap"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//把之前解码出来的原始尺寸的decodingBitmap draw到放大(sx,sy)倍之后的canvas上，最终实现了对原图的缩放处理。</span></span><br><span class="line">    SkPaint paint;</span><br><span class="line">    paint.setFilterLevel(SkPaint::kLow_FilterLevel);</span><br><span class="line">    <span class="function">SkCanvas <span class="title">canvas</span><span class="params">(*outputBitmap)</span></span>;</span><br><span class="line">    canvas.scale(sx, sy);</span><br><span class="line">    canvas.drawBitmap(decodingBitmap, <span class="number">0.0f</span>, <span class="number">0.0f</span>, &amp;paint);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123; <span class="comment">//没有缩放处理，则直接把解码出来的decodingBitmap设置到最终的Bitmap（outputBitmap）中。</span></span><br><span class="line">    outputBitmap-&gt;swap(decodingBitmap);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//若复用了bitmap，那么返回被复用的java层bitmap（也就是说复用成功后，返回的Bitmap就是被复用的Bitmap，只不过底层的像素数据都发生了改变）</span></span><br><span class="line"><span class="keyword">if</span> (javaBitmap != <span class="literal">NULL</span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="comment">// If a java bitmap was passed in for reuse, pass it back</span></span><br><span class="line">    <span class="keyword">return</span> javaBitmap;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// now create the java bitmap 否则创建java层的bitmap，并返回。</span></span><br><span class="line"><span class="keyword">return</span> GraphicsJNI::createBitmap(env, outputBitmap, javaAllocator.getStorageObj(),bitmapCreateFlags, ninePatchChunk, layoutBounds, <span class="number">-1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从上述代码，我们可以有以下几点结论</p>
+<ol>
+<li>API19以上复用Bitmap时依然要求被复用的Bitmap必须可变的。</li>
+<li>native层是通过把原始bitmap重新draw到一个放大(sx,xy)倍的Bitmap上，来实现缩放处理的。</li>
+<li>相比API18，API19引入了两个不同策略的内存分配器：RecyclingPixelAllocator和ScaleCheckingAllocator，并在创建分配器实例时，将被复用位图的像素缓冲区大小传给了分配器实例，而Bitmap复用中的<strong>内存大小限制</strong>就在这两个Allocator里。同时根据上述代码逻辑可知：<blockquote>
+<ol>
+<li>若是复用Bitmap且缩放因为为1，那么使用RecyclingPixelAllocator进行内存分配。</li>
+<li>若是复用Bitmap且缩放因子不为1，那么使用ScaleCheckingAllocator进行内存分配。</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<p>下面我们看下这两个Allocator怎么进行bitmap复用限制的。</p>
+<p>首先看下在<code>RecyclingPixelAllocator</code>的实现。<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> RecyclingPixelAllocator : <span class="keyword">public</span> SkBitmap::Allocator &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    RecyclingPixelAllocator(SkPixelRef* pixelRef, <span class="keyword">unsigned</span> <span class="keyword">int</span> size)</span><br><span class="line">            : mPixelRef(pixelRef), mSize(size) &#123;</span><br><span class="line">        SkSafeRef(mPixelRef);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ~RecyclingPixelAllocator() &#123;</span><br><span class="line">        SkSafeUnref(mPixelRef);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//为指定bitmap分配像素缓冲区</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">allocPixelRef</span><span class="params">(SkBitmap* bitmap, SkColorTable* ctable)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//这里很关键哈，判断bitmap需要的像素缓冲区大小和被复用bitmap的像素缓冲区大小</span></span><br><span class="line">        <span class="keyword">if</span> (!bitmap-&gt;getSize64().is32() || bitmap-&gt;getSize() &gt; mSize) &#123;</span><br><span class="line">            ALOGW(<span class="string">"bitmap marked for reuse (%d bytes) can't fit new bitmap (%d bytes)"</span>,</span><br><span class="line">                    mSize, bitmap-&gt;getSize());</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        SkImageInfo bitmapInfo;</span><br><span class="line">        <span class="keyword">if</span> (!bitmap-&gt;asImageInfo(&amp;bitmapInfo)) &#123;</span><br><span class="line">            ALOGW(<span class="string">"unable to reuse a bitmap as the target has an unknown bitmap configuration"</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Create a new pixelref with the new ctable that wraps the previous pixelref</span></span><br><span class="line">        <span class="comment">//到了这里，说明可以进行bitmap的复用，因此把被复用bitmap的像素缓冲区直接赋值给需要分配像素缓冲区的bitmap，这样就达到了复用bitmap的目的</span></span><br><span class="line">        SkPixelRef* pr = <span class="keyword">new</span> AndroidPixelRef(*<span class="keyword">static_cast</span>&lt;AndroidPixelRef*&gt;(mPixelRef),</span><br><span class="line">                bitmapInfo, bitmap-&gt;rowBytes(), ctable);</span><br><span class="line"></span><br><span class="line">        bitmap-&gt;setPixelRef(pr)-&gt;unref();</span><br><span class="line">        <span class="comment">// since we're already allocated, we lockPixels right away</span></span><br><span class="line">        <span class="comment">// HeapAllocator/JavaPixelAllocator behaves this way too</span></span><br><span class="line">        bitmap-&gt;lockPixels();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    SkPixelRef* <span class="keyword">const</span> mPixelRef;<span class="comment">//被复用Bitmap的像素缓冲区</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> mSize;<span class="comment">//被复用Bitmap的像素缓冲区大小</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>从上述代码可知，API19是在为bitmap分配像素缓冲区时，判断是否可以复用已有bitmap的。若被复用bitmap的像素缓冲区大小大于等于需要为新bitmap分配的像素缓冲区大小，那么就可以复用，否则就不可以复用。</p>
+<p>同时还有很关键的一点结论：<strong>RecyclingPixelAllocator.allocPixelRef方法才是真正复用被复用Bitmap像素缓冲区的地方</strong>。</p>
+<p>然后，看下<code>ScaleCheckingAllocator</code>的实现.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> ScaleCheckingAllocator : <span class="keyword">public</span> SkBitmap::HeapAllocator &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    ScaleCheckingAllocator(<span class="keyword">float</span> scale, <span class="keyword">int</span> size)</span><br><span class="line">            : mScale(scale), mSize(size) &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">allocPixelRef</span><span class="params">(SkBitmap* bitmap, SkColorTable* ctable)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//这里根据bitmap的config/原始宽高/缩放因子计算出缩放后需要多大的像素缓冲区空间，若大于被复用Bitmap的像素缓冲区大小，则无法复用，否则可以被复用。</span></span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">int</span> bytesPerPixel = SkBitmap::ComputeBytesPerPixel(</span><br><span class="line">                configForScaledOutput(bitmap-&gt;config()));</span><br><span class="line">        <span class="comment">//计算出缩放后Bitmap需要占用多大内存</span></span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">int</span> requestedSize = bytesPerPixel * (<span class="keyword">int</span>)(bitmap-&gt;width() * mScale + <span class="number">0.5f</span>) * (<span class="keyword">int</span>)(bitmap-&gt;height() * mScale + <span class="number">0.5f</span>);</span><br><span class="line">        <span class="keyword">if</span> (requestedSize &gt; mSize) &#123;</span><br><span class="line">            ALOGW(<span class="string">"bitmap for alloc reuse (%d bytes) can't fit scaled bitmap (%d bytes)"</span>,</span><br><span class="line">                    mSize, requestedSize);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//真正分配像素缓冲区是在这里（但是这里分配的像素缓冲区没有考虑缩放因子且是申请的新的内存，真正的缩放处理是在BitmapFactory.doDecode方法中，该方法中处理缩放时，又会通过RecyclingPixelAllocator复用被复用bitmap的像素缓冲区）</span></span><br><span class="line">        <span class="keyword">return</span> SkBitmap::HeapAllocator::allocPixelRef(bitmap, ctable);</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">float</span> mScale;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">int</span> mSize;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p><code>ScaleCheckingAllocator.allocPixelRef</code>方法根据bitmap的config，原始宽高，缩放因子等因素，计算出缩放后需要多大的像素缓冲区空间，以此来判断是否可以复用。若可以复用，那么这里会解码出一个原始宽高的bitmap（真正分配了像素缓冲区），然后在BitmapFactory.doDecode方法中，处理对原图的缩放，此时RecyclingPixelAllocator类负责为缩放后的bitmap分配像素缓冲区，也就达到了bitmap复用的目的（也就是我们上面说的<strong><em>RecyclingPixelAllocator.allocPixelRef方法才是真正复用被复用Bitmap像素缓冲区的地方</em></strong>）。</p>
+<p>综合来看，<strong>所谓Bitmap复用，主要就是复用被复用Bitmap的像素缓冲区数据，避免了内存的重复申请和释放</strong>。（同时修改bitmap宽度，高度等信息）</p>
+<p>最后我们再看下API19版本，png解码器的工作（精简后）：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> SkPNGImageDecoder::onDecode(SkStream* sk_stream, SkBitmap* decodedBitmap,Mode mode) &#123;</span><br><span class="line">png_uint_32 origWidth, origHeight;</span><br><span class="line"><span class="keyword">int</span> bitDepth, colorType, interlaceType;</span><br><span class="line"><span class="comment">//获取初始信息</span></span><br><span class="line">png_get_IHDR(png_ptr, info_ptr, &amp;origWidth, &amp;origHeight, &amp;bitDepth,&amp;colorType, &amp;interlaceType, int_p_NULL, int_p_NULL);</span><br><span class="line"><span class="comment">//获取bitmap的配置信息</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">this</span>-&gt;getBitmapConfig(png_ptr, info_ptr, &amp;config, &amp;hasAlpha, &amp;theTranspColor)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> sampleSize = <span class="keyword">this</span>-&gt;getSampleSize();</span><br><span class="line"><span class="comment">//根据图片的原始宽高和sampleSize创建sampler对象，里面会生成新的宽高（origWidth/sampleSize）</span></span><br><span class="line"><span class="function">SkScaledBitmapSampler <span class="title">sampler</span><span class="params">(origWidth, origHeight, sampleSize)</span></span>;</span><br><span class="line"><span class="comment">//这里sampler.scaledWidth()就是除以sampleSize之后的新的原始宽高</span></span><br><span class="line"><span class="comment">//有了位图的高宽及颜色格式，才能计算出该位图需要多大的缓冲区来存储像素数据</span></span><br><span class="line">decodedBitmap-&gt;setConfig(config, sampler.scaledWidth(), sampler.scaledHeight());</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//若是Options.inJustDecodeBounds为true，那么到此就结束了，因为上面宽和高已经计算出来了</span></span><br><span class="line"><span class="keyword">if</span> (SkImageDecoder::kDecotonguodeBounds_Mode == mode) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//为bitmap分配像素缓冲区，这里真正分配像素缓冲分区的是我们在BitmapFactory.doDecode方法中设置的XXXAllocator。（见后面的方法解释）</span></span><br><span class="line"><span class="keyword">if</span> (!<span class="keyword">this</span>-&gt;allocPixelRef(decodedBitmap,SkBitmap::kIndex8_Config == config ? colorTable : <span class="literal">NULL</span>)) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//后续代码应该就是真正去解码png格式图片，生成像素数据的核心逻辑了，这块暂时不进行介绍</span></span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//这里给出上面用到的一些关键方法：</span></span><br><span class="line"><span class="comment">//给解码器设置内存分配器，复用位图时将传入RecyclingPixelAllocator或ScaleCheckingAllocator（在BitmapFactory.doDecode方法中设置）</span></span><br><span class="line">SkBitmap::Allocator* SkImageDecoder::setAllocator(SkBitmap::Allocator* alloc) &#123;</span><br><span class="line">    <span class="keyword">if</span> (alloc) alloc-&gt;ref();</span><br><span class="line">    <span class="keyword">if</span> (fAllocator) fAllocator-&gt;unref();</span><br><span class="line">    fAllocator = alloc;</span><br><span class="line">    <span class="keyword">return</span> alloc;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//为位图分配像素缓冲（png解码器的父类方法）</span></span><br><span class="line"><span class="keyword">bool</span> SkImageDecoder::allocPixelRef(SkBitmap* bitmap,SkColorTable* ctable) <span class="keyword">const</span> &#123;</span><br><span class="line">    <span class="comment">//调用SkBitmap的allocPixels 方法分配像素缓冲                               </span></span><br><span class="line">    <span class="keyword">return</span> bitmap-&gt;allocPixels(fAllocator, ctable);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//最终分配位图像素缓冲区的方法</span></span><br><span class="line"><span class="keyword">bool</span> SkBitmap::allocPixels(Allocator* allocator, SkColorTable* ctable) &#123;</span><br><span class="line">    HeapAllocator stdalloc;<span class="comment">//默认的内存分配器</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> == allocator) &#123;</span><br><span class="line">        allocator = &amp;stdalloc;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//最终调用到解码器的内存分配器去分配内存</span></span><br><span class="line">    <span class="keyword">return</span> allocator-&gt;allocPixelRef(<span class="keyword">this</span>, ctable);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从上述代码可知：相比于API18，API19上<code>SkImageDecoder_libpng.onDecode</code>的实现稍微有点不同：主要是不再进行Bitmap复用逻辑的处理，因为在<code>BitmapFactory.doDecode</code>方法中每次解码（<code>SkImageDecoder_libpng.onDecode</code>）传进来的参数都是新创建的decodingBitmap。现在是在BitmapFactory.doDecode方法中处理Bitmap的复用（通过RecyclingPixelAllocator实现）。</p>
+<p>这样整个逻辑就串联起来了，这里简单总结下API19解码图片的几个点：</p>
+<ol>
+<li>在java层不再处理图片缩放，而是统一在native层<code>BitmapFactory.doDecode</code>方法中处理对Bitmap的缩放。</li>
+<li>验证了上文说的API19对Bitmap复用的两个限制。</li>
+<li>所谓Bitmap复用，主要就是复用被复用Bitmap的像素缓冲区，避免了内存的重复申请和释放。</li>
+<li><code>RecyclingPixelAllocator.allocPixelRef</code>方法才是真正复用被复用Bitmap像素缓冲区的地方。</li>
+</ol>
+<h2 id="使用Bitmap的建议"><a href="#使用Bitmap的建议" class="headerlink" title="使用Bitmap的建议"></a>使用Bitmap的建议</h2><p>网上有很多这方面的资料，这里不打算赘述。<br>推荐仔细阅读下官方教程：<a href="https://developer.android.com/training/displaying-bitmaps/index.html" target="_blank" rel="external">Displaying Bitmaps Efficiently</a></p>
+<p>同时如果想在API19以下，突破Bitmap复用的限制（达到和API19以上一样的效果），那么可以参考Github上的一个方案:<a href="https://github.com/badpx/BitmapFactoryCompat" target="_blank" rel="external">BitmapFactoryCompat</a>。</p>
+<p>OK，任务完成，希望对有需要的人有所帮助。</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/Bitmap/" rel="tag">#Bitmap</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/14/Java8的Lambda表达式和流式操作/" rel="next" title="Java8的Lambda表达式和流式操作">
+                <i class="fa fa-chevron-left"></i> Java8的Lambda表达式和流式操作
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/05/31/Android-Bitmap那些事/"
+     data-title="Android Bitmap那些事"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/05/31/Android-Bitmap那些事/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/05/31/Android-Bitmap那些事/"
+           data-title="Android Bitmap那些事" data-url="http://ltlovezh.github.io/2016/05/31/Android-Bitmap那些事/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+               alt="leon" />
+          <p class="site-author-name" itemprop="name">leon</p>
+          <p class="site-description motion-element" itemprop="description">技术实践者</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">12</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/63230484/" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  douban
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">技术博文</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#BitmapFactory-Options类解析"><span class="nav-number">1.</span> <span class="nav-text">BitmapFactory.Options类解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#inMutable"><span class="nav-number">1.1.</span> <span class="nav-text">inMutable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inJustDecodeBounds、outWidth、outHeight"><span class="nav-number">1.2.</span> <span class="nav-text">inJustDecodeBounds、outWidth、outHeight</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#outMimeType"><span class="nav-number">1.3.</span> <span class="nav-text">outMimeType</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inPurgeable、inInputShareable"><span class="nav-number">1.4.</span> <span class="nav-text">inPurgeable、inInputShareable</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inPreferredConfig"><span class="nav-number">1.5.</span> <span class="nav-text">inPreferredConfig</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inBitmap"><span class="nav-number">1.6.</span> <span class="nav-text">inBitmap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inScaled、inDensity、inTargetDensity、inScreenDensity"><span class="nav-number">1.7.</span> <span class="nav-text">inScaled、inDensity、inTargetDensity、inScreenDensity</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#inSampleSize"><span class="nav-number">1.8.</span> <span class="nav-text">inSampleSize</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bitmap的内存占用"><span class="nav-number">2.</span> <span class="nav-text">Bitmap的内存占用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#缩放因子和Bitmap复用限制的由来"><span class="nav-number">3.</span> <span class="nav-text">缩放因子和Bitmap复用限制的由来</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Android4-3-API18"><span class="nav-number">3.1.</span> <span class="nav-text">Android4.3 API18</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Android4-4-API19"><span class="nav-number">3.2.</span> <span class="nav-text">Android4.4 API19</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Bitmap的建议"><span class="nav-number">4.</span> <span class="nav-text">使用Bitmap的建议</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+&nbsp;
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ltlovezh"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+</body>
+</html>
