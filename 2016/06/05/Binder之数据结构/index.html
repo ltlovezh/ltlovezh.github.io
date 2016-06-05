@@ -1,0 +1,1474 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,Binder,数据结构," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="去年10月份，深入学习了Android的Binder进程间通信机制，感觉收获很大，但时隔数月，忘记了很多。当时主要是结合网上几篇文章以及老罗的博客来学习的，结合源码，基本能看懂。但是网上的那几篇文章都是单刀直入，没有对相关的数据结构进行介绍。这里先把之前学习过程中整理的Binder相关数据结构记录下来，后续学习的时候，结合原理讲解和数据结构，才能更快的看懂这块逻辑。
+关于Binder，几篇不错的文">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Binder之数据结构">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/06/05/Binder之数据结构/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="去年10月份，深入学习了Android的Binder进程间通信机制，感觉收获很大，但时隔数月，忘记了很多。当时主要是结合网上几篇文章以及老罗的博客来学习的，结合源码，基本能看懂。但是网上的那几篇文章都是单刀直入，没有对相关的数据结构进行介绍。这里先把之前学习过程中整理的Binder相关数据结构记录下来，后续学习的时候，结合原理讲解和数据结构，才能更快的看懂这块逻辑。
+关于Binder，几篇不错的文">
+<meta property="og:updated_time" content="2016-06-05T09:55:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Binder之数据结构">
+<meta name="twitter:description" content="去年10月份，深入学习了Android的Binder进程间通信机制，感觉收获很大，但时隔数月，忘记了很多。当时主要是结合网上几篇文章以及老罗的博客来学习的，结合源码，基本能看懂。但是网上的那几篇文章都是单刀直入，没有对相关的数据结构进行介绍。这里先把之前学习过程中整理的Binder相关数据结构记录下来，后续学习的时候，结合原理讲解和数据结构，才能更快的看懂这块逻辑。
+关于Binder，几篇不错的文">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6226090551544907000,
+      author: 'leon'
+    }
+  };
+</script>
+
+  <title> Binder之数据结构 | 风之谷 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">风之谷</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Binder之数据结构
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-05T16:49:18+08:00" content="2016-06-05">
+              2016-06-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/05/Binder之数据结构/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/05/Binder之数据结构/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/06/05/Binder之数据结构/" class="leancloud_visitors" data-flag-title="Binder之数据结构">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>去年10月份，深入学习了Android的Binder进程间通信机制，感觉收获很大，但时隔数月，忘记了很多。当时主要是结合网上几篇文章以及老罗的博客来学习的，结合源码，基本能看懂。但是网上的那几篇文章都是单刀直入，没有对相关的数据结构进行介绍。这里先把之前学习过程中整理的Binder相关数据结构记录下来，后续学习的时候，结合原理讲解和数据结构，才能更快的看懂这块逻辑。</p>
+<h2 id="关于Binder，几篇不错的文章"><a href="#关于Binder，几篇不错的文章" class="headerlink" title="关于Binder，几篇不错的文章"></a>关于Binder，几篇不错的文章</h2><ol>
+<li><a href="http://www.cnblogs.com/innost/archive/2011/01/09/1931456.html" target="_blank" rel="external">Android深入浅出之Binder机制</a></li>
+<li><a href="http://blog.csdn.net/universus/article/details/6211589" target="_blank" rel="external">Android Bander设计与实现 - 设计篇</a></li>
+<li><a href="http://www.cnblogs.com/albert1017/p/3849585.html" target="_blank" rel="external">Android Bander设计与实现 - 实现篇</a></li>
+<li><a href="http://blog.csdn.net/luoshengyang/article/details/6618363" target="_blank" rel="external">老罗的binder系列文章</a></li>
+</ol>
+<a id="more"></a>
+<h2 id="Binder数据结构"><a href="#Binder数据结构" class="headerlink" title="Binder数据结构"></a>Binder数据结构</h2><p>首先介绍下Binder驱动内部使用的数据结构。</p>
+<h3 id="Binder-实体在驱动中的表述binder-node"><a href="#Binder-实体在驱动中的表述binder-node" class="headerlink" title="Binder 实体在驱动中的表述binder_node"></a>Binder 实体在驱动中的表述<code>binder_node</code></h3><p><code>struct binder_node</code>结构是在第一次传输Binder实体时，由驱动程序在内核中创建的，隶属于提供Binder实体的进程。即<code>flat_binder_object</code>的type为BINDER_TYPE_BINDER or BINDER_TYPE_WEAK_BINDER时。</p>
+<p>binder_node结构的成员如下所示：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> binder_node &#123;</span><br><span class="line"><span class="keyword">int</span> debug_id;</span><br><span class="line"><span class="keyword">struct</span> binder_work work;</span><br><span class="line"><span class="keyword">union</span> &#123;</span><br><span class="line">	<span class="keyword">struct</span> rb_node rb_node;</span><br><span class="line">	<span class="keyword">struct</span> hlist_node dead_node;</span><br><span class="line">	&#125;;</span><br><span class="line"><span class="keyword">struct</span> binder_proc *proc;</span><br><span class="line"><span class="keyword">struct</span> hlist_head refs;</span><br><span class="line"><span class="keyword">int</span> internal_strong_refs;</span><br><span class="line"><span class="keyword">int</span> local_weak_refs;</span><br><span class="line"><span class="keyword">int</span> local_strong_refs;</span><br><span class="line"><span class="keyword">void</span> __user *ptr;</span><br><span class="line"><span class="keyword">void</span> __user *cookie;</span><br><span class="line"><span class="keyword">unsigned</span> has_strong_ref:<span class="number">1</span>;</span><br><span class="line"><span class="keyword">unsigned</span> pending_strong_ref:<span class="number">1</span>;</span><br><span class="line"><span class="keyword">unsigned</span> has_weak_ref:<span class="number">1</span>;</span><br><span class="line"><span class="keyword">unsigned</span> pending_weak_ref:<span class="number">1</span>;</span><br><span class="line"><span class="keyword">unsigned</span> has_async_transaction:<span class="number">1</span>;</span><br><span class="line"><span class="keyword">unsigned</span> accept_fds:<span class="number">1</span>;</span><br><span class="line"><span class="keyword">unsigned</span> min_priority:<span class="number">8</span>;</span><br><span class="line"><span class="keyword">struct</span> list_head async_todo;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>相关字段的含义如下所示：</p>
+<ol>
+<li><p>int debug_id</p>
+<blockquote>
+<p>标识一个Binder实体对象的身份，用来帮助调试Binder驱动程序。</p>
+</blockquote>
+</li>
+<li><p>struct binder_work work;</p>
+<blockquote>
+<p>当Binder实体对象的引用计数发生改变时，Binder驱动会请求相应的Service组件修改其引用计数。此时，就会把该引用计数修改操作封装成一个binder_work工作项（即：将Binder实体对象成员变量work的type属性值设置为BINDER_WORK_NODE），添加到相应进程的todo队列中去等待处理。</p>
+</blockquote>
+</li>
+<li><p>一个联合体成员</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">union</span> &#123;</span><br><span class="line">	<span class="keyword">struct</span> rb_node rb_node;</span><br><span class="line">	<span class="keyword">struct</span> hlist_node dead_node;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>每个进程都会维护一棵红黑树（<strong>binder_proc.nodes</strong>），以Binder实体对象在用户空间的地址，即本结构的ptr成员为索引，来存储该进程所有的Binder实体。这样驱动程序可以根据Binder实体在用户空间的地址，快速定位到其位于内核中的节点。<code>rb_node</code>用于将本节点链入到该红黑树中。当该BInder实体对象销毁时，需要从该红黑树中删除节点。</p>
+<p>若一个Binder实体对象的宿主进程已经死亡了，那么这个Binder实体对象就会通过它的成员变量<code>dead_node</code>保存在一个全局的hash列表中。</p>
+</blockquote>
+</li>
+<li><p>struct binder_proc *proc;</p>
+<blockquote>
+<p>本成员指向binder_node节点所属的宿主进程，即提供该节点的进程。</p>
+</blockquote>
+</li>
+<li><p>struct hlist_head refs;</p>
+<blockquote>
+<p>本成员是队列头，所有指向该Binder实体对象的引用（<code>binder_ref</code>）都链接在该队列里。这些引用属于不同的进程，通过该队列可以遍历指向该节点的所有引用。</p>
+</blockquote>
+</li>
+<li><p>void __user * ptr;</p>
+<blockquote>
+<p>指向用户空间Binder实体的指针，来自于<code>flat_binder_object</code>的binder成员。</p>
+</blockquote>
+</li>
+<li><p>void __user *cookie;</p>
+<blockquote>
+<p>指向用户空间的附加指针，来自于<code>flat_binder_object</code>的cookie成员。</p>
+</blockquote>
+</li>
+<li><p>unsigned has_async_transaction；</p>
+<blockquote>
+<p>该成员表明该binder_node所属进程binder_proc的todo队列中有异步交互任务尚未处理完成。（驱动程序会将所有发送往服务端的数据包暂存在接收进程或线程开辟的todo队列里)。对于异步交互，驱动程序做了适当的限流：如果todo队列里有异步交互任务尚未处理完成，则该成员置1，这将导致新到的异步交互任务被添加到本结构的成员asynch_todo队列中，而不直接送到所属进程的todo队列里。目的是为同步交互让路，避免长时间阻塞发送端。</p>
+</blockquote>
+</li>
+<li><p>struct list_head async_todo</p>
+<blockquote>
+<p>异步交互等待队列，用于分流发往所属进程todo队列的异步交互任务，和has_async_transaction属性配合使用。</p>
+</blockquote>
+</li>
+<li><p>unsigned accept_fds </p>
+<blockquote>
+<p>表明Binder实体对象是否同意接收文件方式的Binder，来自flat_binder_object中flags成员的第8bit位，代码中用FLAT_BINDER_FLAG_ACCEPTS_FDS取得。由于接收文件Binder会为进程自动打开一个文件，占用有限的文件描述符，Binder实体可以设置该标志位拒绝这种行为。</p>
+</blockquote>
+</li>
+<li><p>int min_priority</p>
+<blockquote>
+<p>设置处理Binder请求的线程的最低优先级。发送线程将数据提交给接收线程处理时，驱动程序会将发送线程的优先级也赋予接收线程，使得数据即使跨了进程也能以同样优先级得到处理。不过如果发送线程优先级过低，接收线程将以预设的最小值运行。该域的值来自于flat_binder_object中flags成员的第0到第7 bit位，代码中用FLAT_BINDER_FLAG_PRIORITY_MASK取得。</p>
+</blockquote>
+</li>
+<li><p>int internal_strong_refs;</p>
+<blockquote>
+<p>用以实现强指针的计数器：产生一个指向本节点的强引用，该计数就会加1。</p>
+</blockquote>
+</li>
+<li><p>int local_weak_refs;</p>
+<blockquote>
+<p>驱动程序为传输中的Binder设置的弱引用计数。如果一个Binder打包在数据包中，从一个进程发送到另一个进程，驱动会为该Binder增加引用计数，直到接收进程通过BC_FREE_BUFFER，通知驱动程序释放该数据包的数据为止。</p>
+</blockquote>
+</li>
+<li><p>int local_strong_refs;</p>
+<blockquote>
+<p>驱动程序为传输中的Binder设置的强引用计数，同上。</p>
+</blockquote>
+</li>
+<li><p>剩余的成员用于控制驱动程序与Binder实体所在进程（Service组件），交互式修改引用计数。</p>
+<blockquote>
+<p>unsigned has_strong_ref;<br>unsigned pending_strong_ref;<br>unsigned has_weak_ref;<br>unsigned pending_weak_ref</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="Binder引用在驱动中的表述binder-ref"><a href="#Binder引用在驱动中的表述binder-ref" class="headerlink" title="Binder引用在驱动中的表述binder_ref"></a>Binder引用在驱动中的表述<code>binder_ref</code></h3><p>和Binder实体一样，Binder引用也是驱动程序根据传输数据中的<code>flat_binder_object</code>创建的，隶属于获得该引用的进程，用struct binder_ref结构体表示:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> binder_ref &#123;</span><br><span class="line"><span class="comment">/* Lookups needed: */</span></span><br><span class="line"><span class="comment">/*   node + proc =&gt; ref (transaction) */</span></span><br><span class="line"><span class="comment">/*   desc + proc =&gt; ref (transaction, inc/dec ref) */</span></span><br><span class="line"><span class="comment">/*   node =&gt; refs + procs (proc exit) */</span></span><br><span class="line"><span class="keyword">int</span> debug_id;</span><br><span class="line"><span class="keyword">struct</span> rb_node rb_node_desc;</span><br><span class="line"><span class="keyword">struct</span> rb_node rb_node_node;</span><br><span class="line"><span class="keyword">struct</span> hlist_node node_entry;</span><br><span class="line"><span class="keyword">struct</span> binder_proc *proc;</span><br><span class="line"><span class="keyword">struct</span> binder_node *node;</span><br><span class="line"><span class="keyword">uint32_t</span> desc;</span><br><span class="line"><span class="keyword">int</span> strong;</span><br><span class="line"><span class="keyword">int</span> weak;</span><br><span class="line"><span class="keyword">struct</span> binder_ref_death *death;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>相关字段解释如下：</p>
+<ol>
+<li><p>int debug_id;</p>
+<blockquote>
+<p>标识一个Binder引用的身份，用来帮助调试Binder驱动程序。</p>
+</blockquote>
+</li>
+<li><p>struct binder_proc *proc;</p>
+<blockquote>
+<p>指向Binder引用的宿主进程</p>
+</blockquote>
+</li>
+<li><p>struct binder_node *node;</p>
+<blockquote>
+<p>本引用所指向的Binder实体对象（binder_node）</p>
+</blockquote>
+</li>
+<li><p>uint32_t desc;</p>
+<blockquote>
+<p>表示一个句柄值，指向一个Binder引用对象。在Client进程的用户空间中，一个Binder引用对象是使用一个句柄值来描述的，即desc属性的值。</p>
+</blockquote>
+</li>
+<li><p>int strong;</p>
+<blockquote>
+<p>强引用计数，用来维护Binder引用对象的生命周期。</p>
+</blockquote>
+</li>
+<li><p>int weak;</p>
+<blockquote>
+<p>弱引用计数，用来维护Binder引用对象的生命周期。</p>
+</blockquote>
+</li>
+<li><p>struct hlist_node node_entry;</p>
+<blockquote>
+<p>该属性作为节点链入所指向的Binder实体对象binder_node中的refs链表中。</p>
+</blockquote>
+</li>
+<li><p>struct rb_node rb_node_desc;</p>
+<blockquote>
+<p>宿主进程有一棵红黑树，宿主进程所有的Binder引用，以引用号（即本结构的desc域）为索引链接入该红黑树中（<code>binder_proc.refs_by_desc</code>）。本成员作为链接到该红黑树的一个节点。</p>
+</blockquote>
+</li>
+<li><p>struct rb_node rb_node_node;</p>
+<blockquote>
+<p>宿主进程有一棵红黑树，宿主进程所有的Binder引用，以对应Binder实体在内核中的内存地址（即本结构的node域）为索引链接入该红黑树中（<code>binder_proc.refs_by_node</code>）。本成员作为链接到该红黑树的一个节点。</p>
+</blockquote>
+</li>
+<li><p>struct binder_ref_death *death;</p>
+<blockquote>
+<p>该成员变量指向一个Service组件的死亡接收通知。当Client进程通过BC_REQUEST_DEATH_NOTIFICATION命令向Binder驱动程序注册一个它所引用的Service组件的死亡接收通知时，Binder驱动程序就会创建一个<code>binder_ref_death</code>结构体，然后保存在对应的Binder引用对象的成员变量death中。</p>
+<p>这样，当该Binder引用所引用的Service组件死亡时，就会通过death变量指向的<code>binder_ref_death</code>，向Client进程发送通知。</p>
+<p>该域不为空，表明Client进程订阅了对应Service组件销毁的“噩耗”。</p>
+</blockquote>
+</li>
+</ol>
+<p>关于和Binder引用相关的红黑树，和Binder实体一样，每个宿主进程（<code>binder_proc</code>）使用红黑树存放所有正在使用的引用。不同的是Binder引用可以通过两个键值索引：</p>
+<ul>
+<li><p>对应Binder实体（<code>binder_node</code>）在内核中的地址。<strong>注意这里指的是驱动创建于内核中的binder_node结构的地址，而不是Binder实体在用户进程中的地址</strong>。实体在内核中的地址是唯一的，用做索引不会产生二义性；但实体可能来自不同用户进程，而实体在不同用户进程中的地址可能重合，不能用来做索引。驱动利用该红黑树可以在一个进程中快速查找某个Binder实体所对应的Binder引用（一个实体在一个进程中只建立一个引用）。</p>
+</li>
+<li><p>引用号（句柄值）。引用号是驱动程序为引用分配的一个32位标识，在一个进程内是唯一的，而在不同进程中可能会有同样的值，这和进程的文件描述符很类似。引用号将返回给应用程序，可以看作Binder引用在用户进程中的句柄。除了0号引用在所有进程里都固定保留给ServiceManager，其它值由驱动程序动态分配。向Binder实体发送数据包时，应用程序将引用号填入binder_transaction_data结构的target.handle域中表明该数据包的目的Binder。驱动程序根据该引用号在红黑树中找到对应的binder_ref结构，进而通过其node域知道目标Binder实体所在的进程及其它相关信息，实现数据包的路由。</p>
+</li>
+</ul>
+<h3 id="内核缓冲区节点binder-buffer"><a href="#内核缓冲区节点binder-buffer" class="headerlink" title="内核缓冲区节点binder_buffer"></a>内核缓冲区节点binder_buffer</h3><p>Binder驱动程序会为每个正在使用binder进程间通信的进程分配内核缓冲区，用来接收Client进程发送来的请求数据。内核缓冲区会被划分为若干个小块。binder_buffer就表示一个内核缓冲区块，其结构体如下所示：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> binder_buffer &#123;</span><br><span class="line"><span class="keyword">struct</span> list_head entry; <span class="comment">/* free and allocated entries by address */</span></span><br><span class="line"><span class="keyword">struct</span> rb_node rb_node; <span class="comment">/* free entry by size or allocated entry  by address */</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="built_in">free</span>:<span class="number">1</span>;</span><br><span class="line"><span class="keyword">unsigned</span> allow_user_free:<span class="number">1</span>;</span><br><span class="line"><span class="keyword">unsigned</span> async_transaction:<span class="number">1</span>;</span><br><span class="line"><span class="keyword">unsigned</span> debug_id:<span class="number">29</span>;</span><br><span class="line"><span class="keyword">struct</span> binder_transaction *transaction;</span><br><span class="line"><span class="keyword">struct</span> binder_node *target_node;</span><br><span class="line"><span class="keyword">size_t</span> data_size;</span><br><span class="line"><span class="keyword">size_t</span> offsets_size;</span><br><span class="line"><span class="keyword">uint8_t</span> data[<span class="number">0</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>相关字段的含义如下所示：</p>
+<ol>
+<li><p>struct list_head entry;</p>
+<blockquote>
+<p>进程的内核缓冲区列表中的一个节点，头节点为<code>binder_proc.buffers</code>。</p>
+</blockquote>
+</li>
+<li><p>struct rb_node rb_node;</p>
+<blockquote>
+<p>进程（binder_proc）使用两个红黑树来分别保存那些正在使用的内核缓冲区，以及空闲的内核缓冲区。如果一个内核缓冲区是空闲的，则它的成员变量free为1，那么该成员变量    <code>rb_node</code>就是空闲内核缓冲区红黑树中的一个节点（binder_proc.free_buffers）；否则，成员变量free为0，该成员变量    <code>rb_node</code>就是正在使用内核缓冲区红黑树中的一个节点（binder_proc.allocated_buffers）。</p>
+</blockquote>
+</li>
+<li><p>unsigned free;</p>
+<blockquote>
+<p>和rb_node属性配合使用，1表示空闲缓冲区，0表示正在使用缓冲区。</p>
+</blockquote>
+</li>
+<li><p>unsigned allow_user_free</p>
+<blockquote>
+<p>目标Service组件在处理完任务后，若发现传给他的内核缓冲区的成员变量allow_user_free的值为1，那么该Service组件就会请求Binder驱动程序释放该内核缓冲区。</p>
+</blockquote>
+</li>
+<li><p>unsigned async_transaction;</p>
+<blockquote>
+<p>1表示与该内核缓冲区关联的是异步事务，否则为0，表示为同步事务。Binder驱动程序限制了分配给异步事务的内核缓冲区大小，目的是为了保证同步事务可以优先得到内核缓冲区，以便可以快速的处理同步事务。</p>
+</blockquote>
+</li>
+<li><p>unsigned debug_id;</p>
+<blockquote>
+<p>标识一个内核缓冲区的身份，帮助调试Binder驱动程序。</p>
+</blockquote>
+</li>
+<li><p>struct binder_transaction * transaction;</p>
+<blockquote>
+<p>表示哪一个事务<code>binder_transaction</code>正在使用该内核缓冲区。</p>
+</blockquote>
+</li>
+<li><p>struct binder_node * target_node;</p>
+<blockquote>
+<p>表示哪一个Binder实体在使用该内核缓冲区。</p>
+</blockquote>
+</li>
+<li><p>size_t data_size;</p>
+<blockquote>
+<p>真正的数据缓冲区的大小。</p>
+</blockquote>
+</li>
+<li><p>size_t offsets_size;</p>
+<blockquote>
+<p>在data指向的数据缓冲区的后面，有一个偏移数组，记录了数据缓冲区中每一个binder对象在数据缓冲区的位置。而偏移数组的大小就保存在该offsets_size成员中。</p>
+</blockquote>
+</li>
+<li><p>uint8_t data[0];</p>
+<blockquote>
+<p>指向真正的数据缓冲区，用来保存通信数据。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="Binder进程在内核中表述（Binder-proc）"><a href="#Binder进程在内核中表述（Binder-proc）" class="headerlink" title="Binder进程在内核中表述（Binder_proc）"></a>Binder进程在内核中表述（Binder_proc）</h3><p>该结构体用来描述一个正在使用Binder进程间通信机制的进程。当一个进程调用函数<code>open</code>来打开设备文件<code>/dev/binder</code>时，Binder驱动程序就会为它创建一个    <code>binder_proc</code>结构体，并且将它保存在一个全局的hash列表中，而成员变量<code>proc_node</code>就是该hash列表中的一个节点，其结构体如下所示：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> binder_proc &#123;</span><br><span class="line"><span class="keyword">struct</span> hlist_node proc_node;</span><br><span class="line"><span class="keyword">struct</span> rb_root threads;</span><br><span class="line"><span class="keyword">struct</span> rb_root nodes;</span><br><span class="line"><span class="keyword">struct</span> rb_root refs_by_desc;</span><br><span class="line"><span class="keyword">struct</span> rb_root refs_by_node;</span><br><span class="line"><span class="keyword">int</span> pid;</span><br><span class="line"><span class="keyword">struct</span> vm_area_struct *vma;</span><br><span class="line"><span class="keyword">struct</span> mm_struct *vma_vm_mm;</span><br><span class="line"><span class="keyword">struct</span> task_struct *tsk;</span><br><span class="line"><span class="keyword">struct</span> files_struct *files;</span><br><span class="line"><span class="keyword">struct</span> hlist_node deferred_work_node;</span><br><span class="line"><span class="keyword">int</span> deferred_work;</span><br><span class="line"><span class="keyword">void</span> *buffer;</span><br><span class="line"><span class="keyword">ptrdiff_t</span> user_buffer_offset;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> list_head buffers;</span><br><span class="line"><span class="keyword">struct</span> rb_root free_buffers;</span><br><span class="line"><span class="keyword">struct</span> rb_root allocated_buffers;</span><br><span class="line"><span class="keyword">size_t</span> free_async_space;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> page **pages;</span><br><span class="line"><span class="keyword">size_t</span> buffer_size;</span><br><span class="line"><span class="keyword">uint32_t</span> buffer_free;</span><br><span class="line"><span class="keyword">struct</span> list_head todo;</span><br><span class="line"><span class="keyword">wait_queue_head_t</span> wait;</span><br><span class="line"><span class="keyword">struct</span> binder_stats stats;</span><br><span class="line"><span class="keyword">struct</span> list_head delivered_death;</span><br><span class="line"><span class="keyword">int</span> max_threads;</span><br><span class="line"><span class="keyword">int</span> requested_threads;</span><br><span class="line"><span class="keyword">int</span> requested_threads_started;</span><br><span class="line"><span class="keyword">int</span> ready_threads;</span><br><span class="line"><span class="keyword">long</span> default_priority;</span><br><span class="line"><span class="keyword">struct</span> dentry *debugfs_entry;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>相关字段的含义如下所示：</p>
+<ol>
+<li><p>struct hlist_node proc_node;</p>
+<blockquote>
+<p>全局<code>binder_proc</code>列表中的一个子节点。</p>
+</blockquote>
+</li>
+<li><p>struct rb_root threads;</p>
+<blockquote>
+<p>红黑树根节点，以线程ID为关键字来组织一个进程的Binder线程池，节点为<code>binder_thread.rb_node</code>。</p>
+</blockquote>
+</li>
+<li><p>struct rb_root nodes;</p>
+<blockquote>
+<p>红黑树根节点，以<code>binder_node.ptr</code>即Binder实体在用户空间的地址为索引，来组织一个进程的所有Binder实体对象。节点为<code>binder_node.rb_node</code>。</p>
+</blockquote>
+</li>
+<li><p>struct rb_root refs_by_desc;</p>
+<blockquote>
+<p>红黑树根节点，以<code>binder_ref.desc</code>即Binder引用的句柄值为索引，来组织一个进程的所有Binder引用对象。节点为<code>binder_ref.rb_node_desc</code>。</p>
+</blockquote>
+</li>
+<li><p>struct rb_root refs_by_node;</p>
+<blockquote>
+<p>红黑树根节点，以<code>binder_ref.node</code>即 Binder实体（binder_node）在内核中的地址为索引，来组织一个进程的所有Binder引用对象。节点为<code>binder_ref.rb_node_node</code>。</p>
+</blockquote>
+</li>
+<li><p>int pid;</p>
+<blockquote>
+<p>进程（组）ID</p>
+</blockquote>
+</li>
+<li><p>struct task_struct * tsk;</p>
+<blockquote>
+<p>该进程的任务控制块</p>
+</blockquote>
+</li>
+<li><p>struct files_struct * files;</p>
+<blockquote>
+<p>该进程的打开文件结构体数组。</p>
+</blockquote>
+</li>
+<li><p>struct hlist_node deferred_work_node和int deferred_work;</p>
+<blockquote>
+<p>Binder驱动程序将所有的延迟执行的工作项保存在一个Hash列表中。如果一个进程有延迟执行的工作项，那么成员变量deferred_work_node就刚好是该Hash列表中的一个节点，并且使用成员变量deferred_work来描述该延迟工作项的具体类型。</p>
+</blockquote>
+</li>
+<li><p>int <em> buffer、struct vm_area_struct </em> vma、size_t buffer_size和ptrdiff_t user_buffer_offset</p>
+<blockquote>
+<p>这几个成员变量用来管理内核缓冲区。</p>
+<p>进程打开设备文件<code>/dev/binder</code>之后，还必须调用函数<code>mmap</code>将它映射到进程的用户地址空间来，实际上是请求Binder驱动程序为它分配一块内核缓冲区，以便可以用来在进程间传输有效负荷数据，即<code>binder_transaction_data.data.buffer</code>指向的有效负荷数据。</p>
+<p>该内核缓冲区的大小保存在成员变量<code>buffer_size</code>中。这些内核缓冲区有两个地址，其中一个是内核缓冲区地址，另外一个是用户空间地址。内核空间地址是在Binder驱动程序内部使用的，保存在成员变量<code>buffer</code>中，而用户空间地址是在应用程序进程内部使用的，保存在成员变量<code>vma</code>中。这两个地址相差一个固定的值，保存在成员变量<code>user_buffer_offset</code>中。这样，给定一个用户空间地址或者一个内核空间地址，Binder驱动程序就可以计算出另外一个地址值。</p>
+</blockquote>
+</li>
+<li><p>struct list_head buffers、struct rb_root free_buffers、struct rb_node allocated_buffers、unit32_t buffer_free和size_t free_async_space;</p>
+<blockquote>
+<p>这几个成员变量用来管理被分割成小块的内核缓冲区。</p>
+<p>Binder驱动程序为了方便管理分配的内核缓冲区，将它分成若干个小块。这些小块的内核缓冲区就是使用前面介绍的<code>binder_buffer</code>结构体来描述，它们保存在一个列表中，按照地址值从小到大的顺序来排列，成员变量<code>buffers</code>指向的便是该列表的头部，该列表的的节点就是<code>binder_buffer.entry</code>。</p>
+<p><code>buffers</code>列表中的小块内核缓冲区有的是正在使用的，即已经分配了物理页面；有的是空闲的，即还没有分配物理页面，它们分别组织在两个红黑树中。其中，空闲缓冲区保存在成员变量<code>free_buffers</code>所描述的红黑树中(以binder_buffer的数据缓冲区大小为关键字)，而正在使用缓冲区则保存在成员变量<code>allocated_buffers</code>所描述的红黑树中（以binder_buffer的内核空间地址为关键字），两个红黑树的节点都是<code>binder_buffer.rb_node</code>（因为一个binder_buffer要么是空闲的，要么是正在使用的，同一时刻仅仅会存在于一个红黑树中）。而成员变量<code>buffer_free</code>则保存了空闲内核缓冲区的大小；成员变量<code>free_async_space</code>保存了当前可以用来保存异步事务数据的内核缓冲区的大小。</p>
+</blockquote>
+</li>
+<li><p>int max_threads、int requested_threads和int requested_threads_started</p>
+<blockquote>
+<p>每一个使用Binder进程间通信机制的进程都有一个Binder线程池，用来处理进程间通信请求，这个Binder线程池是由Binder驱动负责维护的。Binder线程池的线程，既可以由Server进程主动创建并注册到Binder线程池，也可以由Binder驱动主动请求Server进程注册更多的线程到Binder线程池。其中，前者的线程数不受限制，后者的线程数则受成员变量<code>max_threads</code>的限制，而成员变量<code>ready_threads</code>则表示进程当前的空闲Binder线程数目。</p>
+<p>Binder驱动程序每一次主动请求进程注册一个线程时，都会将成员变量<code>requested_threads</code>的值加1，而当进程响应这个请求后，Binder驱动程序又会将该成员变量减1，同时将成员变量<code>requested_threads_started</code>的值加1，表示Bidner驱动程序已经主动请求进程注册了多少个线程到Binder线程池，此数目受成员变量<code>max_threads</code>的限制。</p>
+</blockquote>
+</li>
+<li><p>struct list_head todo、wait_queue_head_t wait和int ready_threads;</p>
+<blockquote>
+<p><code>todo</code>表示待处理的工作项队列。Binder线程池中空闲Binder线程会睡眠在由成员变量<code>wait</code>所描述的等待队列中，而成员变量<code>ready_threads</code>则表示进程当前空闲的Binder线程数目。当宿主进程的todo队列增加了新的工作项后，Binder驱动就会唤醒wait队列中的空闲线程，来处理新增的工作项。</p>
+</blockquote>
+</li>
+<li><p>long default_priority;</p>
+<blockquote>
+<p>默认的线程优先级</p>
+</blockquote>
+</li>
+<li><p>struct binder_stats stats;</p>
+<blockquote>
+<p>用来统计进程相关数据，例如：进程接收到的进程间通信请求的次数。</p>
+</blockquote>
+</li>
+<li><p>struct list_head delivered_death;</p>
+<blockquote>
+<p>Binder驱动程序会将发送给进程的死亡通知，封装成一个类型为BINDER_WORK_DEAD_BINDER工作项，并保存在该成员变量所描述的队列中。当该进程处理完一个死亡通知时，会通知BInder驱动程序，从该队列中删除对应的工作项。</p>
+</blockquote>
+</li>
+<li><p>struct page ** pages;</p>
+<blockquote>
+<p>该成员变量是类型为struct page * 的一个数组，数组中的每一个元素都指向一个物理页面。Binder驱动一开始只会为进程的内核缓冲区分配一个物理页面，后面不够时，再继续分配。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="Binder线程池的线程（Bidner-thread）"><a href="#Binder线程池的线程（Bidner-thread）" class="headerlink" title="Binder线程池的线程（Bidner_thread）"></a>Binder线程池的线程（Bidner_thread）</h3><p>Binder线程池中的线程使用<code>Bidner_thread</code>结构体来描述:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> binder_thread &#123;</span><br><span class="line"><span class="keyword">struct</span> binder_proc *proc;</span><br><span class="line"><span class="keyword">struct</span> rb_node rb_node;</span><br><span class="line"><span class="keyword">int</span> pid;</span><br><span class="line"><span class="keyword">int</span> looper;</span><br><span class="line"><span class="keyword">struct</span> binder_transaction *transaction_stack;</span><br><span class="line"><span class="keyword">struct</span> list_head todo;</span><br><span class="line"><span class="keyword">uint32_t</span> return_error; <span class="comment">/* Write failed, return error code in read buf */</span></span><br><span class="line"><span class="keyword">uint32_t</span> return_error2; <span class="comment">/* Write failed, return error code in read */</span></span><br><span class="line"><span class="comment">/* buffer. Used when sending a reply to a dead process that */</span></span><br><span class="line"><span class="comment">/* we are also waiting on */</span></span><br><span class="line"><span class="keyword">wait_queue_head_t</span> wait;</span><br><span class="line"><span class="keyword">struct</span> binder_stats stats;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>相关字段的含义如下所示：</p>
+<ol>
+<li><p>struct binder_proc * proc;</p>
+<blockquote>
+<p>指向宿主进程。</p>
+</blockquote>
+</li>
+<li><p>struct rb_node rb_node;</p>
+<blockquote>
+<p>宿主进程用一个红黑树（<code>binder_proc.threads</code>）来组织Binder线程池中的线程，该成员变量就是该红黑树中的一个节点。</p>
+</blockquote>
+</li>
+<li><p>int pid;</p>
+<blockquote>
+<p>线程ID</p>
+</blockquote>
+</li>
+<li><p>int looper;</p>
+<blockquote>
+<p>线程状态，参见老罗书P153页。</p>
+</blockquote>
+</li>
+<li><p>struct binder_transaction * transaction_stack;</p>
+<blockquote>
+<p>当Binder驱动程序决定将一个事务交给一个Binder线程处理时，它会将该事务封装成一个<code>binder_transaction</code>结构体，并且将它添加到由成员变量<code>transaction_stack</code>所描述的一个事务堆栈中。</p>
+</blockquote>
+</li>
+<li><p>struct list_head todo 和wait_queue_head_t wait;</p>
+<blockquote>
+<p><code>todo</code>表示该线程待处理的工作项队列。成员变量<code>wait</code>表示线程等待（睡眠）队列（实际上，最多就只会包含该线程本身）。当Client进程的请求指定要由某一个线程处理时，才会将该工作项添加到该线程的todo队列，否则会添加到进程的todo队列。</p>
+</blockquote>
+</li>
+<li><p>uint32_t return_error和uint32_t return_error2;</p>
+<blockquote>
+<p>当Binder线程在处理一个事务时，若出现了异常情况，那么Binder驱动就会将相应的错误码保存在其成员变量return_error和return_error2中，然后线程就会将这些错误返回给用户空间应用程序处理。</p>
+</blockquote>
+</li>
+<li><p>struct binder_stats stats;</p>
+<blockquote>
+<p>统计Binder线程的数据，如：Binder线程接收到的进程间请求次数。</p>
+</blockquote>
+</li>
+</ol>
+<h3 id="Binder事务Binder-transaction"><a href="#Binder事务Binder-transaction" class="headerlink" title="Binder事务Binder_transaction"></a>Binder事务Binder_transaction</h3><p>该结构体用来描述进程间通信过程，称之为一个事务，其结构体如下所示：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> binder_transaction &#123;</span><br><span class="line"><span class="keyword">int</span> debug_id;</span><br><span class="line"><span class="keyword">struct</span> binder_work work;</span><br><span class="line"><span class="keyword">struct</span> binder_thread *from;</span><br><span class="line"><span class="keyword">struct</span> binder_transaction *from_parent;</span><br><span class="line"><span class="keyword">struct</span> binder_proc *to_proc;</span><br><span class="line"><span class="keyword">struct</span> binder_thread *to_thread;</span><br><span class="line"><span class="keyword">struct</span> binder_transaction *to_parent;</span><br><span class="line"><span class="keyword">unsigned</span> need_reply:<span class="number">1</span>;</span><br><span class="line"><span class="comment">/* unsigned is_dead:1; */</span>	<span class="comment">/* not used at the moment */</span></span><br><span class="line"><span class="keyword">struct</span> binder_buffer *buffer;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span>	code;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span>	flags;</span><br><span class="line"><span class="keyword">long</span>	priority;</span><br><span class="line"><span class="keyword">long</span>	saved_priority;</span><br><span class="line"><span class="keyword">uid_t</span>	sender_euid;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>相关字段的含义如下所示：</p>
+<ol>
+<li><p>int debug_id;</p>
+<blockquote>
+<p>标识一个事务结构体的身份，用来帮助调试程序。</p>
+</blockquote>
+</li>
+<li><p>struct binder_work work;</p>
+<blockquote>
+<p>和该事务相关联的工作项。当Binder驱动为目标进程或者线程创建一个事务时，就会将该事务的成员变量work的类型设置为BINDER_WORK_TRANSACTION,并且将它（binder_work）添加到目标进程或者线程的todo队列中去等待处理。</p>
+</blockquote>
+</li>
+<li><p>struct binder_thread *from;</p>
+<blockquote>
+<p>发起事务的线程，称为源线程。</p>
+</blockquote>
+</li>
+<li><p>struct binder_transaction *from_parent;</p>
+<blockquote>
+<p>该事务依赖的另外一个事务。</p>
+</blockquote>
+</li>
+<li><p>struct binder_proc <em>to_proc和struct binder_thread </em>to_thread;</p>
+<blockquote>
+<p>负责处理该事务的目标进程和目标线程。</p>
+</blockquote>
+</li>
+<li><p>struct binder_transaction *to_parent;</p>
+<blockquote>
+<p>目标线程下一个需要处理的事务。</p>
+</blockquote>
+</li>
+<li><p>unsigned need_reply；</p>
+<blockquote>
+<p>1:同步事务  0：异步事务</p>
+</blockquote>
+</li>
+<li><p>struct binder_buffer *buffer;</p>
+<blockquote>
+<p>buffer指向Binder驱动程序为该事务分配的一块内核缓冲区，它里面保存了进程间通信数据。</p>
+</blockquote>
+</li>
+<li><p>unsigned int code和unsigned int flags;</p>
+<blockquote>
+<p>这些标志直接从进程间通信数据（<code>binder_transaction_data.code和binder_transaction_data.flags</code>）中拷贝过来，见后面的详解。</p>
+</blockquote>
+</li>
+<li><p>long    priority和long    saved_priority;</p>
+<blockquote>
+<p>Binder线程在处理一个事务时，Binder驱动程序会修改Binder线程的优先级，以满足源线程和目标Service组件的要求。Binder驱动程序在修改一个线程的优先级之前，会将它原来的线程优先级保存在成员变量<code>saved_priority</code>中，以便线程处理完该事务后可以恢复到原来的线程优先级。</p>
+<p>目标线程的优先级取决于目标进程的默认优先级，即<code>Binder_proc.default_priority</code>，和目标Binder实体的最低优先级，即<code>Binder_node.min_priority</code>。目标线程的优先级会取两者的最大值。</p>
+</blockquote>
+</li>
+<li><p>uid_t    sender_euid;</p>
+<blockquote>
+<p>源线程的用户ID</p>
+</blockquote>
+</li>
+</ol>
+<hr>
+<p>以上介绍的结构体都是在Binder驱动程序内部使用的，下面介绍直接和我们打交道的结构体。</p>
+<h3 id="和Binder驱动交互的数据结构"><a href="#和Binder驱动交互的数据结构" class="headerlink" title="和Binder驱动交互的数据结构"></a>和Binder驱动交互的数据结构</h3><p>BInder驱动程序对外提供的函数包括：open、mmap和ioctl，其中ioctl函数是最重要的。Binder协议基本格式是（命令+数据），使用ioctl(fd, cmd, arg)函数实现交互。命令由参数cmd承载，数据由参数arg承载，随cmd不同而不同。</p>
+<p>Binder协议的基本命令包括以下几个：</p>
+<ol>
+<li><p>BINDER_SET_MAX_THREADS</p>
+<blockquote>
+<p>后面紧跟int max_threads；表示最大线程数（其实是Binder驱动主动要求Server进程创建的线程数）。通常是在创建Service组件时，通知Binder驱动，Server进程支持的最大线程数。该命令告知Binder驱动，Server进程的Binder线程池中最大的线程数。由于Client是并发向Server端发送请求的，Server端必须开辟线程池为这些并发请求提供服务。告知Binder驱动线程池的最大值，是为了让驱动发现线程数达到该值时，不要再命令Server端启动新的线程。</p>
+</blockquote>
+</li>
+<li><p>BINDER_SET_CONTEXT_MGR</p>
+<blockquote>
+<p>后面紧跟一个整型参数，用来描述一个与Service Manager对应的Binder本地对象的地址，与Service Manager对应的Binder本地对象是一个虚拟的对象，且它的地址值为0。作用是将当前进程注册为<code>ServiceManager</code>。系统中同时只能存在一个ServiceManager。只要当前的ServiceManager没有调用close()关闭，Binder驱动就不会让别的进程可以成为ServiceManager。</p>
+</blockquote>
+</li>
+<li><p>BINDER_THREAD_EXIT</p>
+<blockquote>
+<p>后面不需要跟参数。作用是通知Binder驱动当前线程退出了。Binder驱动会为所有参与Binder通信的线程（包括Server线程池中的线程和Client发出请求的线程）建立相应的数据结构(binder_thread)。这些线程在退出时必须通知binder驱动释放相应的数据结构。</p>
+</blockquote>
+</li>
+<li><p>BINDER_VERSION</p>
+<blockquote>
+<p>后面不需要跟参数。作用是获得Binder驱动的版本号。</p>
+</blockquote>
+</li>
+<li><p><code>BINDER_WRITE_READ</code></p>
+<blockquote>
+<p>后面紧跟<code>binder_write_read</code>结构体，用来描述进程间通信过程中所传输的数据。该命令是Binder通信命令中最重要的命令。作用是向Binder驱动写入或读取数据。下面对binder_write_read结构体进行详细的介绍。</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="通信数据的载体Binder-write-read"><a href="#通信数据的载体Binder-write-read" class="headerlink" title="通信数据的载体Binder_write_read"></a>通信数据的载体Binder_write_read</h4><p>其结构体如下所示：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> binder_write_read &#123;</span><br><span class="line"><span class="keyword">signed</span> <span class="keyword">long</span>	write_size;	<span class="comment">/* bytes to write */</span></span><br><span class="line"><span class="keyword">signed</span> <span class="keyword">long</span>	write_consumed;	<span class="comment">/* bytes consumed by driver */</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span>	write_buffer;</span><br><span class="line"><span class="keyword">signed</span> <span class="keyword">long</span>	read_size;	<span class="comment">/* bytes to read */</span></span><br><span class="line"><span class="keyword">signed</span> <span class="keyword">long</span>	read_consumed;	<span class="comment">/* bytes consumed by driver */</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span>	read_buffer;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>其中，成员变量write_size、write_consumed和write_consumed用来描述输入数据，即<code>从用户空间传输到Binder驱动程序的数据</code>，也是进程间通信的请求数据；而成员变量read_size、read_consumed和read_buffer则用来描述输出数据，即<code>从Binder驱动程序返回给用户空间的数据</code>，也是进程间通信的结果（返回）数据。</p>
+<p><code>write_buffer</code>指向一个用户空间缓冲区的地址，里面保存的请求数据就是要传输到Binder驱动的数据；<code>write_size</code>表示该缓冲区的大小；<code>write_consumed</code><strong>则表示Binder驱动程序从用户空间缓冲区中读取了多少字节的数据</strong>。</p>
+<p><code>read_buffer</code>也是指向一个用户空间缓冲区的地址，里面保存的的内容即为Binder驱动程序返回给用户空间的进程间通信结果数据；<code>read_size</code>表示该缓冲区的大小；<code>read_consumed</code><strong>则表示Binder驱动程序写入了多少字节的数据给用户空间应用程序</strong>。</p>
+<p>从上文可知，<code>write_buffer</code>和<code>read_buffer</code>指向的缓冲区才是真正的有效负荷数据。</p>
+<p>有效负荷数据的命令格式也是由<code>命令+数据</code>构成，并且支持多条命令连续存放，一起操作。下面来看下这里Binder支持的Cmd命令。</p>
+<h4 id="适用于binder-write-read的子命令字"><a href="#适用于binder-write-read的子命令字" class="headerlink" title="适用于binder_write_read的子命令字"></a>适用于binder_write_read的子命令字</h4><p>binder_write_read.write_buffer用于向Binder驱动写入数据。binder_write_read.read_buffer用于从Binder驱动读入数据。<br>write_buffer和read_buffer都是一个数组，数组的每个元素都由一个通信协议代码及其通信数据组成。协议代码又分成两部分，其中一种在输入缓冲区write_buffer中使用的称为<code>命令协议代码</code>，另一种在输出缓冲区read_buffer中使用的称为<code>返回协议代码</code>。</p>
+<h5 id="命令协议代码"><a href="#命令协议代码" class="headerlink" title="命令协议代码"></a>命令协议代码</h5><ol>
+<li><p>BC_TRANSACTION和BC_REPLY</p>
+<blockquote>
+<p>BC_TRANSACTION用于Client向Server发送请求数据；BC_REPLY用于Server向Client发送回复（应答）数据。其后面紧接着一个binder_transaction_data结构体,表明要写入的数据。</p>
+</blockquote>
+</li>
+<li><p>BC_FREE_BUFFER</p>
+<blockquote>
+<p>后面紧跟一个地址值，表示Binder实体的内核缓冲区地址。Binder驱动程序就是通过这个内核缓冲区将源进程的通信数据传递到目标进程的。当目标进程处理完源进程的通信请求后，它就会通过命令协议代码BC_FREE_BUFFER来通知Binder驱动程序来释放这块内存缓冲区。</p>
+</blockquote>
+</li>
+<li><p>BC_INCREFS、BC_DECREFS、BC_ACQUIRE、BC_RELEASE </p>
+<blockquote>
+<p>后面紧跟32位Binder引用号，表示Binder引用对象的句柄值。BC_ACQUIRE和BC_RELEASE命令协议分别用来增加和减少一个Binder引用对象的强引用计数。而BC_INCREFS和BC_DECREFS命令协议则分别用来增加和减少一个Binder引用对象的弱引用计数。</p>
+</blockquote>
+</li>
+<li><p>BC_INCREFS_DONE和BC_ACQUIRE_DONE</p>
+<blockquote>
+<p>后面紧跟binder_ptr_cookie结构体，描述一个binder实体对象。Binder驱动程序第一次增加一个Binder实体对象的强引用计数或者弱引用计数时，会使用返回协议代码BR_INCREFS和BR_ACQUIRE请求对应的Server进程增加对应的Service组件的强引用计数或者弱引用计数。当Server进程处理完这两个请求后，就会分别使用命令协议代码BC_INCREFS_DONE和BC_ACQUIRE_DONE将操作结果返回给binder驱动程序。</p>
+</blockquote>
+</li>
+<li><p>BC_REGISTER_LOOPER </p>
+<blockquote>
+<p>后面不跟参数，当Binder驱动程序主动请求Server进程注册一个新的线程到它的Binder线程池中，来处理进程间通信请求之后，新创建的线程就会使用命令协议代码<code>BC_REGISTER_LOOPER</code>来通知Binder驱动程序，它准备就绪了。</p>
+</blockquote>
+</li>
+<li><p>BC_ENTER_LOOPER</p>
+<blockquote>
+<p>后面不跟参数，当Server进程主动启动一个线程，并将自己注册到Binder驱动程序后，它接着就会使用命令协议代码<code>BC_ENTER_LOOPER</code>来通知Binder驱动程序，它已经准备就绪处理进程间通信请求了。</p>
+</blockquote>
+</li>
+<li><p>BC_EXIT_LOOPER</p>
+<blockquote>
+<p>后面不跟参数，当一个线程要退出时，它就会使用命令协议代码BC_EXIT_LOOPER通知binder驱动，该线程退出主循环了，不再接收数据。</p>
+</blockquote>
+</li>
+<li><p>BC_REQUEST_DEATH_NOTIFICATION</p>
+<blockquote>
+<p>后面紧跟binder_ptr_cookie结构体，描述一个用来接收死亡通知的对象地址。ptr（指针）指向需要得到死亡通知的Binder引用。cookie（指针）指向与死亡通知相关的信息，Binder驱动会在发出死亡通知时，返回给发出请求的进程。该cookie值会保存在<code>binder_ref.death.cookie</code>中。当一个进程希望获得它所引用的Service组件的死亡接收通知时，就需要通过该命令协议代码向Binder驱动程序注册一个死亡接收通知。</p>
+</blockquote>
+</li>
+<li><p>BC_CLEAR_DEATH_NOTIFICATION</p>
+<blockquote>
+<p>后面紧跟binder_ptr_cookie结构体，描述一个用来接收死亡通知的对象地址（上同）。当一个进程希望注销之前注册的一个死亡接收通知，就需要通过该命令协议代码向Binder驱动程序发送请求。Binder驱动程序就会创建一个binder_ref_death结构体，然后保存在对应的Binder引用对象的成员变量death中。</p>
+</blockquote>
+</li>
+<li><p>BC_DEAD_BINDER_DONE</p>
+<blockquote>
+<p>后面紧跟一个指针，指向一个死亡接收通知结构体<code>binder_ref_death</code>的地址。当一个进程获得一个Service组件的死亡接收通知时，就会使用该命令协议代码来通知Binder驱动程序，它已经处理完该Service组件的死亡通知了。</p>
+</blockquote>
+</li>
+<li><p>BC_ACQUIRE_RESULT、BC_ATTEMPT_ACQUIRE 暂不支持。</p>
+</li>
+</ol>
+<h5 id="返回协议代码"><a href="#返回协议代码" class="headerlink" title="返回协议代码"></a>返回协议代码</h5><ol>
+<li><p>BR_ERROR</p>
+<blockquote>
+<p>后面紧跟一个整数，用来描述一个错误码。Binder驱动程序在处理应用程序进程发出的某个请求时，若发生了异常，就会通过该返回协议代码来通知应用程序进程。</p>
+</blockquote>
+</li>
+<li><p>BR_OK </p>
+<blockquote>
+<p>后面不需要指定通信数据，Binder驱动程序成功处理了应用程序进程发出的某一个请求后，就会通过该返回协议代码来通知应用程序进程。</p>
+</blockquote>
+</li>
+<li><p>BR_TRANSACTION和BR_REPLY</p>
+<blockquote>
+<p>后面紧跟binder_transaction_data结构体，当一个Client进程通过BC_TRANSACTION命令向一个Server进程发出进程间请求时，Binder驱动程序就会使用返回协议代码BR_TRANSACTION来通知Server进程来处理该请求。当Server进程处理完该进程间通信请求后，会通过BC_REPLY命令向Client进程返回处理结果，此时Binder驱动程序就会使用返回协议代码BR_REPLY将进程间通信处理结果返回给Client进程。</p>
+</blockquote>
+</li>
+<li><p>BR_DEAD_REPLY</p>
+<blockquote>
+<p>后面不需要指定通信数据，Binder驱动程序在处理进程间通信请求时，如果发现目标进程or目标线程已经死亡，就会通过该返回协议代码来通知源进程。</p>
+</blockquote>
+</li>
+<li><p>BR_TRANSACTION_COMPLETE</p>
+<blockquote>
+<p>后面不需要指定通信数据，当Binder驱动程序接收到应用程序进程给它发送的命令协议代码BC_TRANSACTION或者BC_REPLY后，它就会通过该返回协议代码来通知应用程序进程，该命令协议代码已经被接收了，正在分发给目标进程或者目标线程。</p>
+<p>这和BR_REPLY不一样，是驱动程序告知发送方已经发送成功，而不是Server端返回请求数据。<code>所以，不管同步还是异步交互，接收方都能获得本消息</code>。</p>
+</blockquote>
+</li>
+<li><p>BR_INCREFS、BR_DECREFS、BR_ACQUIRE、BR_RELEASE</p>
+<blockquote>
+<p>后面紧跟binder_ptr_cookie结构体，描述一个Binder实体对象。其中，BR_INCREFS、BR_DECREFS分别用来增加和减少一个Service组件的弱引用计数；而BR_ACQUIRE、BR_RELEASE则分别用来增加和减少一个Service组件的强引用计数。<code>只有提供Binder实体的进程才能收到这组消息。</code></p>
+</blockquote>
+</li>
+<li><p>BR_SPAWN_LOOPER</p>
+<blockquote>
+<p>后面不需要指定通信数据，该消息用于接收方线程池管理。当Binder驱动程序发现接收方所有线程都处于忙碌状态且线程池里的线程总数没有超过BINDER_SET_MAX_THREADS设置的最大线程数时，就会使用该返回协议代码，来通知接收方进程增加一个新的线程到Binder线程池中。</p>
+</blockquote>
+</li>
+<li><p>BR_FAILED_REPLY</p>
+<blockquote>
+<p>后面不需要指定通信数据，当Binder驱动程序处理一个进程发出的BC_TRANSACTION命令协议时，若发生了异常情况（如：Binder引用号非法），就会通过该返回协议代码来通知源进程。</p>
+</blockquote>
+</li>
+<li><p>BR_DEAD_BINDER </p>
+<blockquote>
+<p>后面紧跟一个void类型的指针，即<code>binder_ref.death.cookie</code>值，表示注册接收死亡通知时的附加值。当Binder驱动程序检测到一个Service组件的死亡事件时，就会通过该返回协议码来通知相应的Client进程。</p>
+</blockquote>
+</li>
+<li><p>BR_CLEAR_DEATH_NOTIFICATION_DONE</p>
+<blockquote>
+<p>后面紧跟一个void类型的指针，即<code>binder_ref.death.cookie</code>值，表示注册接收死亡通知时的附加值。当Client进程向Binder驱动注销之前注册的死亡接收通知时，Binder驱动程序执行完这个注销操作后。就会通过该返回协议码来通知源进程。</p>
+</blockquote>
+</li>
+<li><p>BR_NOOP</p>
+<blockquote>
+<p>后面不需要指定通信数据，Binder驱动程序使用该返回协议码来通知应用程序进程执行一个空操作，它存在的目的是为了以后可以替换为BR_SPAWN_LOOPER。</p>
+</blockquote>
+</li>
+<li><p>BR_ACQUIRE_RESULT、BR_ATTEMPT_ACQUIRE、BR_FINISHED 尚未支持</p>
+</li>
+</ol>
+<p>上面提到了多次提到binder_ptr_cookie结构体，其结构如下所示：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> binder_ptr_cookie&#123;</span><br><span class="line"><span class="keyword">void</span> * ptr;</span><br><span class="line"><span class="keyword">void</span> * cookie;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该结构体用来描述一个Binder实体对象或者一个Service组件的死亡接收通知。</p>
+<p>当描述Binder实体时，成员变量ptr和cookie的含义等同于Binder_node的成员变量ptr和cookie，分别表示<code>指向用户空间Binder实体的指针</code>和<code>指向用户空间的附加指针</code>。</p>
+<p>当描述Service组件的死亡接收通知时，成员变量ptr（指针）指向希望得到死亡通知的Binder引用。成员变量cookie（指针）指向与死亡通知相关的信息，该cookie值会保存在<code>binder_ref.death.cookie</code>中，Binder驱动会在发出死亡通知时，返回给发出请求的Client进程。</p>
+<h4 id="进程间通信的真正数据载体Binder-transaction-data"><a href="#进程间通信的真正数据载体Binder-transaction-data" class="headerlink" title="进程间通信的真正数据载体Binder_transaction_data"></a>进程间通信的真正数据载体Binder_transaction_data</h4><p>Binder_transaction_data用来描述进程间通信过程中所传输的数据，其结构体如下所示：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> binder_transaction_data &#123;</span><br><span class="line"><span class="comment">/* The first two are only used for bcTRANSACTION and brTRANSACTION,</span><br><span class="line">* identifying the target and contents of the transaction.</span><br><span class="line">*/</span></span><br><span class="line"><span class="keyword">union</span> &#123;</span><br><span class="line">	<span class="keyword">size_t</span>	handle;	<span class="comment">/* target descriptor of command transaction */</span></span><br><span class="line">	<span class="keyword">void</span>	*ptr;	<span class="comment">/* target descriptor of return transaction */</span></span><br><span class="line">&#125; target;</span><br><span class="line"><span class="keyword">void</span>		*cookie;	<span class="comment">/* target object cookie */</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span>	code;		<span class="comment">/* transaction command */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* General information about the transaction. */</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">int</span>	flags;</span><br><span class="line"><span class="keyword">pid_t</span>		sender_pid;</span><br><span class="line"><span class="keyword">uid_t</span>		sender_euid;</span><br><span class="line"><span class="keyword">size_t</span>		data_size;	<span class="comment">/* number of bytes of data */</span></span><br><span class="line"><span class="keyword">size_t</span>		offsets_size;	<span class="comment">/* number of bytes of offsets */</span></span><br><span class="line"></span><br><span class="line"><span class="comment">/* If this transaction is inline, the data immediately</span><br><span class="line"> * follows here; otherwise, it ends with a pointer to</span><br><span class="line"> * the data buffer.</span><br><span class="line">*/</span></span><br><span class="line"><span class="keyword">union</span> &#123;</span><br><span class="line"><span class="keyword">struct</span> &#123;</span><br><span class="line">	<span class="comment">/* transaction data */</span></span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">void</span>	*buffer;</span><br><span class="line">	<span class="comment">/* offsets from buffer to flat_binder_object structs */</span></span><br><span class="line">	<span class="keyword">const</span> <span class="keyword">void</span>	*offsets;</span><br><span class="line">	&#125; ptr;</span><br><span class="line">	<span class="keyword">uint8_t</span>	buf[<span class="number">8</span>];</span><br><span class="line">&#125; data;</span><br><span class="line">;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li><p>union {<br>size_t  handle;<br>void    * ptr;<br>} target;</p>
+<blockquote>
+<p>成员变量target是一个联合体，用来描述一个目标Binder实体对象或者目标Binder引用对象。对于发送数据包的一方，该成员指明发送目的地。若描述的是一个Binder实体对象，那么它的成员变量ptr就指向Binder实体对象在用户空间的地址。若描述的是一个Binder引用对象，那么它的成员变量handle就表示指向Binder引用对象的句柄值。</p>
+<p>若是Client进程向Server进程发送数据，那么需要填写handle句柄值（指向binder_node的binder_ref的成员变量的desc的值）。Binder驱动程序会自动将该句柄值转换为对应的Binder实体对象在用户空间的地址。这样，Server进程便可以直接将其当做对象指针来使用（通常是将其reinterpret_cast成相应类）。</p>
+<p>反过来的转换，貌似没有应用场景哈？？？</p>
+</blockquote>
+</li>
+<li><p>void *cookie; </p>
+<blockquote>
+<p>Client进程忽略该成员；Binder驱动会自动赋值为binder_node.cookie的值（binder_node.cookie的值又来自于flat_binder_object.cookie的值）。驱动基本上不关心该成员。</p>
+</blockquote>
+</li>
+<li><p>unsigned int    code;</p>
+<blockquote>
+<p>该成员存放收发双方约定的命令码，驱动完全不关心该成员的内容。通常是Server端定义的公共接口函数的编号。</p>
+</blockquote>
+</li>
+<li><p>unsigned int    flags;</p>
+<blockquote>
+<p>flags是一个标志值，用来描述进程间通信行为特征。其取值如下所示：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> transaction_flags &#123;</span><br><span class="line"> TF_ONE_WAY	= <span class="number">0x01</span>,	<span class="comment">/* this is a one-way call: async, no return 若该位被设置为1，就表示这是一个异步的进程间通信过程*/</span></span><br><span class="line"> TF_ROOT_OBJECT	= <span class="number">0x04</span>,	<span class="comment">/* contents are the component's root object 暂无用*/</span></span><br><span class="line"> TF_STATUS_CODE	= <span class="number">0x08</span>,	<span class="comment">/* contents are a 32-bit status code 若该位被设置为1，就表示成员变量data所描述的数据缓冲区的内容是一个4字节的状态码*/</span></span><br><span class="line"> TF_ACCEPT_FDS	= <span class="number">0x10</span>,	<span class="comment">/* allow replies with file descriptors 若该位被设置为0，就表示源进程不允许目标进程返回的结果数据中包含有文件描述符即文件Binder,因为收到一个文件形式的Binder，会自动为数据接收方打开一个文件，使用该标志位可以防止打开文件过多*/</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>pid_t  sender_pid和uid_t  sender_euid;</p>
+<blockquote>
+<p>该成员存放发送方进程的PID和UID，由Binder驱动负责填入，接收方可以读取该成员获知发送方的身份，以便进行安全检查。</p>
+</blockquote>
+</li>
+<li><p>size_t  data_size和size_t   offsets_size</p>
+<blockquote>
+<p>data_size表示成员变量<code>data.ptr.buffer</code>指向的数据缓冲区的大小，字节；offsets_size表示成员变量<code>data.ptr.offsets</code>指向的偏移数组的大小，字节。</p>
+</blockquote>
+</li>
+<li><p>union {<br>struct {<br>  const void  <em>buffer;<br>  const void  </em>offsets;<br> } ptr;<br> uint8_t buf[8];<br>} data;</p>
+<blockquote>
+<p>data是一个联合体，表示通信数据缓冲区。若通信数据较小，就直接使用联合体内的数组buf来传输数据；若数据较大，就需要使用一块动态分配的数据缓冲区来传输数据了。这块动态分配的数据缓冲区通过一个结构体ptr来表示。其中，<code>ptr.buffer</code>指向一个数据缓冲区，他是真正用来保存通信数据的，他的大小由前面所描述的成员变量<code>data_size</code>来描述。当数据缓冲区中包含Binder对象时（Binder引用 or Binder实体），那么紧跟在这个数据缓冲区后面就会有一个偏移数组，用来描述数据缓冲区中每一个Binder对象相对于<code>ptr.buffer</code>的偏移量。<code>ptr.offsets</code>即指向这个偏移数组的首地址。偏移数组的大小由前面所述的<code>offsets_size</code>来表示。</p>
+<p>数据缓冲区中的Binder对象使用<code>flat_binder_object</code>结构体来描述。</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="数据缓冲区中的Binder对象flat-binder-object"><a href="#数据缓冲区中的Binder对象flat-binder-object" class="headerlink" title="数据缓冲区中的Binder对象flat_binder_object"></a>数据缓冲区中的Binder对象flat_binder_object</h4><p>Binder对象可以塞在数据包的有效数据中，从一个进程传递给另一个进程，这些传输中的Binder用结构flat_binder_object表示，如下表所示：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> flat_binder_object &#123;</span><br><span class="line"><span class="comment">/* 8 bytes for large_flat_header. */</span></span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span>		type;</span><br><span class="line"><span class="keyword">unsigned</span> <span class="keyword">long</span>		flags;</span><br><span class="line"><span class="comment">/* 8 bytes of data. */</span></span><br><span class="line"><span class="keyword">union</span> &#123;</span><br><span class="line">	<span class="keyword">void</span>		*binder;	<span class="comment">/* local object */</span></span><br><span class="line">	<span class="keyword">signed</span> <span class="keyword">long</span>	handle;		<span class="comment">/* remote object */</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">/* extra data associated with local object */</span></span><br><span class="line"><span class="keyword">void</span>			*cookie;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></p>
+<p>相关字段的含义如下所示：</p>
+<ol>
+<li><p>unsigned long        type;</p>
+<blockquote>
+<p>表明该Binder对象的类型，包括以下几种：</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> &#123;</span><br><span class="line"> <span class="comment">//表示传递的是Binder实体，并且指向该实体的引用都是强类型</span></span><br><span class="line"> BINDER_TYPE_BINDER	= B_PACK_CHARS(<span class="string">'s'</span>, <span class="string">'b'</span>, <span class="string">'*'</span>, B_TYPE_LARGE),</span><br><span class="line"> <span class="comment">//表示传递的是Binder实体，并且指向该实体的引用都是弱类型；</span></span><br><span class="line"> BINDER_TYPE_WEAK_BINDER	= B_PACK_CHARS(<span class="string">'w'</span>, <span class="string">'b'</span>, <span class="string">'*'</span>, B_TYPE_LARGE),</span><br><span class="line"> <span class="comment">//表示传递的是Binder强类型的引用</span></span><br><span class="line"> BINDER_TYPE_HANDLE	= B_PACK_CHARS(<span class="string">'s'</span>, <span class="string">'h'</span>, <span class="string">'*'</span>, B_TYPE_LARGE),</span><br><span class="line"> <span class="comment">//表示传递的是Binder弱类型的引用</span></span><br><span class="line"> BINDER_TYPE_WEAK_HANDLE	= B_PACK_CHARS(<span class="string">'w'</span>, <span class="string">'h'</span>, <span class="string">'*'</span>, B_TYPE_LARGE),</span><br><span class="line"> <span class="comment">//表示传递的是文件形式的Binder</span></span><br><span class="line"> BINDER_TYPE_FD		= B_PACK_CHARS(<span class="string">'f'</span>, <span class="string">'d'</span>, <span class="string">'*'</span>, B_TYPE_LARGE),</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>unsigned long   flags;</p>
+<blockquote>
+<p>一个标志位，只有当第一次传递Binder实体时有效(1、flat_binder_object表示Binder实体对象；2、第一次跨进程传递该Binder实体对象)，因为此刻Binder驱动需要在内核中创建相应的实体节点（binder_node），有些参数需要从该域取出：</p>
+<blockquote>
+<p>第0-7位：代码中用FLAT_BINDER_FLAG_PRIORITY_MASK取得，表示本Binder实体对象处理进程间通信请求时，所运行的线程应当具备的最小线程优先级。会保存在<code>binder_node.min_priority</code>中。<br>第8位：代码中用FLAT_BINDER_FLAG_ACCEPTS_FDS取得，置1表示该Binder实体可以接收其它进程发过来的文件形式的Binder。由于接收文件形式的Binder会在本进程中自动打开文件，有些Server可以用该标志禁止该功能，以防打开过多文件。</p>
+</blockquote>
+</blockquote>
+</li>
+<li><p>void * cookie;</p>
+<blockquote>
+<p>该域只对Binder实体有效，存放与该Binder实体有关的附加信息，保存在<code>binder_node.cookie</code>中，后续会由Binder驱动填充到<code>binder_transaction_data.cookie</code>成员变量中。    </p>
+</blockquote>
+</li>
+<li><p>union {<br> void  * binder;    //local object<br> signed long handle;     //remote object<br>};</p>
+<blockquote>
+<p>当传递的是Binder实体时，使用binder域指向Binder实体在应用程序中的地址。<br>当传递的是Binder引用时，使用handle域存放Binder引用在进程中的句柄值。<br>在binder进程间传递时，binder驱动会动态的修改这两个值和type类型，详见下面的列表。</p>
+</blockquote>
+</li>
+</ol>
+<p>无论是Binder实体还是对实体的引用都从属与某个进程，所以该结构不能透明地在进程之间传输，必须经过驱动翻译。</p>
+<p>例如当Server把Binder实体传递给Client时，在发送数据流中，flat_binder_object中的type是BINDER_TYPE_BINDER，binder指向Server进程的用户空间地址。如果透传给接收端将毫无用处，驱动必须对数据流中的这个Binder做修改：将type改成BINDER_TYPE_HANDLE；为这个Binder实体在接收进程中创建位于内核中的引用（binder_ref）并将引用号填入handle中。对于数据流中的Binder引用句柄，也要做同样转换。经过处理后，接收进程从数据流中取得的Binder引用句柄才是有效的，才可以将其填入数据包binder_transaction_data的target.handle域，向Binder实体发送请求。</p>
+<p>这样做也是出于安全性考虑：应用程序不能随便猜测一个引用号填入target.handle中就可以向Server请求服务了，因为Binder驱动并没有为你在内核中创建对应的Binder引用，必定会被驱动拒绝。唯有经过身份认证确认合法后，由“权威机构”（Binder驱动）亲手授予你的Binder引用（句柄）才能使用。</p>
+<p>下表总结了当flat_binder_object结构穿过Binder驱动时，驱动所做的操作：</p>
+<table>
+<thead>
+<tr>
+<th>Binder 类型（ <code>flat_binder_object.type</code>）</th>
+<th>在发送方的操作</th>
+<th>在接收方的操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BINDER_TYPE_BINDER、BINDER_TYPE_WEAK_BINDER</td>
+<td>只有Server进程才能发送该类型的Binder。如果是第一次发送Binder实体，Binder驱动将在内核中创建对应的实体节点（Binder_node），并保存binder，cookie，flag域。</td>
+<td>如果是第一次接收该Binder实体，Binder驱动将在内核中创建对应的引用节点（Binder_ref），并将handle域替换为新建的引用号，将type域替换为BINDER<em>TYPE</em>(WEAK_)HANDLE</td>
+</tr>
+<tr>
+<td>BINDER_TYPE_HANDLE、BINDER_TYPE_WEAK_HANDLE</td>
+<td>获得Binder引用的进程都能发送该类型Binder。Binder驱动根据handle域提供的引用号，查找在内核的Binder引用（Binder_ref）。如果找到，则说明引用号合法，否则拒绝该发送请求。</td>
+<td>如果收到的Binder实体位于接收进程中：将binder域替换为保存在binder_node节点中的binder值（Binder实体在用户空间的地址）；cookie替换为保存在binder_node节点中的cookie值；type替换为BINDER<em>TYPE</em>(WEAK_)BINDER。如果收到的Binder实体不在接收进程中：若是第一次接收，则创建Binder实体在内核中的Binder引用（binder_ref），并将handle域替换为新建的引用号（每个进程都会有独立的引用号）</td>
+</tr>
+<tr>
+<td>BINDER_TYPE_FD</td>
+<td>验证handle域中提供的打开文件号是否有效，无效则拒绝该发送请求。</td>
+<td>在接收方创建新的打开文件号，并将其与给定的文件描述结构绑定。</td>
+</tr>
+</tbody>
+</table>
+<h5 id="文件形式的-Binder"><a href="#文件形式的-Binder" class="headerlink" title="文件形式的 Binder"></a>文件形式的 Binder</h5><p>除了通常意义上用来通信的Binder，还有一种特殊的Binder：文件Binder。这种Binder的基本思想是：将文件看成Binder实体，进程打开的文件号看成Binder的引用。一个进程可以将它打开文件的文件号传递给另一个进程，从而另一个进程也打开了同一个文件，就象Binder的引用在进程之间传递一样。</p>
+<p>一个进程打开一个文件，就获得与该文件绑定的打开文件号。<strong>从Binder的角度，linux在内核创建的打开文件描述结构struct file是Binder的实体，打开文件号是该进程对该实体的引用。</strong> 既然是Binder，那么就可以在进程之间传递，故也可以用flat_binder_object结构，将文件Binder通过数据包发送至其它进程，只是结构中type域的值为BINDER_TYPE_FD，表明该Binder是文件Binder。而结构中的handle域则存放文件在发送方进程中的打开文件号。</p>
+<p>我们知道打开文件号是个局限于某个进程的值，一旦跨进程就没有意义了。若要跨进程同样需要驱动做转换。驱动在接收Binder的进程空间创建一个新的打开文件号，将它与已有的打开文件描述结构struct file勾连上，从此该Binder实体又多了一个引用。新建的打开文件号覆盖flat_binder_object中原来的文件号（handle域）交给接收进程。接收进程利用它可以执行read()，write()等文件操作。</p>
+<p>传个文件为啥要这么麻烦，直接将文件名用Binder传过去，接收方用open()打开不就行了吗？其实这还是有区别的。首先对同一个打开文件共享的层次不同：使用文件Binder打开的文件共享linux VFS中的struct file，struct dentry，struct inode结构，这意味着一个进程使用read()/write()/seek()改变了文件指针，另一个进程的文件指针也会改变；而如果两个进程分别使用同一文件名打开文件则有各自的struct file结构，从而各自独立维护文件指针，互不干扰。其次是一些特殊设备文件要求在struct file一级共享才能使用，例如android的另一个驱动ashmem，它和Binder一样也是misc设备，用以实现进程间的共享内存。一个进程打开的ashmem文件只有通过文件Binder发送到另一个进程才能实现内存共享，这大大提高了内存共享的安全性，道理和Binder增强了IPC的安全性是一样的。</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/Binder/" rel="tag">#Binder</a>
+          
+            <a href="/tags/数据结构/" rel="tag">#数据结构</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/31/Android-SystemBar/" rel="next" title="Android SystemBar">
+                <i class="fa fa-chevron-left"></i> Android SystemBar
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/06/05/Binder之数据结构/"
+     data-title="Binder之数据结构"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/06/05/Binder之数据结构/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/06/05/Binder之数据结构/"
+           data-title="Binder之数据结构" data-url="http://ltlovezh.github.io/2016/06/05/Binder之数据结构/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+               alt="leon" />
+          <p class="site-author-name" itemprop="name">leon</p>
+          <p class="site-description motion-element" itemprop="description">技术实践者</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">14</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/63230484/" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  douban
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">技术博文</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#关于Binder，几篇不错的文章"><span class="nav-number">1.</span> <span class="nav-text">关于Binder，几篇不错的文章</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Binder数据结构"><span class="nav-number">2.</span> <span class="nav-text">Binder数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Binder-实体在驱动中的表述binder-node"><span class="nav-number">2.1.</span> <span class="nav-text">Binder 实体在驱动中的表述binder_node</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Binder引用在驱动中的表述binder-ref"><span class="nav-number">2.2.</span> <span class="nav-text">Binder引用在驱动中的表述binder_ref</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内核缓冲区节点binder-buffer"><span class="nav-number">2.3.</span> <span class="nav-text">内核缓冲区节点binder_buffer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Binder进程在内核中表述（Binder-proc）"><span class="nav-number">2.4.</span> <span class="nav-text">Binder进程在内核中表述（Binder_proc）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Binder线程池的线程（Bidner-thread）"><span class="nav-number">2.5.</span> <span class="nav-text">Binder线程池的线程（Bidner_thread）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Binder事务Binder-transaction"><span class="nav-number">2.6.</span> <span class="nav-text">Binder事务Binder_transaction</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#和Binder驱动交互的数据结构"><span class="nav-number">2.7.</span> <span class="nav-text">和Binder驱动交互的数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#通信数据的载体Binder-write-read"><span class="nav-number">2.7.1.</span> <span class="nav-text">通信数据的载体Binder_write_read</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#适用于binder-write-read的子命令字"><span class="nav-number">2.7.2.</span> <span class="nav-text">适用于binder_write_read的子命令字</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#命令协议代码"><span class="nav-number">2.7.2.1.</span> <span class="nav-text">命令协议代码</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#返回协议代码"><span class="nav-number">2.7.2.2.</span> <span class="nav-text">返回协议代码</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#进程间通信的真正数据载体Binder-transaction-data"><span class="nav-number">2.7.3.</span> <span class="nav-text">进程间通信的真正数据载体Binder_transaction_data</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据缓冲区中的Binder对象flat-binder-object"><span class="nav-number">2.7.4.</span> <span class="nav-text">数据缓冲区中的Binder对象flat_binder_object</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#文件形式的-Binder"><span class="nav-number">2.7.4.1.</span> <span class="nav-text">文件形式的 Binder</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+&nbsp;
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ltlovezh"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+</body>
+</html>

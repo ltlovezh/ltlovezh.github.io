@@ -255,6 +255,124 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/27/Kotlin基本语法2/" itemprop="url">
+                  Kotlin基本语法2
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-27T09:47:36+08:00" content="2016-04-27">
+              2016-04-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/27/Kotlin基本语法2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/27/Kotlin基本语法2/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/04/27/Kotlin基本语法2/" class="leancloud_visitors" data-flag-title="Kotlin基本语法2">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>本文承接上文<a href="http://ltlovezh.com/2016/04/17/Kotlin%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%951/">Kotlin基本语法1</a>，继续介绍kotlin基础语法。</p>
+<h2 id="类"><a href="#类" class="headerlink" title="类"></a>类</h2><p>在kotlin中，类的定义包含类名、类头和类体。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> 类名 修饰符[<span class="title">public</span>,<span class="type">internal</span>,<span class="type">protected</span>,<span class="type">private] constructor（参数：参数类型）&#123;</span></span></span><br><span class="line">  init&#123;</span><br><span class="line">    initializer blocks</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">//二级构造函数，调用了主构造函数</span></span><br><span class="line">  constructor(参数：参数类型) : this(参数) &#123;</span><br><span class="line">        parent.children.add(this)</span><br><span class="line">  &#125;</span><br><span class="line">类体</span><br><span class="line">&#125;</span><br><span class="line">其中，类头和类体都是可选的。</span><br></pre></td></tr></table></figure></p>
+<p>kotlin中的Class有两种构造函数：主构造函数和二级构造函数。上述<code>constructor（参数：参数类型）</code>就指定了主构造函数，它是类头的一部分。</p>
+<p>主构造函数不能包含任何代码。任何初始化操作只能在<code>initializer blocks</code>中进行（可以直接引用主构造函数中的参数值）。</p>
+<p>二级构造函数通过<code>constructor</code>关键字进行定义，所有的二级构造函数必须直接或者间接的调用主构造函数（通过this关键字）。</p>
+<p>我们在java代码中，经常在类中定义多个属性变量，然后在构造函数中分别初始化它们。对于这种行为，kotlin提供了更加简单的方式：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span></span>(<span class="variable"><span class="keyword">val</span> name</span>: String = 默认参数值, <span class="variable"><span class="keyword">var</span> age</span>: <span class="keyword">Int</span> = 默认参数值) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述User类定义了两个成员变量，并在主构造函数中完成了初始化。</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/04/27/Kotlin基本语法2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/24/Android中测量Text的宽度和高度/" itemprop="url">
                   Android中测量Text的宽度和高度
                 </a>
@@ -622,7 +740,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">13</span>
+              <span class="site-state-item-count">14</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -632,7 +750,7 @@
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
