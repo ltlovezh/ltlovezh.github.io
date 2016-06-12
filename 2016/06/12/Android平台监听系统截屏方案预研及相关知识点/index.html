@@ -1,0 +1,970 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,系统截屏,FileObserver,ContentObserver,多媒体数据库," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="最近有个针对系统截屏的需求，所以预研了Android平台上捕获系统截屏的方案。
+最直接的方式就是监听手机的系统截屏组合键（电源键+音量下键），但是这种方式实现难度大，且有的机型使用特殊手势进行截屏，兼容性问题难以解决。
+所以网上流行的方案是监听系统截屏目录下文件创建事件或者多媒体数据库图片资源变更通知。我对两种方式都做了测试，多多少少都存在一些问题，现整理如下：
+通过FileObserver监听系">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android平台监听系统截屏方案预研及相关知识点">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="最近有个针对系统截屏的需求，所以预研了Android平台上捕获系统截屏的方案。
+最直接的方式就是监听手机的系统截屏组合键（电源键+音量下键），但是这种方式实现难度大，且有的机型使用特殊手势进行截屏，兼容性问题难以解决。
+所以网上流行的方案是监听系统截屏目录下文件创建事件或者多媒体数据库图片资源变更通知。我对两种方式都做了测试，多多少少都存在一些问题，现整理如下：
+通过FileObserver监听系">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%A4%9A%E5%AA%92%E4%BD%93%E6%95%B0%E6%8D%AE%E5%BA%93.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%A4%9A%E5%AA%92%E4%BD%93%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E6%95%B0%E6%8D%AE.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/image%E8%A1%A8.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%88%AA%E5%9B%BE%E6%95%B0%E6%8D%AE.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%8B%8D%E7%85%A7%E6%95%B0%E6%8D%AE.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/MediaStore.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/ContentProvider%E6%95%B0%E6%8D%AE%E5%8F%98%E6%9B%B4%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%A4%9A%E5%8F%89%E6%A0%91%E7%BB%93%E6%9E%84.png">
+<meta property="og:updated_time" content="2016-06-12T05:33:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android平台监听系统截屏方案预研及相关知识点">
+<meta name="twitter:description" content="最近有个针对系统截屏的需求，所以预研了Android平台上捕获系统截屏的方案。
+最直接的方式就是监听手机的系统截屏组合键（电源键+音量下键），但是这种方式实现难度大，且有的机型使用特殊手势进行截屏，兼容性问题难以解决。
+所以网上流行的方案是监听系统截屏目录下文件创建事件或者多媒体数据库图片资源变更通知。我对两种方式都做了测试，多多少少都存在一些问题，现整理如下：
+通过FileObserver监听系">
+<meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%A4%9A%E5%AA%92%E4%BD%93%E6%95%B0%E6%8D%AE%E5%BA%93.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6226090551544907000,
+      author: 'leon'
+    }
+  };
+</script>
+
+  <title> Android平台监听系统截屏方案预研及相关知识点 | 风之谷 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">风之谷</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android平台监听系统截屏方案预研及相关知识点
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-12T13:21:50+08:00" content="2016-06-12">
+              2016-06-12
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/12/Android平台监听系统截屏方案预研及相关知识点/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/" class="leancloud_visitors" data-flag-title="Android平台监听系统截屏方案预研及相关知识点">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近有个针对系统截屏的需求，所以预研了Android平台上捕获系统截屏的方案。</p>
+<p>最直接的方式就是监听手机的系统截屏组合键（电源键+音量下键），但是这种方式实现难度大，且有的机型使用特殊手势进行截屏，兼容性问题难以解决。</p>
+<p>所以网上流行的方案是监听系统截屏目录下文件创建事件或者多媒体数据库图片资源变更通知。我对两种方式都做了测试，多多少少都存在一些问题，现整理如下：</p>
+<h2 id="通过FileObserver监听系统截屏目录下的文件创建"><a href="#通过FileObserver监听系统截屏目录下的文件创建" class="headerlink" title="通过FileObserver监听系统截屏目录下的文件创建"></a>通过FileObserver监听系统截屏目录下的文件创建</h2><p><code>FileObserver</code>可以对一个文件或者目录进行监听，它是基于linux的inotify实现，可以监听文件创建、访问、修改等操作。</p>
+<p>虽然文档上说FileObserver可以实现递归监听，即被监听文件夹下所有文件和级联子目录的改变都会触发监听器。但是，真正实验下来发现，不是这么回事！<strong>被监听目录的子目录的本身改动以及子目录下的文件改动都不会触发监听器。因此，要想实现递归监听，必须自己递归实现对每个子目录的监听</strong>。</p>
+<p>FileObserver可以监听多种类型的事件：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">事件类型</th>
+<th style="text-align:left">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">ACCESS</td>
+<td style="text-align:left">被监听文件被访问</td>
+</tr>
+<tr>
+<td style="text-align:center">MODIFY</td>
+<td style="text-align:left">被监听文件被修改</td>
+</tr>
+<tr>
+<td style="text-align:center">ATTRIB</td>
+<td style="text-align:left">被监听文件或目录的权限、Owner等属性被改变</td>
+</tr>
+<tr>
+<td style="text-align:center">CLOSE_WRITE</td>
+<td style="text-align:left">被监听的可写文件或者目录（已经被打开）被关闭</td>
+</tr>
+<tr>
+<td style="text-align:center">CLOSE_NOWRITE</td>
+<td style="text-align:left">被监听的只读文件或者目录（已经被打开）被关闭</td>
+</tr>
+<tr>
+<td style="text-align:center">OPEN</td>
+<td style="text-align:left">被监听文件或者目录被打开</td>
+</tr>
+<tr>
+<td style="text-align:center">MOVED_FROM</td>
+<td style="text-align:left">文件或者子目录从当前被监听目录下被移走</td>
+</tr>
+<tr>
+<td style="text-align:center">MOVED_TO</td>
+<td style="text-align:left">文件或者子目录从其他目录被移动到当前被监听目录下</td>
+</tr>
+<tr>
+<td style="text-align:center">CREATE</td>
+<td style="text-align:left">在当前被监听目录下，创建文件或者子目录</td>
+</tr>
+<tr>
+<td style="text-align:center">DELETE</td>
+<td style="text-align:left">在当前被监听目录下删除一个文件</td>
+</tr>
+<tr>
+<td style="text-align:center">DELETE_SELF</td>
+<td style="text-align:left">被监听的文件或者目录本身被删除，此时监听将被停止</td>
+</tr>
+<tr>
+<td style="text-align:center">MOVE_SELF</td>
+<td style="text-align:left">被监听的文件或者目录本身被移动</td>
+</tr>
+<tr>
+<td style="text-align:center">ALL_EVENTS</td>
+<td style="text-align:left">上面多有事件的并集</td>
+</tr>
+</tbody>
+</table>
+<p>FileObserver是抽象类，我们需要实现<code>onEvent</code>方法处理具体业务逻辑。此外，创建FileObserver对象时，需要指定被监听文件或者目录，以及需要监听的事件类型。</p>
+<p>经过实际测试，发现使用<code>FileObserver</code>进行文件（夹）监控，有几点需要注意：</p>
+<blockquote>
+<ol>
+<li>不要在<code>onEvent</code>方法中进行耗时操作，这样会导致线程被阻塞，无法监听到后续事件，最好在工作线程进行统一处理。</li>
+<li>防止出现死循环，比如：若监听<code>CREATE</code>事件时，就不能在<code>onEvent</code>方法中在被监听目录创建文件，否则又会触发<code>CREATE</code>事件，导致死循环。</li>
+<li>回调方法<code>onEvent</code>中的参数path，仅是文件名，不是完整路径。</li>
+<li>在监听到<code>CREATE</code>事件时，需要等待几百ms，才能加载到到文件。（这点很坑，不知道有啥解决方案不？！）</li>
+</ol>
+</blockquote>
+<p>OK，FileObserver的基本情况介绍完了，下面我们看下使用FileObserver监听系统截图的方案和可行性：因为我们要监听系统截图，因此理论上只需要监听系统截图目录的<code>CREATE</code>事件即可。基本代码如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//三星Note3下的系统截图目录</span></span><br><span class="line">String path = <span class="string">"/storage/emulated/0/Pictures/Screenshots"</span>;</span><br><span class="line"><span class="comment">//小米4下的系统截图目录</span></span><br><span class="line"><span class="comment">//path = "/storage/emulated/0/DCIM/Screenshots";</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//指定监听路径path和事件类型CREATE</span></span><br><span class="line">FileObserver fileObserver = <span class="keyword">new</span> FileObserver(path,FileObserver.CREATE) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onEvent</span><span class="params">(<span class="keyword">int</span> event, String path)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//这里最好启动一个线程去加载系统截屏的图片，否则会导致线程被阻塞，无法监听到后续事件。</span></span><br><span class="line">        <span class="comment">//此外，这里的path仅是图片文件名，不是完整路径</span></span><br><span class="line">        <span class="comment">//收到CREATE事件后，立即去加载图片是获取不到的，需要延迟几百毫秒才可以加载到，估计是图片正在落地。</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//开始监听</span></span><br><span class="line">fileObserver.startWatching();</span><br><span class="line"><span class="comment">//结束监听</span></span><br><span class="line">fileObserver.stopWatching();</span><br></pre></td></tr></table></figure>
+<p>但是实际测试下来发现，在三星Note3上可以准确的监听系统截图，并可以获取到系统截图图片。但是在小米4上，根本监听不到<code>CREATE</code>事件（实际上，截屏图片已经在系统截屏目录了）。</p>
+<p>在小米4上仅能监听到ACCESS(被触发多次)和OPEN事件。但是OPEN事件在三星Note3上会触发多次，而且Android手机千奇百怪，要想找到一个系统截屏时，所有手机都会触发一次的FileObserver事件，会很难，而且存在很大的兼容性问题。</p>
+<p>因此，通过<code>FileObserver</code>监听系统截图存在两个比较大的问题：</p>
+<blockquote>
+<ol>
+<li>每个手机上保存系统截屏图片的目录不完全相同，比如上面三星Note3和小米4就不同。因此，必须先获得每个手机保存截图图片的目录，才能进行监听。</li>
+<li>很难找到一个系统截屏时，所有手机仅会触发一次的FileObserver事件。</li>
+</ol>
+</blockquote>
+<p>所以目前来看，通过FileObserver监听系统截图不靠谱。</p>
+<h2 id="通过ContentObserver监听多媒体数据库（图片）的资源变化"><a href="#通过ContentObserver监听多媒体数据库（图片）的资源变化" class="headerlink" title="通过ContentObserver监听多媒体数据库（图片）的资源变化"></a>通过ContentObserver监听多媒体数据库（图片）的资源变化</h2><p>我们知道：通过系统截屏生成一张图片时，这张图片不仅会存储在系统截屏目录中，还会通过<code>MediaProvider</code>类在多媒体数据库中插入一条记录，方便系统图库进行查询。而且<code>MediaProvider</code>会将唯一标识这张图片的URI通知到感兴趣的<code>ContentObserver</code>。（关于多媒体数据库下面会进行详细介绍）</p>
+<p>因此，我们的方案就是通过<code>ContentObserver</code>监听多媒体数据库图片资源的变化。基本代码如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//查询的表字段</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> String[] PROJECTION = <span class="keyword">new</span> String[]&#123;</span><br><span class="line">    MediaStore.Images.Media.DATA,MediaStore.Images.Media.DATE_ADDED&#125;;</span><br><span class="line"><span class="comment">//根据时间降序排序</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> String SORT_ORDER = MediaStore.Images.Media.DATE_ADDED + <span class="string">" DESC"</span>;</span><br><span class="line"><span class="comment">//mHandler表示主线程的Handler，这样回调函数onChange就会在主线程被调用</span></span><br><span class="line">ContentObserver contentObserver = <span class="keyword">new</span> ContentObserver(mHandler) &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onChange</span><span class="params">(<span class="keyword">boolean</span> selfChange)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onChange(selfChange);</span><br><span class="line">        <span class="comment">//从API16开始，才有两个参数的onChange方法，所以这里要主动调用下面的onChange方法。</span></span><br><span class="line">        onChange(selfChange, <span class="keyword">null</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onChange</span><span class="params">(<span class="keyword">boolean</span> selfChange, Uri uri)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//若调用父类方法就死循环了</span></span><br><span class="line">        <span class="comment">//super.onChange(selfChange,uri);</span></span><br><span class="line">        <span class="keyword">if</span> (uri == <span class="keyword">null</span>) &#123; <span class="comment">//API16以下版本 </span></span><br><span class="line">            Cursor cursor = contentResolver.query(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, PROJECTION, <span class="keyword">null</span>, <span class="keyword">null</span>,SORT_ORDER);</span><br><span class="line">            <span class="keyword">if</span> (cursor != <span class="keyword">null</span> &amp;&amp; cursor.moveToFirst()) &#123;</span><br><span class="line">                <span class="comment">//完整路径</span></span><br><span class="line">                String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));</span><br><span class="line">                <span class="comment">//添加图片的时间，单位秒</span></span><br><span class="line">                <span class="keyword">long</span> dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));</span><br><span class="line">                <span class="keyword">long</span> currentTime = System.currentTimeMillis() / <span class="number">1000</span>;</span><br><span class="line">                <span class="comment">//加个过滤条件必须是3S内的图片，且路径中包含截图字样“screenshot”</span></span><br><span class="line">                <span class="keyword">if</span> (Math.abs(currentTime - dateAdded) &lt;= <span class="number">3l</span> &amp;&amp; path.toLowerCase().contains(<span class="string">"screenshot"</span>)) &#123;</span><br><span class="line">                    <span class="comment">//这就是系统截屏的图片了，这里测试发现需要等待几百MS，才能加载到图片。因此具体实现时，最好在独立线程，每隔100MS尝试加载一次，做好超时处理。</span></span><br><span class="line">                    Bitmap b1 = BitmapFactory.decodeFile(path);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123; <span class="comment">//API16及以上版本</span></span><br><span class="line">            <span class="keyword">if</span> (uri.toString().matches(EXTERNAL_CONTENT_URI_MATCHER + <span class="string">"/\\d+"</span>)) &#123;</span><br><span class="line">                Cursor cursor = contentResolver.query(uri, PROJECTION, <span class="keyword">null</span>, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br><span class="line">                <span class="keyword">if</span> (cursor != <span class="keyword">null</span> &amp;&amp; cursor.moveToFirst())&#123;</span><br><span class="line">                    <span class="comment">//完整路径</span></span><br><span class="line">                    String path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));</span><br><span class="line">                    <span class="comment">//添加图片的时间，单位秒</span></span><br><span class="line">                    <span class="keyword">long</span> dateAdded = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media.DATE_ADDED));</span><br><span class="line">                    <span class="keyword">long</span> currentTime = System.currentTimeMillis() / <span class="number">1000</span>;</span><br><span class="line">                    <span class="keyword">if</span> (Math.abs(currentTime - dateAdded) &lt;= <span class="number">3l</span> &amp;&amp; path.toLowerCase().contains(<span class="string">"screenshot"</span>))  &#123;</span><br><span class="line">                        <span class="comment">//这就是系统截屏的图片了</span></span><br><span class="line">                        Bitmap b2 = MediaStore.Images.Media.getBitmap(contentResolver, uri);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//通过ContentResolver注册ContentObserver，监听"content://media/external/video/media"</span></span><br><span class="line">getContentResolver().registerContentObserver(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, <span class="keyword">true</span>, contentObserver);</span><br><span class="line"></span><br><span class="line"><span class="comment">//不需要监听的时候，一定要把原来的ContentObserver注销掉。</span></span><br><span class="line">getContentResolver().unregisterContentObserver(contentObserver);</span><br></pre></td></tr></table></figure></p>
+<p>上述代码中，我们在API16以上和以下采取了两种不同的方案：</p>
+<ol>
+<li>方案1：API16以下，因为回调中没有URI，所以只能到多媒体数据库中去查询，然后取出最新的那一条记录，理论上就是系统截屏的图片了。</li>
+<li>方案2：API16及以上，因为回调中有唯一标识图片的URI，所以可以通过<code>MediaStore.Images.Media</code>和URI，直接获取截屏图片。这种方式既简单，又准确！</li>
+</ol>
+<p>上述方案，经过测试，发现存在一些问题：</p>
+<ol>
+<li>方案1中，若收到onChange回调，立即去获取图片，是加载不到的，必须等几百毫秒，推测应该是图片还没完全落地。但是这个等待的时间应该跟机器性能有关，因此很难确定一个固定值（和FileObserver存在相同的问题）。</li>
+<li>不仅向多媒体数据库中插入一条图片数据会触发onChange回调，更新和删除图片数据，也会触发onChange回调。</li>
+<li>若我们主动通过<code>MediaProvider</code>向多媒体数据库插入、更新、删除一条图片数据，也会触发onChange回调。</li>
+</ol>
+<p>简单来说，就是<strong>没办法完全确定触发onChange回调的事件一定是系统截屏行为</strong>。因此，在onChange回调方法中，判断此次回调是不是系统截屏触发的，是个难点。但是这个问题解决不好，就会造成一定的误差。比如：我通过相机拍摄了一张图片，就会触发上面的onChange回调。所以上面的代码加了两个过滤条件：必须是3S内的图片，且图片路径中包含截图字样“screenshot”。但是这样也不能确保百分之百没有误差。</p>
+<hr>
+<p>综上所述，不管是通过<code>FileObserver</code>还是<code>ContentObserver</code>，都不能完全准确地监控系统截屏操作。（相比于IOS直接提供了API级别的支持，Android还是很蛋疼啊…）</p>
+<h2 id="多媒体数据库"><a href="#多媒体数据库" class="headerlink" title="多媒体数据库"></a>多媒体数据库</h2><p>Android中的多媒体数据记录（图片、音频、视频等）是存储在DB中的，即多媒体数据库。这个数据库文件存储在<code>/data/data/com.android.providers.media/databases</code>目录中。如下图所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%A4%9A%E5%AA%92%E4%BD%93%E6%95%B0%E6%8D%AE%E5%BA%93.png" width="500" alt="多媒体数据库"></p>
+<p>其中<code>internal.db</code>是内部存储数据库文件，<code>external.db</code>是存储卡数据库文件。多媒体数据操作主要就是围绕这两个数据库来进行的，这两个数据库的结构是完全一样的。如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%A4%9A%E5%AA%92%E4%BD%93%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E6%95%B0%E6%8D%AE.png" width="500" alt="多媒体数据库表数据"></p>
+<p>上面是存储不同多媒体数据的表，其中video表主要存储视频数据；videothumbnails表主要存储视频缩略图数据；audio_xx表主要存储音频数据，音频数据比较复杂，又需要album相关表存储专辑信息，artist相关表存储歌手信息；<code>images</code>表主要存储图片数据。<code>thumbnails</code>表主要存储图片缩略图数据。</p>
+<p>这里我们主要看下<code>images</code>表结构，如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/image%E8%A1%A8.png" alt="image表结构"><br>可见，images表是基于<code>files</code>表的视图。其中,<code>_data</code>字段表示图片的完整路径，<code>data_added</code>字段表示添加图片的时间，<code>width</code>和<code>height</code>字段分别表示图片的宽度和高度,<code>_display_name</code>字段则表示图片名称。</p>
+<p>下面看两个具体案例，我们分别通过系统截屏手势和相机获取一张图片，然后看下这两种图片在<code>images</code>表中的存储。<br>首先是截屏获得的图片，其表记录如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%88%AA%E5%9B%BE%E6%95%B0%E6%8D%AE.png" width="500" alt="截图表数据"></p>
+<p>然后是相机拍摄出的图片，其表记录如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%8B%8D%E7%85%A7%E6%95%B0%E6%8D%AE.png" width="500" alt="拍照数据"></p>
+<p>从上述两张图片的表数据可知：</p>
+<ul>
+<li>图片id确实是递增的。</li>
+<li>系统截图和相机拍摄的图片存储在不同的目录。</li>
+<li>系统截图图片是png格式，相机拍摄图片是jpeg格式。</li>
+<li><code>bucket_display_name</code>字段指出了图片的来源途径，它是根据<code>_data</code>字段生成的。</li>
+<li>系统截屏图片的宽高就是屏幕的宽高，而相机拍摄图片的宽高则和具体手机有关，但一般都大于屏幕宽高。</li>
+<li>向其他字段的含义也很明确，此处不再赘述。</li>
+</ul>
+<p>上面我们是通过sql语句直接查询图片数据，其实Android系统给我们封装了<code>MediaStore</code>类，它提供了多媒体数据存储与获取相关API，其基本结构如下所示（详细结构可参见源码）：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/MediaStore.png" width="450" alt="MediaStore"></p>
+<p>其中<code>Images.ImageColumns</code>类主要封装了images表的字段。<code>Images.Media</code>类主要提供了查询和插入图片数据的API（这类API很简单，都是通过<code>ContentResolver</code>和<code>uri</code>，呼起对应的<code>MediaProvider</code>完成真正的DB操作），以及可以通过<code>getBitmap</code>方法获取图片的Bitmap对象，而<code>Images.Thumbnails</code>类则提供了操作缩略图的相关API。同样的，其他的内部类（Audio、Video）分别对应音频表和视频表。</p>
+<p><code>Images.Media.getBitmap</code>方法很便利，其实现也很简单，首先通过uri获取输入流（详情参见源码），然后通过BitmapFactory类解码获取Bitmap。如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> Bitmap <span class="title">getBitmap</span><span class="params">(ContentResolver cr, Uri url)</span><span class="keyword">throws</span> FileNotFoundException, IOException </span>&#123;</span><br><span class="line">    InputStream input = cr.openInputStream(url);</span><br><span class="line">    Bitmap bitmap = BitmapFactory.decodeStream(input);</span><br><span class="line">    input.close();</span><br><span class="line">    <span class="keyword">return</span> bitmap;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从<code>MediaStore</code>类的源码可知，它提供的API都是通过<code>ContentResolver</code>和<code>Uri</code>呼起对应<code>MediaProvider</code>来实现的，<code>MediaProvider</code>才是真正实现多媒体数据库操作的场所。关于MediaProvider，又是单独话题了，感兴趣的可以去看源码。</p>
+<p><code>MediaStore</code>类为每一种资源分配了单独的Uri地址，例如：视频资源的基础地址是MediaStore.Vedio.MediaEXTERNAL_CONTENT_URI,即<code>content://media/external/video/media</code>，图片资源的基础地址是MediaStore.Images.Media.EXTERNAL_CONTENT_URI，即<code>content://media/external/images/media</code>。</p>
+<p>这些基础地址都是数据集合类型，对应的个体数据类型则是在基础地址后面加上图片ID。例如：上面我们通过系统截屏获得的图片资源ID是<strong>233494</strong>，那么唯一标识这张图片的uri就是<code>content://media/external/images/media/233494</code>，通过这个uri，就可以获取这张图片的所有信息了（上面getBitmap方法的第二个参数就是这种个体数据类型uri）。实际操作中，要使用哪种类型的URI，则要根据具体情况而定。</p>
+<p>因此，获取系统截屏图片的Bitmap对象有两种方式：</p>
+<blockquote>
+<ol>
+<li>假如知道了图片的唯一标识URI，那么通过<code>MediaStore.Images.Media.getBitmap</code>方法就可以获取了。</li>
+<li>假如不知道URI，而知道图片的本地地址（SD卡地址），那么只能通过<code>BitmapFactory</code>类的decodeXXX方法来搞定了。</li>
+</ol>
+</blockquote>
+<h2 id="ContentProvider的数据更新通知机制"><a href="#ContentProvider的数据更新通知机制" class="headerlink" title="ContentProvider的数据更新通知机制"></a>ContentProvider的数据更新通知机制</h2><p>上面介绍的第二种方案，依赖的就是ContentProvider的数据更新通知机制。因为ContentProvider是以URI形式来组织资源的，所以当数据变更时，也是以URI形式通知感兴趣的ContentObserver。</p>
+<p>整个数据更新机制的示意图如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/ContentProvider%E6%95%B0%E6%8D%AE%E5%8F%98%E6%9B%B4%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6%E7%A4%BA%E6%84%8F%E5%9B%BE.png" width="600" alt="ContentProvider的数据更新通知机制"></p>
+<p>其中，<code>ContentService</code>服务就是管理所有<code>ContentObserver</code>监听器的场所，它运行在System进程，以多叉树的形式组织所有监听器。而<code>MediaProvider</code>则负责操作多媒体数据库，并以URI的形式发出数据变更通知到<code>ContentService</code>服务，<code>ContentService</code>负责从树形数据结构中找出对该URI感兴趣的<code>ContentObserver</code>，然后跨进程回调<code>ContentObserver.onChange</code>方法。</p>
+<p>所以这里的关键点就是<code>ContentService</code>服务中多叉树数据结构的建立和查询。其中多叉树的节点是<code>ObserverNode</code>，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ObserverNode</span></span>&#123;</span><br><span class="line">    String mName;<span class="comment">//节点名称</span></span><br><span class="line">    ArrayList&lt;ObserverNode&gt; mChildren = <span class="keyword">new</span> ArrayList&lt;ObserverNode&gt;();<span class="comment">//孩子节点</span></span><br><span class="line">    ArrayList&lt;ObserverEntry&gt; mObservers = <span class="keyword">new</span> ArrayList&lt;ObserverEntry&gt;();<span class="comment">//该节点上的监听器</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ObserverEntry</span></span>&#123;</span><br><span class="line">    <span class="comment">//跨进程回调的接口</span></span><br><span class="line">    IContentObserver observer;</span><br><span class="line">    <span class="comment">//该参数就是注册监听器时的第二个参数，若为false，则表示若变化的URI是正在监听的URI的父节点或者相同节点时，就会触发回调。若为true，则在上述时机之上，若变化的URI是正在监听的URI的子节点时，也会触发回调。</span></span><br><span class="line">    <span class="keyword">boolean</span> notifyForDescendants;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面我们监听系统截屏事件时，监听的URI是<code>content://media/external/images/media</code>，且notifyForDescendents参数为true。因此，注册之后，<code>ContentService</code>服务的多叉树数据结构如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%A4%9A%E5%8F%89%E6%A0%91%E7%BB%93%E6%9E%84.png" width="600" alt="ContentService的多叉树结构"></p>
+<p>而当系统截屏图片插入到多媒体数据库时，<code>MediaProvider</code>会发出<code>content://media/external/images/media/xxx</code>形式的通知，该通知到达<code>ContentService</code>服务后，就会在上面的多叉树数据结构中进行检索，以找到对此URI感兴趣的监听器。</p>
+<p>其中当查找到<code>media</code>节点时，就会把<code>media</code>节点中的notifyForDescendants属性为true（即正在通知的URI是content://media/external/images/media的子节点）的ObserverEntry对象收集起来。最后，通过ObserverEntry对象的observer接口属性回调到应用程序进程的<code>ContentObserver.onChange</code>方法，这样整个流程就完整了。</p>
+<p>这里在应用程序进程注册URI时，需要特别注意，<code>ContentService</code>服务在组织多叉树数据结构时，遇到<code>/</code>、<code>#</code>、<code>?</code>这三个特殊符号，就会停止构造子节点，因此<code>content://media/external/images/media/#</code>、<code>content://media/external/images/media//#</code>和<code>content://media/external/images/media/#/?</code>等URI形成的多叉树结构都是相同的，即上面的树形结构。（一开始我在注册URI时，以为<code>#</code>号的作用和ContentProvider中#号一样，代表所有的整型ID，坑了我很久）。</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ol>
+<li><a href="http://wiki.jikexueyuan.com/project/deep-android-v1/mediascanner.html" target="_blank" rel="external">深入理解MediaScanner</a></li>
+<li><a href="http://blog.csdn.net/luoshengyang/article/details/6985171" target="_blank" rel="external">Android应用程序组件Content Provider的共享数据更新通知机制分析</a></li>
+<li><a href="http://stackoverflow.com/questions/29621903/detect-only-screenshot-with-fileobserver-android/29624090#29624090" target="_blank" rel="external">Detect only screenshot with FileObserver Android</a></li>
+</ol>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/系统截屏/" rel="tag">#系统截屏</a>
+          
+            <a href="/tags/FileObserver/" rel="tag">#FileObserver</a>
+          
+            <a href="/tags/ContentObserver/" rel="tag">#ContentObserver</a>
+          
+            <a href="/tags/多媒体数据库/" rel="tag">#多媒体数据库</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/05/Binder之数据结构/" rel="next" title="Binder之数据结构">
+                <i class="fa fa-chevron-left"></i> Binder之数据结构
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/06/12/Android平台监听系统截屏方案预研及相关知识点/"
+     data-title="Android平台监听系统截屏方案预研及相关知识点"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/06/12/Android平台监听系统截屏方案预研及相关知识点/"
+           data-title="Android平台监听系统截屏方案预研及相关知识点" data-url="http://ltlovezh.github.io/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+               alt="leon" />
+          <p class="site-author-name" itemprop="name">leon</p>
+          <p class="site-description motion-element" itemprop="description">技术实践者</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">15</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/63230484/" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  douban
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">技术博文</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#通过FileObserver监听系统截屏目录下的文件创建"><span class="nav-number">1.</span> <span class="nav-text">通过FileObserver监听系统截屏目录下的文件创建</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过ContentObserver监听多媒体数据库（图片）的资源变化"><span class="nav-number">2.</span> <span class="nav-text">通过ContentObserver监听多媒体数据库（图片）的资源变化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#多媒体数据库"><span class="nav-number">3.</span> <span class="nav-text">多媒体数据库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ContentProvider的数据更新通知机制"><span class="nav-number">4.</span> <span class="nav-text">ContentProvider的数据更新通知机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">5.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+&nbsp;
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ltlovezh"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+</body>
+</html>
