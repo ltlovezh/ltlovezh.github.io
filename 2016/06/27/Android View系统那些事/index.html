@@ -1,0 +1,876 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="风之谷,leon" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="Android View系统那些事
+
+
+
+#wmd-preview h1  {
+    color: #0077bb; /* 将标题改为蓝色 */
+}
+
+
+Android View系统那些事View系统本篇文章打算介绍下View的坐标、自定义View的手势检测以及实现View内容滚动的几种方式。希望对有需要的同学有所帮助。View的坐标在自定义View中，经常需要处理各种坐标之间的转换，下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="风之谷">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/06/27/Android View系统那些事/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="Android View系统那些事
+
+
+
+#wmd-preview h1  {
+    color: #0077bb; /* 将标题改为蓝色 */
+}
+
+
+Android View系统那些事View系统本篇文章打算介绍下View的坐标、自定义View的手势检测以及实现View内容滚动的几种方式。希望对有需要的同学有所帮助。View的坐标在自定义View中，经常需要处理各种坐标之间的转换，下">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E5%9D%90%E6%A0%87%E7%B3%BB.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/OnGestureListener%E9%95%BF%E6%8C%89%E4%BA%8B%E4%BB%B6.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%8F%8C%E5%87%BB%E4%BA%8B%E4%BB%B6%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/scrollX.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/scrollY.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/ScrollXY.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/fling%E6%95%88%E6%9E%9C.gif">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/springBack.gif">
+<meta property="og:updated_time" content="2016-06-27T01:37:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="风之谷">
+<meta name="twitter:description" content="Android View系统那些事
+
+
+
+#wmd-preview h1  {
+    color: #0077bb; /* 将标题改为蓝色 */
+}
+
+
+Android View系统那些事View系统本篇文章打算介绍下View的坐标、自定义View的手势检测以及实现View内容滚动的几种方式。希望对有需要的同学有所帮助。View的坐标在自定义View中，经常需要处理各种坐标之间的转换，下">
+<meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E5%9D%90%E6%A0%87%E7%B3%BB.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6226090551544907000,
+      author: 'leon'
+    }
+  };
+</script>
+
+  <title>  | 风之谷 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">风之谷</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-06-27T09:37:06+08:00" content="2016-06-27">
+              2016-06-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/27/Android View系统那些事/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/27/Android View系统那些事/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/06/27/Android View系统那些事/" class="leancloud_visitors" data-flag-title="">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <!DOCTYPE html>
+<html class="theme theme-white">
+<head>
+<meta charset="utf-8">
+<title>Android View系统那些事</title>
+<link href="https://www.zybuluo.com/static/assets/template-theme-white.css" rel="stylesheet" media="screen">
+<style type="text/css">
+
+#wmd-preview h1  {
+    color: #0077bb; /* 将标题改为蓝色 */
+}</style>
+</head>
+<body class="theme theme-white">
+<div id="wmd-preview" class="wmd-preview wmd-preview-full-reader"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="87vz" id="android-view系统那些事">Android View系统那些事</h1><p data-anchor-id="dq6u"><code>View系统</code></p><hr><p data-anchor-id="3gl6">本篇文章打算介绍下View的坐标、自定义View的手势检测以及实现View内容滚动的几种方式。希望对有需要的同学有所帮助。</p><div class="md-section-divider"></div><h2 data-anchor-id="z05v" id="view的坐标">View的坐标</h2><p data-anchor-id="n0an">在自定义View中，经常需要处理各种坐标之间的转换，下图展示了View中的各种坐标： <br>
+<img src="http://7xs2qy.com1.z0.glb.clouddn.com/View%E5%9D%90%E6%A0%87%E7%B3%BB.png" width="400" alt="View坐标系"> <br>
+简单解释下上图的含义：</p><p data-anchor-id="nr87">针对一个普通View：</p><ul data-anchor-id="s78f">
+<li><code>getTop</code>方法表示view自身的顶边到其父布局顶边的距离</li>
+<li><code>getLeft</code>方法表示view自身的左边到其父布局左边的距离</li>
+<li><code>getRight</code>方法表示view自身的右边到其父布局左边的距离</li>
+<li><code>getBottom</code>方法表示view自身的底边到其父布局顶边的距离。</li>
+</ul><p data-anchor-id="dfwc">在处理一个普通View的Touch事件时：</p><ul data-anchor-id="8579">
+<li><code>getX</code>方法表示Touch事件在当前View坐标系中X轴上的坐标，即相对于view左边缘的距离</li>
+<li><code>getY</code>方法表示Touch事件在当前View坐标系中Y轴上的坐标，即相对于View上边缘的距离</li>
+<li><code>getRawX</code>方法表示Touch事件在屏幕坐标系中X轴上的坐标，即相对于整个屏幕左边缘的距离</li>
+<li><code>getRawY</code>方法表示Touch事件在屏幕坐标系中Y轴上的坐标，即相对于整个屏幕上边缘的距离。</li>
+</ul><div class="md-section-divider"></div><h2 data-anchor-id="mlh4" id="gesturedetector手势检测"><code>GestureDetector</code>手势检测</h2><p data-anchor-id="hzag">我们在自定义View时，经常需要处理Touch事件，而<code>GestureDetector</code>就是一个辅助我们检测用户单击、双击、长按和滚动等行为的工具类。</p><p data-anchor-id="yggk">该工具类的使用也很简单。首先创建一个<code>GestureDetector</code>对象，并把实现事件监听接口的类作为参数传进到对象中。其中，可以实现的事件监听接口有两个，分别是<code>OnGestureListener</code>接口负责监听单击、长按和滚动等事件，和<code>OnDoubleTapListener</code>接口负责监听双击事件。</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="ot7g"><ol class="linenums"><li class="L0"><code class="language-java"><span class="typ">GestureDetector</span><span class="pln"> mGestureDetector </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">GestureDetector</span><span class="pun">(实现上述事件监听接口的类对象);</span></code></li></ol></pre><p data-anchor-id="ip4c">然后，在自定义View的<code>onTouchEvent</code>方法中，把事件处理权委托给<code>GestureDetector</code>。</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="zvz4"><ol class="linenums"><li class="L0"><code class="language-java"><span class="pln">mGestureDetector</span><span class="pun">.</span><span class="pln">onTouchEvent</span><span class="pun">(</span><span class="pln">event</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="s6jy">最后，根据具体情况，在不同的事件回调方法中处理业务逻辑就OK了。</p><p data-anchor-id="13gx">下面重点介绍一下两个事件监听接口中的回调方法：</p><div class="md-section-divider"></div><h3 data-anchor-id="v1f8" id="ondown"><code>onDown</code></h3><p data-anchor-id="7mzs">方法签名：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="mbhk"><ol class="linenums"><li class="L0"><code class="language-java"><span class="kwd">boolean</span><span class="pln"> onDown</span><span class="pun">(</span><span class="typ">MotionEvent</span><span class="pln"> e</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="tqf3">说明：<strong>每次<code>ACTION_DOWN</code>事件发生时，都会调用该方法，事件e表示该ACTION_DOWN事件</strong>。熟悉Android事件分发机制的同学应该知道<code>ACTION_DOWN</code>事件的重要性。若在该方法中返回了false（表示不消费该事件），那么后续的ACTION事件都不再会分发到当前View。因此，一般情况下，该方法要返回true。</p><div class="md-section-divider"></div><h3 data-anchor-id="h8p5" id="onshowpress"><code>onShowPress</code></h3><p data-anchor-id="udst">方法签名：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="yhbu"><ol class="linenums"><li class="L0"><code class="language-java"><span class="kwd">void</span><span class="pln"> onShowPress</span><span class="pun">(</span><span class="typ">MotionEvent</span><span class="pln"> e</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="pnn8">说明：若发生<code>ACTION_DOWN</code>事件后，在<code>ViewConfiguration.TAP_TIMEOUT</code>时间内，<strong>既没有发生<code>ACTION_UP</code>事件，也没有触发<code>onScroll</code>滚动方法</strong>，那么就会触发该方法，表示对用户行为的反馈，事件e表示<code>ACTION_DOWN</code>事件。</p><p data-anchor-id="oznc">这里要特别注意和<code>onDown</code>方法的区别。<code>onShowPress</code>方法强调在一段时间内没有松开或者滚动的行为，才会触发。</p><div class="md-section-divider"></div><h3 data-anchor-id="chxb" id="onlongpress"><code>onLongPress</code></h3><p data-anchor-id="lfhd">方法签名：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="axx3"><ol class="linenums"><li class="L0"><code class="language-java"><span class="kwd">void</span><span class="pln"> onLongPress</span><span class="pun">(</span><span class="typ">MotionEvent</span><span class="pln"> e</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="ff4i">说明：若发生<code>ACTION_DOWN</code>事件后，在<code>ViewConfiguration.TAP_TIMEOUT + ViewConfiguration.LONGPRESS_TIMEOUT</code>时间内，<strong>既没有发生<code>ACTION_UP</code>事件，也没有触发<code>onScroll</code>滚动方法</strong>，那么就会触发该方法，表示用户的长按行为，事件e表示<code>ACTION_DOWN</code>事件。</p><p data-anchor-id="wjmv">这里结合前面两个方法看一个例子：下面是一次长按事件的日志： <br>
+<img src="http://7xs2qy.com1.z0.glb.clouddn.com/OnGestureListener%E9%95%BF%E6%8C%89%E4%BA%8B%E4%BB%B6.png" alt="GestureDetector长按事件" title=""></p><p data-anchor-id="i8ty">从日志可以看出，在我的Nexus 6p上，<code>ACTION_DOWN</code>事件后，100ms后触发了onShowPress方法，600ms后触发了onLongPress方法。这个时间对应于<code>ViewConfiguration</code>类中相应变量，即取决于Android系统，每个手机都可能不同。</p><div class="md-section-divider"></div><h3 data-anchor-id="ii93" id="onsingletapup"><code>onSingleTapUp</code></h3><p data-anchor-id="6bi4">方法签名：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="rkj4"><ol class="linenums"><li class="L0"><code class="language-java"><span class="kwd">boolean</span><span class="pln"> onSingleTapUp</span><span class="pun">(</span><span class="typ">MotionEvent</span><span class="pln"> e</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="roa0">说明：当用户手指离开屏幕，生成UP事件时会触发该方法，事件e表示<code>ACTION_UP</code>事件。</p><p data-anchor-id="81wz">关于该方法有几点需要注意：</p><ol data-anchor-id="za9o">
+<li>在<code>ACTION_DOWN</code>和<code>ACTION_UP</code>事件之间，若触发了<code>onScroll</code>滚动方法，则不会触发该方法。</li>
+<li>该方法在长按事件发生时（即上面的onLongPress方法），不会被触发。</li>
+<li>该方法在双击事件的第一次UP事件时会被触发，但第二次UP事件时不会被触发了。也就是说触发该方法的原因可能并不是一个严格的单击事件，也有可能是双击事件中的第一个UP事件。</li>
+</ol><div class="md-section-divider"></div><h3 data-anchor-id="b2hc" id="ondoubletap"><code>onDoubleTap</code></h3><p data-anchor-id="iwgx">方法签名：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="167i"><ol class="linenums"><li class="L0"><code class="language-java"><span class="kwd">boolean</span><span class="pln"> onDoubleTap</span><span class="pun">(</span><span class="typ">MotionEvent</span><span class="pln"> e</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="dm5j">说明：在一定时间内两次单击行为构成一次双击操作。严格来说，如果第二次单击行为的DOWN事件时间和第一次单击行为的UP事件时间之差小于<code>ViewConfiguration.DOUBLE_TAP_TIMEOUT</code>，那么则构成一次双击事件，事件e表示第一次单击行为的<code>ACTION_DOWN</code>事件。</p><p data-anchor-id="0byv">有一点需要注意：触发该方法的确切时机是第二次单击行为的<code>ACTION_DOWN</code>事件，而不是<code>ACTION_UP</code>事件。也就是说双击事件是第二次按下屏幕的时候触发，而不是第二次离开屏幕的时候触发。关于双击事件下面还会继续介绍。</p><div class="md-section-divider"></div><h3 data-anchor-id="86xx" id="onsingletapconfirmed"><code>onSingleTapConfirmed</code></h3><p data-anchor-id="r8kp">方法签名：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="tks7"><ol class="linenums"><li class="L0"><code class="language-java"><span class="kwd">boolean</span><span class="pln"> onSingleTapConfirmed</span><span class="pun">(</span><span class="typ">MotionEvent</span><span class="pln"> e</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="zjhr">说明：严格的单击操作，若该方法被触发，则说明这是一个严格的单击行为，那么后面不可能再紧跟着另一个单击行为，即这只可能是单击，而不可能是双击事件中的一次单击（这点是和onSingleTapUp方法的主要区别）。</p><p data-anchor-id="7o3z">这里要说下双击操作和严格的单击操作是怎么实现的，首先看一个示意图： <br>
+<img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%8F%8C%E5%87%BB%E4%BA%8B%E4%BB%B6%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="双击操作和严格的单击操作示意图" title=""></p><p data-anchor-id="vqu0">如图所示，A1、A2和A3分别表示三个时间点，时间线之上的两个变量分别表示A2和A3时间点的系统值，时间线之下的数值则是在Nexus 6P上的具体取值。</p><p data-anchor-id="7d57">实际上在<code>ACTION_DOWN</code>事件发生后，系统会发出两个延时Message（假设为M1和M2），分别在A2和A3时间点触发。 <br>
+其中，A2时间点的M1用于实现双击操作：若第二次单击操作发生时，M1还没有执行，那么说明在A1 ~ A2之间发生了两次单击操作，则构成了一次双击事件。 <br>
+A3时间点的M2用于实现长按事件：若在A1 ~ A3时间内，没有触发<code>onScroll</code>滚动方法，也没有发生<code>ACTION_UP</code>事件，那么在A3时间点就会触发<code>onLongPress</code>方法。</p><p data-anchor-id="92tp">而触发<code>onSingleTapConfirmed</code>方法的时机有两个：</p><ol data-anchor-id="xtnd">
+<li><p>若在A1 ~ A2之间只有一次单击行为（即只有一次ACTION_UP事件，且没有触发onScroll滚动方法），那么就会在A2时间点会触发<code>onSingleTapConfirmed</code>方法，表示这是一次严格的单击操作。<strong>之所以要等到A2时间点，而不是UP事件发生时就触发该方法，是因为在该次UP事件有可能是双击事件中的第一次单击操作，只有等到A2时间点，才能确定这是一次严格的单击操作，而不是双击操作的一部分</strong>。此时，方法签名中的事件e表示<code>ACTION_DOWN</code>事件。</p></li>
+<li><p>若唯一的一次单击行为发生在A2 ~ A3之间（即只有一次ACTION_UP事件，且没有触发onScroll滚动方法），那么在<code>ACTION_UP</code>事件发生时，就会触发<code>onSingleTapConfirmed</code>方法，表示这是一次严格的单击操作。此时，方法签名中的事件e表示<code>ACTION_UP</code>事件。</p></li>
+</ol><p data-anchor-id="qj9p">总结一下，只有在[A2,A3)时间区间内，才会触发<code>onSingleTapConfirmed</code>方法，以表明这是一次严格的单击操作。而且双击操作和严格的单击操作是不可能同时发生的。</p><div class="md-section-divider"></div><h3 data-anchor-id="lx65" id="ondoubletapevent"><code>onDoubleTapEvent</code></h3><p data-anchor-id="4qxp">方法签名：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="78os"><ol class="linenums"><li class="L0"><code class="language-java"><span class="kwd">boolean</span><span class="pln"> onDoubleTapEvent</span><span class="pun">(</span><span class="typ">MotionEvent</span><span class="pln"> e</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="w9fk">说明：在触发<code>onDoubleTap</code>方法之后，就可以在<code>onDoubleTapEvent</code>方法中监听到双击事件发生后，从按下到弹起的所有触屏事件。也就是说<strong>双击事件中的第二次单击行为的<code>ACTION_DOWN</code>事件之后的所有ACTION事件都会触发该方法</strong>。</p><div class="md-section-divider"></div><h3 data-anchor-id="o5p1" id="onscroll"><code>onScroll</code></h3><p data-anchor-id="tvps">方法签名：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="20l8"><ol class="linenums"><li class="L0"><code class="language-java"><span class="com">/**</span></code></li><li class="L1"><code class="language-java"><span class="com">该方法在滚动期间，会多次被调用</span></code></li><li class="L2"><code class="language-java"></code></li><li class="L3"><code class="language-java"><span class="com">e1表示初始的ACTION_DOWN事件</span></code></li><li class="L4"><code class="language-java"><span class="com">e2表示滚动过程中的ACTION_MOVE事件</span></code></li><li class="L5"><code class="language-java"><span class="com">distanceX为本次在X轴上的滚动距离</span></code></li><li class="L6"><code class="language-java"><span class="com">distanceY为本次在Y轴上的滚动距离</span></code></li><li class="L7"><code class="language-java"><span class="com">这里的滚动距离是相对于上一次onScroll事件的距离，而不是e1 down事件和e2 move事件的距离</span></code></li><li class="L8"><code class="language-java"><span class="com">*/</span></code></li><li class="L9"><code class="language-java"><span class="kwd">boolean</span><span class="pln"> onScroll</span><span class="pun">(</span><span class="typ">MotionEvent</span><span class="pln"> e1</span><span class="pun">,</span><span class="pln"> </span><span class="typ">MotionEvent</span><span class="pln"> e2</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">float</span><span class="pln"> distanceX</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">float</span><span class="pln"> distanceY</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="t277">说明：手指按下屏幕并滚动会触发该方法，即由初始的DOWN事件和一些列的MOVE事件驱动该方法。</p><div class="md-section-divider"></div><h3 data-anchor-id="c686" id="onfling"><code>onFling</code></h3><p data-anchor-id="afbi">方法签名：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="wg9k"><ol class="linenums"><li class="L0"><code class="language-java"><span class="com">/**</span></code></li><li class="L1"><code class="language-java"><span class="com">e1表示初始的ACTION_DOWN事件</span></code></li><li class="L2"><code class="language-java"><span class="com">e2表示手指离开View时的ACTION_UP事件</span></code></li><li class="L3"><code class="language-java"><span class="com">veloctiyX，velocitY为手指离开当前View时的滚动速度，以这两个速度为初始速度做匀减速运动，就是现在快速拖动列表后的延迟滚动效果。</span></code></li><li class="L4"><code class="language-java"><span class="com">*/</span></code></li><li class="L5"><code class="language-java"><span class="kwd">boolean</span><span class="pln"> onFling</span><span class="pun">(</span><span class="typ">MotionEvent</span><span class="pln"> e1</span><span class="pun">,</span><span class="pln"> </span><span class="typ">MotionEvent</span><span class="pln"> e2</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">float</span><span class="pln"> velocityX</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">float</span><span class="pln"> velocityY</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="a4qf">说明：在快速滚动屏幕，抬起手指后，滚动效果并不会立即停止。而是会以当前的滚动速度，做匀减速运动，直接速度为0，才会停止滚动。<code>onFling</code>方法就是在手指离开屏幕时触发的。</p><div class="md-section-divider"></div><h2 data-anchor-id="s5lk" id="view的内容滚动">View的内容滚动</h2><p data-anchor-id="3nom">这里讨论的View滚动指的是View内容的滚动，而不是View位置的移动。当View的内容过长时，通过Scroll的方式，可以一点点的查看。View的内容滚动实际是修改View的<code>mScrollX</code>和<code>mScrollY</code>属性。</p><p data-anchor-id="lbfx">要实现对View的滚动，可以通过View的<code>scrollTo</code>或者<code>scrollBy</code>方法来实现（scrollBy最终也是通过scrollBy来实现的）。同时，View滚动后，会回调onScrollChanged方法。如下所示：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="ewr5"><ol class="linenums"><li class="L0"><code class="language-java"><span class="pln"> </span><span class="com">//这里是滚动到具体的位置</span></code></li><li class="L1"><code class="language-java"><span class="pln"> </span><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> scrollTo</span><span class="pun">(</span><span class="kwd">int</span><span class="pln"> x</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span></code></li><li class="L2"><code class="language-java"><span class="pln">    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">mScrollX </span><span class="pun">!=</span><span class="pln"> x </span><span class="pun">||</span><span class="pln"> mScrollY </span><span class="pun">!=</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span></code></li><li class="L3"><code class="language-java"><span class="pln">        </span><span class="kwd">int</span><span class="pln"> oldX </span><span class="pun">=</span><span class="pln"> mScrollX</span><span class="pun">;</span></code></li><li class="L4"><code class="language-java"><span class="pln">        </span><span class="kwd">int</span><span class="pln"> oldY </span><span class="pun">=</span><span class="pln"> mScrollY</span><span class="pun">;</span></code></li><li class="L5"><code class="language-java"><span class="pln">        mScrollX </span><span class="pun">=</span><span class="pln"> x</span><span class="pun">;</span></code></li><li class="L6"><code class="language-java"><span class="pln">        mScrollY </span><span class="pun">=</span><span class="pln"> y</span><span class="pun">;</span></code></li><li class="L7"><code class="language-java"><span class="pln">        invalidateParentCaches</span><span class="pun">();</span></code></li><li class="L8"><code class="language-java"><span class="pln">        </span><span class="com">//回调方法</span></code></li><li class="L9"><code class="language-java"><span class="pln">        onScrollChanged</span><span class="pun">(</span><span class="pln">mScrollX</span><span class="pun">,</span><span class="pln"> mScrollY</span><span class="pun">,</span><span class="pln"> oldX</span><span class="pun">,</span><span class="pln"> oldY</span><span class="pun">);</span></code></li><li class="L0"><code class="language-java"><span class="pln">        </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(!</span><span class="pln">awakenScrollBars</span><span class="pun">())</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="com">//唤醒滚动条</span></code></li><li class="L1"><code class="language-java"><span class="pln">            postInvalidateOnAnimation</span><span class="pun">();</span></code></li><li class="L2"><code class="language-java"><span class="pln">        </span><span class="pun">}</span></code></li><li class="L3"><code class="language-java"><span class="pln">    </span><span class="pun">}</span></code></li><li class="L4"><code class="language-java"><span class="pun">}</span></code></li></ol></pre><p data-anchor-id="oxpx">这里要明确下mScrollX和mScrollY属性的具体含义： <br>
+1. <code>mScrollX</code>:View左边缘和View内容左边缘在水平方向上的距离，并且当View内容左边缘在View左边缘的左边时，mScrollX为正值，否则为负值。 <br>
+2. <code>mScrollY</code>:View上边缘和View内容上边缘在垂直方向上的距离，并且当View内容上边缘在View上边缘的上边时，mScrollY为正值，否则为负值。</p><p data-anchor-id="55xu">下面来看个几个例子，如下所示： <br>
+<img src="http://7xs2qy.com1.z0.glb.clouddn.com/scrollX.png" alt="ScrollX" title=""> <br>
+上图是分别在X轴上滚动100和-100的示意图。</p><p data-anchor-id="8ess"><img src="http://7xs2qy.com1.z0.glb.clouddn.com/scrollY.png" alt="ScrollY" title=""> <br>
+上图是分别在Y轴上滚动100和-100的示意图。</p><p data-anchor-id="qmwb"><img src="http://7xs2qy.com1.z0.glb.clouddn.com/ScrollXY.png" alt="ScrollXY" title=""> <br>
+上图是分别在X轴和Y轴上滚动100和-100的示意图。</p><p data-anchor-id="5ci9">通过上面几个示意图，应该对<code>mScrollX</code>和<code>mScrollY</code>属性有一定认识了。</p><div class="md-section-divider"></div><h3 data-anchor-id="hhed" id="overscroller类三个滚动相关的方法"><code>OverScroller</code>类三个滚动相关的方法</h3><p data-anchor-id="45t1">下面看下如何通过<code>OverScroller</code>类实现View内容的弹性滑动。</p><p data-anchor-id="d5u2">上面介绍的scrollTo方法会瞬间把View内容滑动到指定位置，没有任何动画效果，显得比较突兀。但是我们可以通过<code>OverScroller</code>（OverScroller是Scroller的超集，在Scroller的基础上添加了对OverScroll的支持）实现弹性滑动。典型的实现如下所示：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="h2qe"><ol class="linenums"><li class="L0"><code class="language-java"><span class="typ">OverScroller</span><span class="pln"> mScroller </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">OverScroller</span><span class="pun">(</span><span class="pln">mContext</span><span class="pun">);</span></code></li><li class="L1"><code class="language-java"></code></li><li class="L2"><code class="language-java"><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> smoothScrollTo</span><span class="pun">(</span><span class="kwd">int</span><span class="pln"> destX</span><span class="pun">,</span><span class="kwd">int</span><span class="pln"> destY</span><span class="pun">,</span><span class="kwd">int</span><span class="pln"> duration</span><span class="pun">){</span></code></li><li class="L3"><code class="language-java"><span class="pln">    </span><span class="com">//计算出需要滚动的距离</span></code></li><li class="L4"><code class="language-java"><span class="pln">    </span><span class="kwd">int</span><span class="pln"> deltaX </span><span class="pun">=</span><span class="pln"> destX </span><span class="pun">-</span><span class="pln"> getScrollX</span><span class="pun">();</span></code></li><li class="L5"><code class="language-java"><span class="pln">    </span><span class="kwd">int</span><span class="pln"> deltaY </span><span class="pun">=</span><span class="pln"> destY </span><span class="pun">-</span><span class="pln"> getScrollY</span><span class="pun">();</span></code></li><li class="L6"><code class="language-java"><span class="pln">    </span><span class="com">//开始滚动（表示在指定时间内，滚动指定的偏移量。）</span></code></li><li class="L7"><code class="language-java"><span class="pln">    mScroller</span><span class="pun">.</span><span class="pln">startScroll</span><span class="pun">(</span><span class="pln">getScrollX</span><span class="pun">(),</span><span class="pln">getScrollY</span><span class="pun">(),</span><span class="pln">deltaX</span><span class="pun">,</span><span class="pln">deltaY</span><span class="pun">,</span><span class="pln">duration</span><span class="pun">);</span></code></li><li class="L8"><code class="language-java"><span class="pln">    invalidate</span><span class="pun">();</span></code></li><li class="L9"><code class="language-java"><span class="pun">}</span></code></li><li class="L0"><code class="language-java"></code></li><li class="L1"><code class="language-java"><span class="com">//需要在自定义View中实现该方法</span></code></li><li class="L2"><code class="language-java"><span class="lit">@Override</span></code></li><li class="L3"><code class="language-java"><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> computeScroll</span><span class="pun">(){</span></code></li><li class="L4"><code class="language-java"><span class="pln">    </span><span class="kwd">if</span><span class="pun">(</span><span class="pln">mScroller</span><span class="pun">.</span><span class="pln">computeScrollOffset</span><span class="pun">()){</span><span class="pln"> </span><span class="com">//判断滚动是否结束</span></code></li><li class="L5"><code class="language-java"><span class="pln">        </span><span class="com">//真正的滚动操作</span></code></li><li class="L6"><code class="language-java"><span class="pln">        scrollTo</span><span class="pun">(</span><span class="pln">mScroller</span><span class="pun">.</span><span class="pln">getCurrX</span><span class="pun">(),</span><span class="pln">mScroller</span><span class="pun">.</span><span class="pln">getCurrY</span><span class="pun">());</span></code></li><li class="L7"><code class="language-java"><span class="pln">        postInvalidate</span><span class="pun">();</span></code></li><li class="L8"><code class="language-java"><span class="pln">    </span><span class="pun">}</span></code></li><li class="L9"><code class="language-java"><span class="pun">}</span></code></li></ol></pre><p data-anchor-id="8hvq">整个弹性滚动是靠着View绘制来驱动的，当调用<code>OverScroller.startScroll()</code>方法后，会触发View重绘，而在<code>View.draw</code>方法中就会调用上面的<code>computeScroll</code>方法。正如上述代码所示，在computeScroll方法中，获取当前的scrollX和scrollY，然后通过scrollTo来实现滚动，接着又通过<code>postInvalidate</code>方法触发下一次重绘，如此反复，直到整个滚动过程结束。</p><hr><p data-anchor-id="w5cl">仔细看下<code>OverScroller</code>的API，就会发现除了可以通过<code>startScroll</code>方法实现弹性滚动外，还有两个特殊的API：<code>fling</code>和<code>springBack</code>，它们可以分别实现Fling效果和回弹效果。</p><p data-anchor-id="abu0">所谓Fling效果，就是当我们快速滑动列表时，手指离开屏幕后，列表会以当前的滚动速度，以一个摩擦系数，做匀减速运动，直到滚动速度为0为止。 <br>
+看下fling的方法签名：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="662x"><ol class="linenums"><li class="L0"><code class="language-java"><span class="com">/**</span></code></li><li class="L1"><code class="language-java"><span class="com">startX和startY表示初始的滚动值，一般设置为当前的mScrollX和mScrollY即可</span></code></li><li class="L2"><code class="language-java"><span class="com">velocityX和velocityY分别表示X轴和Y轴上的速度，单位：像素/秒。</span></code></li><li class="L3"><code class="language-java"><span class="com">minX和maxX表示在X轴上最小和最大的滚动值，即最终的mScrollX值要在这个区间之内。</span></code></li><li class="L4"><code class="language-java"><span class="com">minY和maxY表示在Y轴上最小和最大的滚动值，即最终的mScrollY值要在这个区间之内。</span></code></li><li class="L5"><code class="language-java"><span class="com">overX表示在X轴上可以过度滚动的长度，也就是说，若mScrollX达到了[minX,maxX]的边界值，但是滚动速度还不为0，那么可以在边界值的基础上再滚动overX距离，但是最终还是会回弹到[minX,maxX]区间，即会有一个回弹的效果。</span></code></li><li class="L6"><code class="language-java"><span class="com">overY表示在Y轴上可以过度滚动的长度，也就是说，若mScrollY达到了[minY,maxY]的边界值，但是滚动速度还不为0，那么可以在边界值的基础上再滚动overY距离，但是最终还是会回弹到[minY,maxY]区间，即会有一个回弹的效果。</span></code></li><li class="L7"><code class="language-java"><span class="com">*/</span></code></li><li class="L8"><code class="language-java"><span class="kwd">public</span><span class="pln"> </span><span class="kwd">void</span><span class="pln"> fling</span><span class="pun">(</span><span class="kwd">int</span><span class="pln"> startX</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> startY</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> velocityX</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> velocityY</span><span class="pun">,</span><span class="kwd">int</span><span class="pln"> minX</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> maxX</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> minY</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> maxY</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> overX</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> overY</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="tjj0"><code>fling</code>方法的参数含义如上，下面看一个具体的案例：</p><p data-anchor-id="u4zi">以5000/S的速度在Y轴上进行fling，最终停止在[0,300]这个mScrollY区间，过度滚动的距离overY为300。 <br>
+核心代码如下所示：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="wjvu"><ol class="linenums"><li class="L0"><code class="language-java"><span class="pln">mScroller</span><span class="pun">.</span><span class="pln">fling</span><span class="pun">(</span><span class="pln">getScrollX</span><span class="pun">(),</span><span class="pln"> getScrollY</span><span class="pun">(),</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">5000</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">300</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">300</span><span class="pun">);</span></code></li><li class="L1"><code class="language-java"><span class="pln">myView</span><span class="pun">.</span><span class="pln">invalidate</span><span class="pun">();</span></code></li></ol></pre><p data-anchor-id="dv3a">具体的效果如下所示： <br>
+<img src="http://7xs2qy.com1.z0.glb.clouddn.com/fling%E6%95%88%E6%9E%9C.gif" width="300" alt="fling效果图"></p><p data-anchor-id="1uqh">从上图可以看到，因为速度过大，当mScrollY达到边界300时，又滚动了一段距离（overY），但是最终又回弹到了边界值。</p><p data-anchor-id="uxpo">因此，我们可以通过<code>OverScroller.fling</code>方法模拟这种带有回弹效果的fling过程。</p><hr><p data-anchor-id="9t6a">最后一个是用于实现回弹效果的<code>springBack</code>方法。 <br>
+首先看下方法签名:</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="36sh"><ol class="linenums"><li class="L0"><code class="language-java"><span class="com">/**</span></code></li><li class="L1"><code class="language-java"><span class="com">startX和startY表示初始的滚动值，一般设置为当前的mScrollX和mScrollY即可</span></code></li><li class="L2"><code class="language-java"><span class="com">minX和maxX表示在X轴上最小和最大的滚动值，即最终的mScrollX值要在这个区间之内。</span></code></li><li class="L3"><code class="language-java"><span class="com">minY和maxY表示在Y轴上最小和最大的滚动值，即最终的mScrollY值要在这个区间之内。</span></code></li><li class="L4"><code class="language-java"><span class="com">minX，maxX，minY，maxY这4个滚动值构成了一个矩形区域。表示回弹后的（mScrollX,mScrollY)要在这个矩形区域内。</span></code></li><li class="L5"><code class="language-java"></code></li><li class="L6"><code class="language-java"><span class="com">返回值若为true，则表示初始的startX和startY还不在最终的矩形区间内，需要进行回弹；若为false，则表示初始的startX和startY已经在最终的矩形区间内，不需要进行回弹了。</span></code></li><li class="L7"><code class="language-java"><span class="com">*/</span></code></li><li class="L8"><code class="language-java"><span class="kwd">public</span><span class="pln"> </span><span class="kwd">boolean</span><span class="pln"> springBack</span><span class="pun">(</span><span class="kwd">int</span><span class="pln"> startX</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> startY</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> minX</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> maxX</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> minY</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">int</span><span class="pln"> maxY</span><span class="pun">);</span></code></li></ol></pre><p data-anchor-id="v44p"><code>springBack</code>方法的参数含义如上，下面看一个具体的案例： <br>
+首先把View滚动到(0,-500)位置，然后把mScrollY回弹到[0,100]区间，核心代码如下所示：</p><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="8brt"><ol class="linenums"><li class="L0"><code class="language-java"><span class="com">//首先在2S内把mScrollX和mScrollY滚动到（0，-500）</span></code></li><li class="L1"><code class="language-java"><span class="pln">myView</span><span class="pun">.</span><span class="pln">smoothScrollTo</span><span class="pun">(</span><span class="lit">0</span><span class="pun">,-</span><span class="lit">500</span><span class="pun">,</span><span class="lit">2000</span><span class="pun">)</span></code></li><li class="L2"><code class="language-java"></code></li><li class="L3"><code class="language-java"><span class="com">//在当前的位置上进行回弹，目标是mScrollX为0，mScrollY落在[0,100]区间内</span></code></li><li class="L4"><code class="language-java"><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">mScroller</span><span class="pun">.</span><span class="pln">springBack</span><span class="pun">(</span><span class="pln">getScrollX</span><span class="pun">(),</span><span class="pln"> getScrollY</span><span class="pun">(),</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">0</span><span class="pun">,</span><span class="pln"> </span><span class="lit">100</span><span class="pun">))</span><span class="pln"> </span><span class="pun">{</span></code></li><li class="L5"><code class="language-java"><span class="pln">    myView</span><span class="pun">.</span><span class="pln">invalidate</span><span class="pun">();</span></code></li><li class="L6"><code class="language-java"><span class="pun">}</span></code></li></ol></pre><p data-anchor-id="rr1e">具体的效果如下所示： <br>
+<img src="http://7xs2qy.com1.z0.glb.clouddn.com/springBack.gif" width="300" alt="springBack效果图"></p><p data-anchor-id="myci">从上图可以看出，mScrollX回弹到0就结束了（只要落在[minY,maxY]区间内就可以了）。</p><p data-anchor-id="q7sa">因此，通过<code>OverScroller.springBack</code>方法，我们可以轻而易举的把View的内容回弹到我们期望的位置。</p><p data-anchor-id="ezpl">OK，至此<code>`OverScroller</code>类三个滚动相关的方法都介绍完了。它们有一个共同点：这三个函数都仅是初始化函数，都是借助View的不断重绘，通过<code>View.computeScroll</code>方法和<code>OverScroller.computeScrollOffset</code>方法，把每一帧的scrollX和scrollY值，设置到View上，达到滚动View内容的目的。</p></div>
+</body>
+</html>
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/26/Android-View系统那些事一/" rel="next" title="Android View系统那些事一">
+                <i class="fa fa-chevron-left"></i> Android View系统那些事一
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/06/27/Android View系统那些事/"
+     data-title=""
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/06/27/Android View系统那些事/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/06/27/Android View系统那些事/"
+           data-title="" data-url="http://ltlovezh.github.io/2016/06/27/Android View系统那些事/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+               alt="leon" />
+          <p class="site-author-name" itemprop="name">leon</p>
+          <p class="site-description motion-element" itemprop="description">技术实践者</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">18</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">33</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/63230484/" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  douban
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">技术博文</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#android-view系统那些事"><span class="nav-number">1.</span> <span class="nav-text">Android View系统那些事</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#view的坐标"><span class="nav-number">1.1.</span> <span class="nav-text">View的坐标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gesturedetector手势检测"><span class="nav-number">1.2.</span> <span class="nav-text">GestureDetector手势检测</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ondown"><span class="nav-number">1.2.1.</span> <span class="nav-text">onDown</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onshowpress"><span class="nav-number">1.2.2.</span> <span class="nav-text">onShowPress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onlongpress"><span class="nav-number">1.2.3.</span> <span class="nav-text">onLongPress</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onsingletapup"><span class="nav-number">1.2.4.</span> <span class="nav-text">onSingleTapUp</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ondoubletap"><span class="nav-number">1.2.5.</span> <span class="nav-text">onDoubleTap</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onsingletapconfirmed"><span class="nav-number">1.2.6.</span> <span class="nav-text">onSingleTapConfirmed</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ondoubletapevent"><span class="nav-number">1.2.7.</span> <span class="nav-text">onDoubleTapEvent</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onscroll"><span class="nav-number">1.2.8.</span> <span class="nav-text">onScroll</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onfling"><span class="nav-number">1.2.9.</span> <span class="nav-text">onFling</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#view的内容滚动"><span class="nav-number">1.3.</span> <span class="nav-text">View的内容滚动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#overscroller类三个滚动相关的方法"><span class="nav-number">1.3.1.</span> <span class="nav-text">OverScroller类三个滚动相关的方法</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+&nbsp;
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ltlovezh"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+</body>
+</html>

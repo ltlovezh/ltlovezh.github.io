@@ -58,23 +58,13 @@
 
 
 <meta name="description" content="本篇文章打算介绍下View的坐标、自定义View的手势检测以及实现View内容滚动的几种方式。希望对有需要的同学有所帮助。
-View的坐标在自定义View中，经常需要处理各种坐标之间的转换，下图展示了View中的各种坐标：简单解释下上图的含义：
-针对一个普通View：
-
-getTop方法表示view自身的顶边到其父布局顶边的距离
-getLeft方法表示view自身的左边到其父布局左边的距离
-get">
+View的坐标在自定义View中，经常需要处理各种坐标之间的转换，下图展示了View中的各种坐标：">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android View系统那些事一">
 <meta property="og:url" content="http://ltlovezh.github.io/2016/06/26/Android-View系统那些事一/index.html">
 <meta property="og:site_name" content="风之谷">
 <meta property="og:description" content="本篇文章打算介绍下View的坐标、自定义View的手势检测以及实现View内容滚动的几种方式。希望对有需要的同学有所帮助。
-View的坐标在自定义View中，经常需要处理各种坐标之间的转换，下图展示了View中的各种坐标：简单解释下上图的含义：
-针对一个普通View：
-
-getTop方法表示view自身的顶边到其父布局顶边的距离
-getLeft方法表示view自身的左边到其父布局左边的距离
-get">
+View的坐标在自定义View中，经常需要处理各种坐标之间的转换，下图展示了View中的各种坐标：">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E5%9D%90%E6%A0%87%E7%B3%BB.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/OnGestureListener%E9%95%BF%E6%8C%89%E4%BA%8B%E4%BB%B6.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%8F%8C%E5%87%BB%E4%BA%8B%E4%BB%B6%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
@@ -83,16 +73,11 @@ get">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/ScrollXY.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/fling%E6%95%88%E6%9E%9C.gif">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/springBack.gif">
-<meta property="og:updated_time" content="2016-06-26T14:00:54.000Z">
+<meta property="og:updated_time" content="2016-06-27T11:49:29.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android View系统那些事一">
 <meta name="twitter:description" content="本篇文章打算介绍下View的坐标、自定义View的手势检测以及实现View内容滚动的几种方式。希望对有需要的同学有所帮助。
-View的坐标在自定义View中，经常需要处理各种坐标之间的转换，下图展示了View中的各种坐标：简单解释下上图的含义：
-针对一个普通View：
-
-getTop方法表示view自身的顶边到其父布局顶边的距离
-getLeft方法表示view自身的左边到其父布局左边的距离
-get">
+View的坐标在自定义View中，经常需要处理各种坐标之间的转换，下图展示了View中的各种坐标：">
 <meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E5%9D%90%E6%A0%87%E7%B3%BB.png">
 
 
@@ -336,7 +321,9 @@ get">
 
       
         <p>本篇文章打算介绍下View的坐标、自定义View的手势检测以及实现View内容滚动的几种方式。希望对有需要的同学有所帮助。</p>
-<h2 id="View的坐标"><a href="#View的坐标" class="headerlink" title="View的坐标"></a>View的坐标</h2><p>在自定义View中，经常需要处理各种坐标之间的转换，下图展示了View中的各种坐标：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/View%E5%9D%90%E6%A0%87%E7%B3%BB.png" width="400" alt="View坐标系"><br>简单解释下上图的含义：</p>
+<h2 id="View的坐标"><a href="#View的坐标" class="headerlink" title="View的坐标"></a>View的坐标</h2><p>在自定义View中，经常需要处理各种坐标之间的转换，下图展示了View中的各种坐标：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/View%E5%9D%90%E6%A0%87%E7%B3%BB.png" width="400" alt="View坐标系"></p>
+<a id="more"></a>
+<p>简单解释下上图的含义：</p>
 <p>针对一个普通View：</p>
 <ul>
 <li><code>getTop</code>方法表示view自身的顶边到其父布局顶边的距离</li>
@@ -469,6 +456,10 @@ get">
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2016/06/27/Android View系统那些事/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -558,7 +549,7 @@ get">
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-count">18</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
