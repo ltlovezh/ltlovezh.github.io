@@ -66,7 +66,7 @@
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%AE%98%E6%96%B9.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%B7%A1%E5%8C%96SystemBar.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%B2%A1%E6%9C%89%E6%B7%A1%E5%8C%96SystemBar.png">
-<meta property="og:updated_time" content="2016-05-31T13:11:46.000Z">
+<meta property="og:updated_time" content="2016-06-30T09:42:02.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android SystemBar">
 <meta name="twitter:description" content="SystemBar是用来展示通知、表现设备状态和完成设备导航的屏幕区域。主要包括状态栏（1：status bar）和导航栏（2：navigation bar）。借用官方的图，如下所示，我们可以根据需要对SystemBar进行一些操作，满足自己的需求。">
@@ -319,7 +319,7 @@
 <p>一旦用户触摸到状态栏或者是系统栏，这个标签就会被清除，使系统栏重新显现（无透明度）。在标签被清除的情况下，如果你想重新淡化系统栏就必须重新设定这个标签。</p>
 <p>或者我们也可以通过代码直接清除该标志：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);</span><br></pre></td></tr></table></figure></p>
 <p>如图所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E6%B2%A1%E6%9C%89%E6%B7%A1%E5%8C%96SystemBar.png" width="300"><br><code>View.SYSTEM_UI_FLAG_VISIBLE</code>表示请求系统显示SystemBar.</p>
-<h3 id="隐藏SystemBar"><a href="#隐藏SystemBar" class="headerlink" title="隐藏SystemBar"></a>隐藏SystemBar</h3><p>在Api15及其之下，可以通过设置Window的Flag标志来达到全屏目的,一般两个标志位同时设置：<br><code>getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN)</code></p>
+<h3 id="隐藏SystemBar"><a href="#隐藏SystemBar" class="headerlink" title="隐藏SystemBar"></a>隐藏SystemBar</h3><p>在Api15及其之下，可以通过设置Window的Flag标志来达到全屏目的,相关的Flag主要有以下三个：</p>
 <ol>
 <li><p>WindowManager.LayoutParams.FLAG_FULLSCREEN</p>
 <blockquote>
@@ -331,8 +331,19 @@
 <p>设置了FLAG_LAYOUT_IN_SCREEN之后，可以拥有与启用FLAG_FULLSCREEN相同的屏幕区域。这个方法防止了状态栏隐藏和显示时，内容区域的大小变化。但是此时，状态栏应该是在压在内容区域之上，所以需要自己处理布局，防止状态栏遮盖重要的内容区域。</p>
 </blockquote>
 </li>
+<li><p>WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS</p>
+<blockquote>
+<p>allow window to extend outside of the screen. 允许窗口超出屏幕</p>
+</blockquote>
+</li>
 </ol>
+<p>下面来看一个具体的案例：</p>
+<p>假如我们一开始想要以全屏模式（布局充满整个屏幕）运行，但是也需要在特定场景下，显示状态栏，并且要求状态栏是漂浮在布局上面，而不是把布局顶下去，该怎么实现那？</p>
+<p>首先要在<code>Activity.onCreate</code>方法中，添加如下代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//表示布局文件充满整个屏幕，即View布局不受状态栏限制，此时状态栏漂浮在布局之上。</span></span><br><span class="line">getWindow().addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)</span><br></pre></td></tr></table></figure></p>
+<p>然后根据实际情况，调用以下函数来显示和隐藏状态栏（显示出来的状态栏是漂浮在布局之上的）<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//显示状态栏</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">showSystemBar</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//隐藏状态栏</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hideSystemBar</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如果不添加<code>Activity.onCreate</code>中的代码，仅通过下面的两个方法来显示和隐藏状态栏，那么每次都会导致重新布局（View布局会被状态栏顶下来，充不满全屏）。</p>
 <p>当你设置WindowManager标签之后（无论是通过Activity主题还是动态设置），这个标签都会一直生效直到你清除它。这点和View.setSystemUiVisibility设置有本质的区别。</p>
+<hr>
 <p>在Api16及其之上，可以通过View.setSystemUiVisibility来设置。该方法可以用来控制SystemBar的显示和隐藏，下面简单介绍下其可以设置的Flag：<br>最重要的两个Flag：</p>
 <ol>
 <li><p>View.SYSTEM_UI_FLAG_IMMERSIVE <code>Api19</code> (控制SYSTEM_UI_FLAG_HIDE_NAVIGATION flag是否能被用户交互行为所清除) </p>
