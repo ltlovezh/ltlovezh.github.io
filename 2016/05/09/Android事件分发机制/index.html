@@ -65,14 +65,14 @@
 <meta property="og:site_name" content="风之谷">
 <meta property="og:description" content="最近做需求时，对Android的事件分发机制产生了一些困惑，所以周末详细学习了一下，现总结如下：
 基础知识1、所有的Touch事件都会被封装成MotionEvent对象，该对象代表了Touch事件的坐标、动作等基本信息。2、一般情况下，每一个Touch事件，总是以ACTION_DOWN事件开始，中间穿插着一些ACTION_MOVE事件（取决于是否有手势的移动），然后以ACTION_UP事件结束，之">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B2%A1%E6%9C%89%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png">
-<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png">
-<meta property="og:updated_time" content="2016-05-11T12:39:44.000Z">
+<meta property="og:updated_time" content="2016-07-09T06:56:20.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android事件分发机制">
 <meta name="twitter:description" content="最近做需求时，对Android的事件分发机制产生了一些困惑，所以周末详细学习了一下，现总结如下：
 基础知识1、所有的Touch事件都会被封装成MotionEvent对象，该对象代表了Touch事件的坐标、动作等基本信息。2、一般情况下，每一个Touch事件，总是以ACTION_DOWN事件开始，中间穿插着一些ACTION_MOVE事件（取决于是否有手势的移动），然后以ACTION_UP事件结束，之">
-<meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png">
+<meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B2%A1%E6%9C%89%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png">
 
 
 
@@ -325,7 +325,7 @@
 <p>好了，熟悉这些基本用法，应付一般的Coding就没问题了。不过作为有追求的猿们，我们要从源码层面揭开事件分发机制的神秘面纱。</p>
 <a id="more"></a>
 <h2 id="事件分发层级关系"><a href="#事件分发层级关系" class="headerlink" title="事件分发层级关系"></a>事件分发层级关系</h2><p>Touch事件首先会被传递给当前的Activity，接着由Activity向下传递给ViewGroup1，然后是ViewGroup2， … ，最后传递给目标View。若目标View没有消费该Touch事件，那么事件又会向上回传，直到某个ViewGroup消费了该事件，或者没有ViewGroup消费事件，那么最终Touch事件会回到当前Activity，触发Activity的onTouchEvent方法。</p>
-<p>在一系列Touch事件中，<code>ACTION_DOWN</code>是比较特殊的一个，若<code>ACTION_DOWN</code>事件没有被消费，则说明Touch事件没有找到目标View，那么后续的Touch事件不会继续下发，在Activity层就停止了。如下所示：<br><code>ACTION_DOWN</code>没有被目标View消费的情况下：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png" alt="目标View没有消费ACTION_DOWN事件"></p>
+<p>在一系列Touch事件中，<code>ACTION_DOWN</code>是比较特殊的一个，若<code>ACTION_DOWN</code>事件没有被消费，则说明Touch事件没有找到目标View，那么后续的Touch事件不会继续下发，在Activity层就停止了。如下所示：<br><code>ACTION_DOWN</code>没有被目标View消费的情况下：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B2%A1%E6%9C%89%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png" alt="目标View没有消费ACTION_DOWN事件"></p>
 <p><code>ACTION_DOWN</code>被目标View消费的情况下：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/View%E6%B6%88%E8%B4%B9Down%E4%BA%8B%E4%BB%B6.png" alt="目标View消费ACTION_DOWN事件"></p>
 <h3 id="Activity层的事件分发"><a href="#Activity层的事件分发" class="headerlink" title="Activity层的事件分发"></a>Activity层的事件分发</h3><p>下面，我们直接从Activity层入手，分析事件传递，至于事件是如何产生的，以及事件是如何传递到Activity层的，可以参考<a href="http://feelyou.info/analyze_android_touch_event/" target="_blank" rel="external">这里</a>。<br><code>Activity.dispatchTouchEvent</code>方法比较简单，如下所示:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchTouchEvent</span><span class="params">(MotionEvent ev)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (ev.getAction() == MotionEvent.ACTION_DOWN) &#123;</span><br><span class="line">        onUserInteraction();<span class="comment">//系统留的回调接口</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (getWindow().superDispatchTouchEvent(ev)) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> onTouchEvent(ev);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>由代码可知，这里主要是去调用了<code>PhoneWindow.superDispatchTouchEvent</code>方法，而该方法也很简单，直接抛给了<code>DecorView.superDispatchTouchEvent</code>处理，而<code>DecorView</code>则直接调用了<code>super.dispatchTouchEvent</code>去处理，我们知道<code>DecorView</code>继承自<code>FrameLayout</code>，所以实际最后交给了<code>ViewGroup.dispatchTouchEvent</code>处理。至于<code>ViewGroup.dispatchTouchEvent</code>，下面会进行详细的分析。<br>从上面的代码，还可以看出，只有DecorView无法消费Touch事件时，才会调用<code>Activity.onTouchEvent</code>。也即我们上面讲的，当子View无法消费Touch事件时，最后会回传给<code>Activity.onTouchEvent</code>，而<code>Activity.onTouchEvent</code>默认是返回false的。</p>
