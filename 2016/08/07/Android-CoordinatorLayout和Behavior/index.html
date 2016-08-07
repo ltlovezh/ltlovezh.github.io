@@ -1,0 +1,897 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="CoordinatorLayout,Behavior,嵌套滚动机制," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="上篇文章简要介绍了一些Android Material Design组件，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。
+在介绍CoordinatorLayout之前，首先需要了解下嵌套滚动机制（NestedScrolling）。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android CoordinatorLayout和Behavior">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/08/07/Android-CoordinatorLayout和Behavior/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="上篇文章简要介绍了一些Android Material Design组件，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。
+在介绍CoordinatorLayout之前，首先需要了解下嵌套滚动机制（NestedScrolling）。">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Behavior.gif">
+<meta property="og:updated_time" content="2016-08-07T08:35:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android CoordinatorLayout和Behavior">
+<meta name="twitter:description" content="上篇文章简要介绍了一些Android Material Design组件，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。
+在介绍CoordinatorLayout之前，首先需要了解下嵌套滚动机制（NestedScrolling）。">
+<meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Behavior.gif">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6226090551544907000,
+      author: 'leon'
+    }
+  };
+</script>
+
+  <title> Android CoordinatorLayout和Behavior | 风之谷 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">风之谷</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Android CoordinatorLayout和Behavior
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-08-07T16:26:20+08:00" content="2016-08-07">
+              2016-08-07
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/07/Android-CoordinatorLayout和Behavior/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/07/Android-CoordinatorLayout和Behavior/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/08/07/Android-CoordinatorLayout和Behavior/" class="leancloud_visitors" data-flag-title="Android CoordinatorLayout和Behavior">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上篇文章简要介绍了一些Android Material Design组件，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。</p>
+<p>在介绍CoordinatorLayout之前，首先需要了解下嵌套滚动机制（NestedScrolling）。</p>
+<a id="more"></a>
+<h2 id="嵌套滚动机制"><a href="#嵌套滚动机制" class="headerlink" title="嵌套滚动机制"></a>嵌套滚动机制</h2><p>所谓嵌套滚动其实就是界面布局中包含一个可滚动的列表和一个不可滚动的View，这样在滚动列表时，首先将不可滚动View移出屏幕或移进屏幕，待不可滚动View固定时，才会继续滚动滚动列表的内容。具体效果可参见上一篇文章的CoordinatorLayout效果图。</p>
+<p>为什么会有嵌套滚动机制那？<br>之前我们处理Touch事件时，主要通过重写View的<code>dispatchTouchEvent</code>、<code>onInterceptTouchEvent</code>和<code>onTouchEvent</code>等方法处理滚动事件。但这种事件处理方式有一个痛点：</p>
+<blockquote>
+<p>Touch事件要么被父View处理，要么被子View处理，很难在两者之间协调处理。</p>
+</blockquote>
+<p>也就是说：一旦子View决定处理Touch事件，那么事件就会一直下发到子View，即使子View不想处理中间的某个Touch事件（返回false），那么父View也没办法接着处理这个Touch事件了；除非父View拦截中间的某个Touch事件自己处理，但是一旦拦截了Touch事件，那么后续的Touch事件将永远不会下发到子View了。</p>
+<p>针对这种问题，Android提供了NestedScrolling机制，实现嵌套滚动机制主要依赖四个类：</p>
+<ol>
+<li><code>NestedScrollingChild</code></li>
+<li><code>NestedScrollingParent</code></li>
+<li><code>NestedScrollingChildHelper</code></li>
+<li><code>NestedScrollingParentHelper</code></li>
+</ol>
+<p>一般情况下，滚动列表需要实现NestedScrollingChild接口，以支持将滚动事件分发给父ViewGroup，相应的，父ViewGroup需要实现NestedScrollingParent接口，以支持将滚动事件进一步的分发给各个子View；而下面的两个类则是进行嵌套滚动的辅助类。</p>
+<p>一般实现<code>NestedScrollingChild</code>接口的滚动列表会把滚动事件委托给NestedScrollingChildHelper辅助类来处理。例如：RecyclerView实现了NestedScrollingChild接口，它内部就会把滚动相关事件委托给NestedScrollingChildHelper对象来处理，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">startNestedScroll</span><span class="params">(<span class="keyword">int</span> axes)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> getScrollingChildHelper().startNestedScroll(axes);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stopNestedScroll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    getScrollingChildHelper().stopNestedScroll();</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedScroll</span><span class="params">(<span class="keyword">int</span> dxConsumed, <span class="keyword">int</span> dyConsumed, <span class="keyword">int</span> dxUnconsumed,<span class="keyword">int</span> dyUnconsumed, <span class="keyword">int</span>[] offsetInWindow)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> getScrollingChildHelper().dispatchNestedScroll(dxConsumed, dyConsumed,dxUnconsumed, dyUnconsumed, offsetInWindow);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedPreScroll</span><span class="params">(<span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span>[] consumed, <span class="keyword">int</span>[] offsetInWindow)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> getScrollingChildHelper().dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//...</span></span><br></pre></td></tr></table></figure>
+<p>NestedScrollingChild的方法有很多，更多的可参见源码，上述摘录的是和嵌套滚动机制相关的四个方法：</p>
+<p>当我们滚动RecyclerView时，RecyclerView首先会通过startNestedScroll方法通知父ViewGroup（“我马上要滚动了，是否有兄弟节点要一起滚动？”），父ViewGroup会进一步把滚动事件分发给所有子View（实际是分发给和子View绑定的Behavior），感兴趣的子View会特别关注，即Behavior.onStartNestedScroll方法返回true。</p>
+<p>针对这个流程，我们看下代码上的实现，RecyclerView会在Down事件时调用<code>startNestedScroll</code>方法，我们看下<strong>NestedScrollingChildHelper.startNestedScroll方法的实现</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">startNestedScroll</span><span class="params">(<span class="keyword">int</span> axes)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (hasNestedScrollingParent()) &#123;</span><br><span class="line">        <span class="comment">// Already in progress</span></span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (isNestedScrollingEnabled()) &#123;</span><br><span class="line">        ViewParent p = mView.getParent();</span><br><span class="line">        View child = mView;</span><br><span class="line">        <span class="comment">//该循环主要是寻找到能够协调处理滚动事件的父View，即实现NestedScrollingParent接口的父ViewGroup</span></span><br><span class="line">        <span class="keyword">while</span> (p != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (ViewParentCompat.onStartNestedScroll(p, child, mView, axes)) &#123;</span><br><span class="line">                <span class="comment">//记录协调处理滚动事件的父View</span></span><br><span class="line">                mNestedScrollingParent = p;</span><br><span class="line">                <span class="comment">//ViewParentCompat是一个和父ViewGroup交互的兼容类，如果在Android5.0以上，就用View自带的方法，否则若实现了NestedScrollingParent接口，则调用接口方法。</span></span><br><span class="line">                ViewParentCompat.onNestedScrollAccepted(p, child, mView, axes);</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (p <span class="keyword">instanceof</span> View) &#123;</span><br><span class="line">                child = (View) p;</span><br><span class="line">            &#125;</span><br><span class="line">            p = p.getParent();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述方法会找到能够协调处理滚动事件的父ViewGroup，然后调用它的onStartNestedScroll方法，因为CoordinatorLayout实现了NestedScrollingParent接口，所以我们看下<strong>CoordinatorLayout.onStartNestedScroll</strong>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStartNestedScroll</span><span class="params">(View child, View target, <span class="keyword">int</span> nestedScrollAxes)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> handled = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> childCount = getChildCount();</span><br><span class="line">    <span class="comment">//询问每一个子View是否对滚动列表的滚动事件感兴趣？</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; childCount; i++) &#123;</span><br><span class="line">        <span class="keyword">final</span> View view = getChildAt(i);</span><br><span class="line">        <span class="keyword">final</span> LayoutParams lp = (LayoutParams) view.getLayoutParams();</span><br><span class="line">        <span class="comment">//获取和子View绑定的Behavior</span></span><br><span class="line">        <span class="keyword">final</span> Behavior viewBehavior = lp.getBehavior();</span><br><span class="line">        <span class="keyword">if</span> (viewBehavior != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">boolean</span> accepted = viewBehavior.onStartNestedScroll(<span class="keyword">this</span>, view, child, target,nestedScrollAxes);</span><br><span class="line">            handled |= accepted;</span><br><span class="line">            <span class="comment">//做一下标注，作为判断后续是否接收滚动事件的标记</span></span><br><span class="line">            lp.acceptNestedScroll(accepted);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            lp.acceptNestedScroll(<span class="keyword">false</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> handled;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述方法会遍历每一个子View，询问它们是否对滚动列表的滚动事件感兴趣，若<code>Behavior.onStartNestedScroll</code>方法返回true，则表示感兴趣，那么滚动列表后续的滚动事件都会分发到该子View的Behavior。而把Behavior绑定到View的方法有两种：</p>
+<ol>
+<li>在布局文件中通过<code>app:layout_behavior</code>属性指定</li>
+<li>在自定义View中通过<code>@CoordinatorLayout.DefaultBehavior</code>注解指定，就像AppBarLayout那样。</li>
+</ol>
+<blockquote>
+<p>因此，我们可以在自定义的<code>Behavior.onStartNestedScroll</code>方法中根据实际情况决定是否对滚动事件感兴趣。</p>
+</blockquote>
+<p>OK，假设CoordinatorLayout的某个子View对RecyclerView的滚动事件感兴趣，接下来RecyclerView就会把用户的滚动事件源源不断的分发给之前找到的父ViewGroup，然后父ViewGroup则进一步分发给感兴趣的子View。等到感兴趣的子View处理完滚动事件后，若用户的滚动距离没有被消费完，那么RecyclerView才有机会处理滚动事件，例如：用户一次性滚动了10px，其中某个View消费了8px，那么RecyclerView就只能滚动2px了。</p>
+<p>针对这个流程，我们看下代码实现，RecyclerView会在Move事件时，计算出滚动距离，然后通过<code>dispatchNestedPreScroll</code>方法进行分发，我们看下NestedScrollingChildHelper.dispatchNestedPreScroll方法的实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">dispatchNestedPreScroll</span><span class="params">(<span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span>[] consumed, <span class="keyword">int</span>[] offsetInWindow)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//判断之前是否找到协同处理的父ViewGroup</span></span><br><span class="line">    <span class="keyword">if</span> (isNestedScrollingEnabled() &amp;&amp; mNestedScrollingParent != <span class="keyword">null</span>) &#123;</span><br><span class="line">        <span class="comment">//dx和dy分别表示X和Y轴上的滚动距离</span></span><br><span class="line">        <span class="keyword">if</span> (dx != <span class="number">0</span> || dy != <span class="number">0</span>) &#123; </span><br><span class="line">            <span class="keyword">int</span> startX = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">int</span> startY = <span class="number">0</span>;</span><br><span class="line">            <span class="comment">//offsetInWindow用于计算滚动前后，滚动列表本身的偏移量</span></span><br><span class="line">            <span class="keyword">if</span> (offsetInWindow != <span class="keyword">null</span>) &#123;</span><br><span class="line">                mView.getLocationInWindow(offsetInWindow);</span><br><span class="line">                startX = offsetInWindow[<span class="number">0</span>];</span><br><span class="line">                startY = offsetInWindow[<span class="number">1</span>];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (consumed == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">if</span> (mTempNestedScrollConsumed == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    mTempNestedScrollConsumed = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>];</span><br><span class="line">                &#125;</span><br><span class="line">                consumed = mTempNestedScrollConsumed;</span><br><span class="line">            &#125;</span><br><span class="line">            consumed[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">            consumed[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">            <span class="comment">//分发给父ViewGroup</span></span><br><span class="line">            ViewParentCompat.onNestedPreScroll(mNestedScrollingParent, mView, dx, dy, consumed);</span><br><span class="line">            <span class="keyword">if</span> (offsetInWindow != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="comment">//计算出滚动列表本身的偏移量</span></span><br><span class="line">                mView.getLocationInWindow(offsetInWindow);</span><br><span class="line">                offsetInWindow[<span class="number">0</span>] -= startX;</span><br><span class="line">                offsetInWindow[<span class="number">1</span>] -= startY;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> consumed[<span class="number">0</span>] != <span class="number">0</span> || consumed[<span class="number">1</span>] != <span class="number">0</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (offsetInWindow != <span class="keyword">null</span>) &#123;</span><br><span class="line">            offsetInWindow[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">            offsetInWindow[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该方法的第3个参数是一个长度为2的一维数组，用于记录父ViewGroup（其实是父ViewGroup的子View）消费的滚动长度，若滚动距离没有用完，则滚动列表处理剩下的滚动距离；第4个参数也是一个长度为2的一维数组，用于记录滚动列表本身的偏移量，该参数用于修复用户Touch事件的坐标，以保证下一次滚动距离的正确性。这些处理逻辑可参见RecyclerView对Move事件的代码，此处不再贴代码了。</p>
+<p>然后，父ViewGroup就会把滚动事件分发给感兴趣的子View，因为CoordinatorLayout实现了NestedScrollingParent接口，所以我们看下<strong>CoordinatorLayout.onNestedPreScroll</strong>方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNestedPreScroll</span><span class="params">(View target, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span>[] consumed)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> xConsumed = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span> yConsumed = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">boolean</span> accepted = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> childCount = getChildCount();</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; childCount; i++) &#123;</span><br><span class="line">        <span class="keyword">final</span> View view = getChildAt(i);</span><br><span class="line">        <span class="keyword">final</span> LayoutParams lp = (LayoutParams)view.getLayoutParams();</span><br><span class="line">        <span class="comment">//若子View对滚动事件不感兴趣，则直接跳过</span></span><br><span class="line">        <span class="keyword">if</span> (!lp.isNestedScrollAccepted()) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">final</span> Behavior viewBehavior = lp.getBehavior();</span><br><span class="line">        <span class="keyword">if</span> (viewBehavior != <span class="keyword">null</span>) &#123;</span><br><span class="line">            mTempIntPair[<span class="number">0</span>] = mTempIntPair[<span class="number">1</span>] = <span class="number">0</span>;</span><br><span class="line">            <span class="comment">//分发给每个子View的Behavior处理</span></span><br><span class="line">            viewBehavior.onNestedPreScroll(<span class="keyword">this</span>, view,target, dx, dy, mTempIntPair);</span><br><span class="line">            <span class="comment">//找出每个子View消费的最大滚动距离就是父ViewGroup消费的滚动距离</span></span><br><span class="line">            xConsumed = dx &gt; <span class="number">0</span> ? Math.max(xConsumed, mTempIntPair[<span class="number">0</span>]): Math.min(xConsumed, mTempIntPair[<span class="number">0</span>]);</span><br><span class="line">            yConsumed = dy &gt; <span class="number">0</span> ? Math.max(yConsumed, mTempIntPair[<span class="number">1</span>]): Math.min(yConsumed, mTempIntPair[<span class="number">1</span>]);</span><br><span class="line">            accepted = <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//记录父ViewGroup消费的滚动距离</span></span><br><span class="line">    consumed[<span class="number">0</span>] = xConsumed;</span><br><span class="line">    consumed[<span class="number">1</span>] = yConsumed;</span><br><span class="line">    <span class="keyword">if</span> (accepted) &#123;</span><br><span class="line">        <span class="comment">//处理子View之间的依赖关系</span></span><br><span class="line">        dispatchOnDependentViewChanged(<span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>CoordinatorLayout的处理很简单，把滚动事件分发给各个子View的<code>Behavior.onNestedPreScroll</code>方法处理，并计算出最终消费的滚动距离。</p>
+<blockquote>
+<p>因此，我们可以在自定义的<code>Behavior.onNestedPreScroll</code>方法中处理子View的滚动事件，然后根据实际情况填写消费的滚动距离。</p>
+</blockquote>
+<p>OK，假设RecyclerView的滚动距离没有被CoordinatorLayout消费完，那么接下来RecyclerView应该处理这些滚动事件了。在RecyclerView的onTouchEvent方法中会调用scrollByInternal处理内容滚动，关键代码如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//x表示X轴上剩余的滚动距离</span></span><br><span class="line"><span class="keyword">if</span> (x != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">//交给具体的LayoutManager处理滚动事件，并且记录下消费的和剩余的滚动量</span></span><br><span class="line">    consumedX = mLayout.scrollHorizontallyBy(x, mRecycler,mState);</span><br><span class="line">    unconsumedX = x - consumedX;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//y表示Y轴上剩余的滚动距离</span></span><br><span class="line"><span class="keyword">if</span> (y != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="comment">//交给具体的LayoutManager处理滚动事件，并且记录下消费的和剩余的滚动量</span></span><br><span class="line">    consumedY = mLayout.scrollVerticallyBy(y, mRecycler, mState);</span><br><span class="line">    unconsumedY = y - consumedY;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//...</span></span><br><span class="line"><span class="comment">//分发滚动列表本身对剩余滚动量的消费情况</span></span><br><span class="line">dispatchNestedScroll(consumedX, consumedY, unconsumedX, unconsumedY, mScrollOffset);</span><br></pre></td></tr></table></figure>
+<p>如上所示，RecyclerView通过LayoutManager处理了剩余的滚动距离，然后计算出对剩余滚动量的消费情况，通过<code>dispatchNestedScroll</code>方法继续分发给CoordinatorLayout，而CoordinatorLayout则通过<code>onNestedScroll</code>方法分发给感兴趣的子View的Behavior处理。这部分的代码逻辑和onNestedPreScroll类似，就不贴出了，感兴趣的可以直接看源码。</p>
+<blockquote>
+<p>因此，我们可以在自定义的<code>Behavior.onNestedScroll</code>方法中检测到滚动距离的最终消费情况。</p>
+</blockquote>
+<p>OK，现在假设用户结束滚动操作了，即应该结束一系列的滚动事件了，RecyclerView会在UP事件中调用<code>stopNestedScroll</code>方法，该方法和上面介绍的三个方法类似，都会先把事件分发给父ViewGroup，然后父ViewGroup再把事件分到各个子View，最终触发子View的<code>Behavior.onStopNestedScroll</code>方法，感兴趣可以可接看源码，此处不再贴出。</p>
+<blockquote>
+<p>因此，我们可以在自定义的<code>Behavior.onStopNestedScroll</code>方法中检测到滚动事件的结束。</p>
+</blockquote>
+<p>OK，整个嵌套滚动机制就介绍完了，可见跟我们直接打交道的就是<code>CoordinatorLayout.Behavior</code>类了，通过重写该类中的方法，我们不仅可以监听滚动列表的滚动事件，还可以做很多其他的事情，感兴趣的可以详细看下Behavior接口中的方法说明。</p>
+<h2 id="监听View之间的状态变化"><a href="#监听View之间的状态变化" class="headerlink" title="监听View之间的状态变化"></a>监听View之间的状态变化</h2><p>这里我比较感兴趣的是通过Behavior监听View之间的状态变化，例如：位置、大小、背景色等，要实现这种状态监听，需要重写Behavior的两个方法：</p>
+<ol>
+<li><code>layoutDependsOn</code> ： 决定需要监听的View对象</li>
+<li><code>onDependentViewChanged</code> ： 当监听对象的状态发生变化时，会回调该方法，我们可以根据监听对象的状态，变换自己View的状态。</li>
+</ol>
+<p>首先，我们来看下这两个方法在CoordinatorLayout中是怎么被调用的？</p>
+<p>经过代码摸索和测试，发现这两个方法基本都是在<code>CoordinatorLayout.dispatchOnDependentViewChanged</code>方法中被调用的，而该方法则会在CoordinatorLayout每次绘制之前被调用，核心代码如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//View绘制前的全局监听器</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OnPreDrawListener</span> <span class="keyword">implements</span> <span class="title">ViewTreeObserver</span>.<span class="title">OnPreDrawListener</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onPreDraw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            <span class="comment">//触发关联View的回调</span></span><br><span class="line">            dispatchOnDependentViewChanged(<span class="keyword">false</span>);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//当CoordinatorLayout绑定到窗口时，就会被注册</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onAttachedToWindow</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>.onAttachedToWindow();</span><br><span class="line">    resetTouchBehaviors();</span><br><span class="line">    <span class="keyword">if</span> (mNeedsPreDrawListener) &#123;</span><br><span class="line">        <span class="keyword">if</span> (mOnPreDrawListener == <span class="keyword">null</span>) &#123;</span><br><span class="line">            mOnPreDrawListener = <span class="keyword">new</span> OnPreDrawListener();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">final</span> ViewTreeObserver vto = getViewTreeObserver();</span><br><span class="line">        <span class="comment">//注册每次绘制前的回调</span></span><br><span class="line">        vto.addOnPreDrawListener(mOnPreDrawListener);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//...    </span></span><br><span class="line">    mIsAttachedToWindow = <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>从上述代码可知，每次重绘CoordinatorLayout之前，都会调用<code>dispatchOnDependentViewChanged</code>方法，好吧，该方法是核心部分，来看下代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">dispatchOnDependentViewChanged</span><span class="params">(<span class="keyword">final</span> <span class="keyword">boolean</span> fromNestedScroll)</span> </span>&#123;</span><br><span class="line"><span class="comment">//布局方向    </span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> layoutDirection = ViewCompat.getLayoutDirection(<span class="keyword">this</span>);</span><br><span class="line"><span class="comment">//mDependencySortedChildren是根据View之间的依赖关系，重新排序后的子View列表，假如A依赖于B，那么B就在A的前面，可参见prepareChildren方法</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> childCount = mDependencySortedChildren.size();</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; childCount; i++) &#123;</span><br><span class="line">    <span class="keyword">final</span> View child = mDependencySortedChildren.get(i);</span><br><span class="line">    <span class="keyword">final</span> LayoutParams lp = (LayoutParams)child.getLayoutParams();</span><br><span class="line">    <span class="comment">//向前寻找当前View依赖的View，这里的依赖关系是通过app:layout_anchor属性指定的</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; i; j++) &#123;</span><br><span class="line">        <span class="keyword">final</span> View checkChild = mDependencySortedChildren.get(j);</span><br><span class="line">        <span class="comment">//lp.mAnchorDirectChild表示当前View所依赖View的父View，并且为CoordinatorLayout直接子View，因为checkChild是直接子View，只有这样他们才可以在一起比较是否相等</span></span><br><span class="line">        <span class="keyword">if</span> (lp.mAnchorDirectChild == checkChild) &#123;</span><br><span class="line">            <span class="comment">//找到了当前View依赖的View，offsetChildToAnchor方法会根据当前View的位置和所依赖View的位置，计算出当前View期望的新位置，然后对当前View进行位移，同时调用onDependentViewChanged方法。感兴趣可直接查阅该方法源码，此处不再赘述</span></span><br><span class="line">            offsetChildToAnchor(child, layoutDirection);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 这里oldRect表示当前View上一次的位置，newRect表示当前View现在的位置，若两次位置相同，说明没有发生偏移，则所有依赖于该View的子View都将收不到onDependentViewChanged回调（感觉这里应该是为了效率考虑吧）</span></span><br><span class="line">    <span class="keyword">final</span> Rect oldRect = mTempRect1;</span><br><span class="line">    <span class="keyword">final</span> Rect newRect = mTempRect2;</span><br><span class="line">    getLastChildRect(child, oldRect);</span><br><span class="line">    getChildRect(child, <span class="keyword">true</span>, newRect);</span><br><span class="line">    <span class="keyword">if</span> (oldRect.equals(newRect)) &#123;</span><br><span class="line">        <span class="keyword">continue</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//重新记录当前View的位置</span></span><br><span class="line">    recordLastChildRect(child, newRect);</span><br><span class="line">    <span class="comment">// Update any behavior-dependent views for the change</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; childCount; j++) &#123;</span><br><span class="line">        <span class="keyword">final</span> View checkChild = mDependencySortedChildren.get(j);</span><br><span class="line">        <span class="keyword">final</span> LayoutParams checkLp = (LayoutParams) checkChild.getLayoutParams();</span><br><span class="line">        <span class="comment">//找出View的Behavior</span></span><br><span class="line">        <span class="keyword">final</span> Behavior b = checkLp.getBehavior();</span><br><span class="line">        <span class="comment">//通过layoutDependsOn判断checkChild是否依赖于当前View</span></span><br><span class="line">        <span class="keyword">if</span> (b != <span class="keyword">null</span> &amp;&amp; b.layoutDependsOn(<span class="keyword">this</span>, checkChild, child)) &#123;</span><br><span class="line">            <span class="comment">//...省略代码</span></span><br><span class="line">            <span class="comment">//若依赖于当前View，那么调用onDependentViewChanged方法</span></span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">boolean</span> handled = b.onDependentViewChanged(<span class="keyword">this</span>, checkChild, child);</span><br><span class="line">            <span class="comment">//...省略代码</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>如上所示，核心代码都添加了详细的注释，这里简单总结下：</p>
+<ol>
+<li><p>形成依赖关系的方法有两种</p>
+<blockquote>
+<ol>
+<li>通过<code>app:layout_anchor</code>属性指定参照的View；</li>
+<li>通过<code>layoutDependsOn</code>方法判断</li>
+</ol>
+</blockquote>
+</li>
+<li><p>若是通过第二种方式形成的依赖关系，那么只有当被依赖View的Rect区域发生变化时，所有依赖于该View的其他View才会收到<code>onDependentViewChanged</code>回调。</p>
+</li>
+<li>若在<code>Behavior.onDependentViewChanged</code>方法中根据所依赖View的状态修改了当前View的位置，那么也应该重写Behavior的<code>onLayoutChild</code>，这样才能保持一致。</li>
+</ol>
+<p>OK，这两个方法的实现原理已经介绍完了。</p>
+<h2 id="实际案例"><a href="#实际案例" class="headerlink" title="实际案例"></a>实际案例</h2><p>下面我们来看一个同时包含嵌套滚动和View间状态监听的Demo。</p>
+<p>首先看一下效果图：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/Behavior.gif" alt=""></p>
+<p>当向上滚动TextView时，首先会把TextView滚动出屏幕，然后才会滚动RecyclerView的内容；当向下滚动时，首先会把TextView滚动到屏幕内，然后才会滚动RecyclerView的内容；同时TextView的位置依赖于Button的位置，RecyclerView的位置依赖于TextView的位置（保证RecyclerView不会被TextView遮盖住）。</p>
+<p>实现上述效果的布局文按如下所示：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"</span><br><span class="line">    xmlns:app="http://schemas.android.com/apk/res-auto"</span><br><span class="line">    xmlns:tools="http://schemas.android.com/tools"</span><br><span class="line">    android:id="@+id/activity_behavior"</span><br><span class="line">    android:layout_width="match_parent"</span><br><span class="line">    android:layout_height="match_parent"&gt;</span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span><br><span class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span><br><span class="line">        <span class="attr">android:layout_height</span>=<span class="string">"150dp"</span></span><br><span class="line">        <span class="attr">android:background</span>=<span class="string">"#4400ff00"</span></span><br><span class="line">        <span class="attr">android:gravity</span>=<span class="string">"center"</span></span><br><span class="line">        <span class="attr">android:text</span>=<span class="string">"Hello CoordinatorLayout"</span></span><br><span class="line">        <span class="attr">android:textSize</span>=<span class="string">"18dp"</span></span><br><span class="line">        <span class="attr">app:layout_behavior</span>=<span class="string">"leon.com.allkindsoflistview.MyBehavior"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">android.support.v7.widget.RecyclerView</span></span><br><span class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/recycler"</span></span><br><span class="line">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span><br><span class="line">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span><br><span class="line">        <span class="attr">app:layout_behavior</span>=<span class="string">"leon.com.allkindsoflistview.RecyclerBehavior"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">Button</span></span><br><span class="line">        <span class="attr">android:id</span>=<span class="string">"@+id/button"</span></span><br><span class="line">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span><br><span class="line">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span><br><span class="line">        <span class="attr">android:layout_gravity</span>=<span class="string">"bottom|right"</span></span><br><span class="line">        <span class="attr">android:text</span>=<span class="string">"Click Me"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">android.support.design.widget.CoordinatorLayout</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>CoordinatorLayout包含3个子View，其中RecyclerView依赖于TextView，TextView依赖于Button（通过Behavior.layoutDependsOn方法指定），RecyclerView的滚动会带动TextView的滚动。</p>
+<p>下面来看一下RecyclerView的Behavior，该Behavior仅仅实现了layoutDependsOn和onDependentViewChanged方法，目的是根据TextView的位置，计算出RecyclerView的位置，这样才能保证RecyclerView的顶部靠着TextView的底部，而不被TextView盖住。代码如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">layoutDependsOn</span><span class="params">(CoordinatorLayout parent, View child, View dependency)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//当前RecyclerView依赖于TextView</span></span><br><span class="line">    <span class="keyword">return</span> dependency <span class="keyword">instanceof</span> TextView;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onDependentViewChanged</span><span class="params">(CoordinatorLayout parent, View child, View dependency)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//根据TextView的位置，计算出RecyclerView的位置，这样才能保证RecyclerView的顶部靠着TextView的底部，而不被TextView盖住</span></span><br><span class="line">    <span class="keyword">int</span> delta = (<span class="keyword">int</span>) dependency.getTranslationY() + dependency.getBottom();</span><br><span class="line">    delta = delta - child.getTop();</span><br><span class="line">    child.offsetTopAndBottom(delta);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后来看一下TextView的MyBehavior，该Behavior不仅仅实现了依赖关系，同时还实现了嵌套滚动，代码如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"> <span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onStartNestedScroll</span><span class="params">(CoordinatorLayout coordinatorLayout, View child, View directTargetChild, View target, <span class="keyword">int</span> nestedScrollAxes)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//若是RecyclerView滚动，那么TextView则跟着滚动，即TextView对RecyclerView的滚动感兴趣</span></span><br><span class="line">    <span class="keyword">return</span> target <span class="keyword">instanceof</span> RecyclerView;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"> <span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onNestedPreScroll</span><span class="params">(CoordinatorLayout coordinatorLayout, View child, View target, <span class="keyword">int</span> dx, <span class="keyword">int</span> dy, <span class="keyword">int</span>[] consumed)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//通过调整TextView的TranslationY值来达到滚动的目的</span></span><br><span class="line">    <span class="keyword">if</span> (dy &gt; <span class="number">0</span>) &#123; <span class="comment">//表示向上滚动</span></span><br><span class="line">        <span class="keyword">if</span> (child.getTranslationY() &gt; -child.getHeight()) &#123;</span><br><span class="line">            <span class="keyword">float</span> trY = child.getTranslationY() - dy &lt;= -child.getHeight() ? -child.getHeight() : child.getTranslationY() - dy;</span><br><span class="line">            consumed[<span class="number">1</span>] = (<span class="keyword">int</span>) (child.getTranslationY() - trY);</span><br><span class="line">            child.setTranslationY(trY);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span> (dy &lt; <span class="number">0</span>)&#123; <span class="comment">//向下滚动</span></span><br><span class="line">        <span class="keyword">if</span> (child.getTranslationY() &lt; <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">float</span> trY = child.getTranslationY() - dy &gt;= <span class="number">0</span> ? <span class="number">0</span> : child.getTranslationY() - dy;</span><br><span class="line">            consumed[<span class="number">1</span>] = (<span class="keyword">int</span>) (child.getTranslationY() - trY);</span><br><span class="line">            child.setTranslationY(trY);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">layoutDependsOn</span><span class="params">(CoordinatorLayout parent, View child, View dependency)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//表示TextView依赖于Button</span></span><br><span class="line">    <span class="keyword">return</span> dependency <span class="keyword">instanceof</span> Button;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onDependentViewChanged</span><span class="params">(CoordinatorLayout parent, View child, View dependency)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//根据Button的TranslationY调整TextView的TranslationY</span></span><br><span class="line">     child.setTranslationY(Math.abs(dependency.getTranslationY()));</span><br><span class="line">     <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>TextView的MyBehavior的稍微复杂一些，主要是实现了跟着RecyclerView的滚动而滚动，同时又依赖于Button的位置决定TextView的最终位置。</p>
+<p>OK，到此为止，简要介绍了嵌套滚动机制和CoordinatorLayout.Behavior的使用方法，Behavior的方法还有很多，感兴趣的可以多尝试下。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><ol>
+<li><a href="https://segmentfault.com/a/1190000002873657" target="_blank" rel="external">Android嵌套滑动机制（NestedScrolling）</a></li>
+<li><a href="http://www.tuicool.com/articles/uU7vqya" target="_blank" rel="external">探究Behavior的真实面目</a></li>
+<li><a href="https://segmentfault.com/a/1190000002888109" target="_blank" rel="external">Android Support Design中CoordinatorLayout与Behaviors 初探</a></li>
+</ol>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CoordinatorLayout/" rel="tag">#CoordinatorLayout</a>
+          
+            <a href="/tags/Behavior/" rel="tag">#Behavior</a>
+          
+            <a href="/tags/嵌套滚动机制/" rel="tag">#嵌套滚动机制</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/05/Android-Material-Design/" rel="next" title="Android Material Design">
+                <i class="fa fa-chevron-left"></i> Android Material Design
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/08/07/Android-CoordinatorLayout和Behavior/"
+     data-title="Android CoordinatorLayout和Behavior"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/08/07/Android-CoordinatorLayout和Behavior/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/08/07/Android-CoordinatorLayout和Behavior/"
+           data-title="Android CoordinatorLayout和Behavior" data-url="http://ltlovezh.github.io/2016/08/07/Android-CoordinatorLayout和Behavior/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+               alt="leon" />
+          <p class="site-author-name" itemprop="name">leon</p>
+          <p class="site-description motion-element" itemprop="description">技术实践者</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">19</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/63230484/" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  douban
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">技术博文</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#嵌套滚动机制"><span class="nav-number">1.</span> <span class="nav-text">嵌套滚动机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#监听View之间的状态变化"><span class="nav-number">2.</span> <span class="nav-text">监听View之间的状态变化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实际案例"><span class="nav-number">3.</span> <span class="nav-text">实际案例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文章"><span class="nav-number">4.</span> <span class="nav-text">参考文章</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+&nbsp;
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ltlovezh"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+</body>
+</html>
