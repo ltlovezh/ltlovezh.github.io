@@ -57,16 +57,18 @@
 
 
 
-<meta name="description" content="Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
+<meta name="description" content="本篇文章已授权微信公众号 guolin_blog （郭霖）独家发布
+Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
 Matrix是一个3*3的矩阵，如图所示：
-我们可以直接通过Matrix.getValues方法获取Matrix的矩阵值（浮点型数组类型），然后修改矩阵值（Matrix类为每一个矩阵值提供了固定索引，如：">
+我们可以直接通过Matrix.getValues方法获取Matrix的矩阵值（浮点型数组类型">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Matrix使用解析">
 <meta property="og:url" content="http://ltlovezh.github.io/2016/04/27/Matrix使用解析/index.html">
 <meta property="og:site_name" content="风之谷">
-<meta property="og:description" content="Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
+<meta property="og:description" content="本篇文章已授权微信公众号 guolin_blog （郭霖）独家发布
+Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
 Matrix是一个3*3的矩阵，如图所示：
-我们可以直接通过Matrix.getValues方法获取Matrix的矩阵值（浮点型数组类型），然后修改矩阵值（Matrix类为每一个矩阵值提供了固定索引，如：">
+我们可以直接通过Matrix.getValues方法获取Matrix的矩阵值（浮点型数组类型">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/matrix.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/translate.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/scale.png">
@@ -77,12 +79,13 @@ Matrix是一个3*3的矩阵，如图所示：
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Matrix%E6%AD%A3%E5%90%91.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/nothardwareAcceleration.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/hardwareAcceleration.png">
-<meta property="og:updated_time" content="2016-08-19T01:34:03.000Z">
+<meta property="og:updated_time" content="2016-08-26T01:27:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Matrix使用解析">
-<meta name="twitter:description" content="Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
+<meta name="twitter:description" content="本篇文章已授权微信公众号 guolin_blog （郭霖）独家发布
+Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。
 Matrix是一个3*3的矩阵，如图所示：
-我们可以直接通过Matrix.getValues方法获取Matrix的矩阵值（浮点型数组类型），然后修改矩阵值（Matrix类为每一个矩阵值提供了固定索引，如：">
+我们可以直接通过Matrix.getValues方法获取Matrix的矩阵值（浮点型数组类型">
 <meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/matrix.png">
 
 
@@ -325,7 +328,8 @@ Matrix是一个3*3的矩阵，如图所示：
       
 
       
-        <p>Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。</p>
+        <p>本篇文章已授权微信公众号 guolin_blog （郭霖）独家发布</p>
+<p>Matrix的使用范围非常广泛，我们平时使用的Tween Animation，其在进行位移、缩放、旋转时，都是通过Matrix来实现的。除此之外，在进行图像变换操作时，Matrix也是最佳选择。</p>
 <p>Matrix是一个3*3的矩阵，如图所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/matrix.png" alt="Matrix"></p>
 <p>我们可以直接通过<code>Matrix.getValues</code>方法获取Matrix的矩阵值（浮点型数组类型），然后修改矩阵值（Matrix类为每一个矩阵值提供了固定索引，如：MSCALE_X、MSKEW_X等），最后通过<code>Matrix.setValues</code>方法重新设置Matrix值，已达到修改Matrix的目的。这种方式要求我们对Matrix每一个值的作用都要十分了解，操作起来比较繁琐，但却是最灵活、最彻底的操作方式。</p>
 <a id="more"></a>

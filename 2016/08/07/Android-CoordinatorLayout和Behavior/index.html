@@ -57,19 +57,22 @@
 
 
 
-<meta name="description" content="上篇文章简要介绍了一些Android Material Design组件，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。
+<meta name="description" content="本篇文章已授权微信公众号 guolin_blog （郭霖）独家发布
+上篇文章简要介绍了一些Android Material Design组件，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。
 在介绍CoordinatorLayout之前，首先需要了解下嵌套滚动机制（NestedScrolling）。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android CoordinatorLayout和Behavior">
 <meta property="og:url" content="http://ltlovezh.github.io/2016/08/07/Android-CoordinatorLayout和Behavior/index.html">
 <meta property="og:site_name" content="风之谷">
-<meta property="og:description" content="上篇文章简要介绍了一些Android Material Design组件，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。
+<meta property="og:description" content="本篇文章已授权微信公众号 guolin_blog （郭霖）独家发布
+上篇文章简要介绍了一些Android Material Design组件，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。
 在介绍CoordinatorLayout之前，首先需要了解下嵌套滚动机制（NestedScrolling）。">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Behavior.gif">
-<meta property="og:updated_time" content="2016-08-24T10:34:46.000Z">
+<meta property="og:updated_time" content="2016-08-26T01:27:19.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android CoordinatorLayout和Behavior">
-<meta name="twitter:description" content="上篇文章简要介绍了一些Android Material Design组件，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。
+<meta name="twitter:description" content="本篇文章已授权微信公众号 guolin_blog （郭霖）独家发布
+上篇文章简要介绍了一些Android Material Design组件，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。
 在介绍CoordinatorLayout之前，首先需要了解下嵌套滚动机制（NestedScrolling）。">
 <meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Behavior.gif">
 
@@ -313,7 +316,8 @@
       
 
       
-        <p>上篇文章简要介绍了一些<a href="http://ltlovezh.com/2016/08/05/Android-Material-Design/" target="_blank" rel="external">Android Material Design组件</a>，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。</p>
+        <p>本篇文章已授权微信公众号 guolin_blog （郭霖）独家发布</p>
+<p>上篇文章简要介绍了一些<a href="http://ltlovezh.com/2016/08/05/Android-Material-Design/" target="_blank" rel="external">Android Material Design组件</a>，其中最重要的就是CoordinatorLayout了。本文将介绍下CoordinatorLayout是如何协调子View间关系的。</p>
 <p>在介绍CoordinatorLayout之前，首先需要了解下嵌套滚动机制（NestedScrolling）。</p>
 <a id="more"></a>
 <h2 id="嵌套滚动机制"><a href="#嵌套滚动机制" class="headerlink" title="嵌套滚动机制"></a>嵌套滚动机制</h2><p>所谓嵌套滚动其实就是界面布局中包含一个可滚动的列表和一个不可滚动的View，这样在滚动列表时，首先将不可滚动View移出屏幕或移进屏幕，待不可滚动View固定时，才会继续滚动滚动列表的内容。具体效果可参见上一篇文章的CoordinatorLayout效果图。</p>
