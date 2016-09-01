@@ -91,7 +91,7 @@
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Activity%E8%BF%81%E7%A7%BB3.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Activity%E4%B8%8D%E8%BF%81%E7%A7%BB1-2.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Activity%E4%B8%8D%E8%BF%81%E7%A7%BB3.png">
-<meta property="og:updated_time" content="2016-08-28T14:11:02.000Z">
+<meta property="og:updated_time" content="2016-09-01T01:40:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Activity启动模式一">
 <meta name="twitter:description" content="众所周知，Activity有4种启动模式，分别是：Standard、SingleTop、SingleTask和SingleInstance，它们控制了被启动Activity的启动行为。本文将通过具体案例，详细分析这几种模式的差异和使用场景，方便日后查阅。">
@@ -346,6 +346,9 @@
 <p>在Android系统的多个任务栈中，只有一个处于前台，即前台任务栈，其它的都位于后台，即后台任务栈。后台任务栈中的Activity处于暂停状态，用户可以通过唤起后台任务栈中的任意Activity，将后台任务栈切换到前台。</p>
 <h3 id="android-taskAffinity属性"><a href="#android-taskAffinity属性" class="headerlink" title="android:taskAffinity属性"></a>android:taskAffinity属性</h3><p><code>android:taskAffinity</code>是Activity的一个属性，表示该<strong>Activity期望的任务栈的名称</strong>。默认情况下，一个应用程序中所有Activity的taskAffinity都是相同的，即应用程序的包名。当然，我们可以在配置文件中为每个Activity指定不同的taskAffinity（只有和已有包名不同，才有意义）。一般情况下，该属性主要和SingleTask启动模式或者<code>android:allowTaskReparenting</code>属性结合使用（下面会详细介绍），在其他情况下没有意义。</p>
 <h2 id="四种启动模式"><a href="#四种启动模式" class="headerlink" title="四种启动模式"></a>四种启动模式</h2><p>上面简要介绍了Activity任务栈和android:taskAffinity属性。有了这些基础之后，我们就可以详细介绍Activity的四种启动模式了。</p>
+<p>一般情况下，我们可以在<code>AndroidManifest</code>配置文件中，为Activity指定启动模式和taskAffinity，如下所示：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">activity</span> </span><br><span class="line"><span class="attr">android:name</span>=<span class="string">"leon.com.activitylaunchmode.FirstActivity"</span> </span><br><span class="line"><span class="attr">android:launchMode</span>=<span class="string">"singleTop"</span></span><br><span class="line"><span class="attr">android:taskAffinity</span>=<span class="string">"leon.com.activitylaunchmode1"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+<p>除此之外，我们也可以通过设置Intent的某些标志位来达到相同的效果，关于这些和Activity启动模式相关的标志位，我们会在下篇文章进行介绍。</p>
 <h3 id="Standard"><a href="#Standard" class="headerlink" title="Standard"></a><code>Standard</code></h3><p>标准模式，也是系统的默认模式。该模式下，每次启动Activity，都会创建一个新实例，并且将其加入到启动该Activity的那个Activity所在的任务栈中，所以目标Activity的多个实例可以位于不同的任务栈。例如：ActivityA启动了标准模式的ActivityB，那么ActivityB就会在ActivityA所在的任务栈中。</p>
 <p>关于标准模式的Activity，有一个很经典的异常：<br>当我们通过非Activity的Context（例如：Service）启动标准模式的Activity时，就会有以下异常：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Caused by: Android.util.AndroidRuntimeException: <span class="function">Calling <span class="title">startActivity</span><span class="params">()</span> from outside of an Activity context requires the FLAG_ACTIVITY_NEW_TASK flag. Is <span class="keyword">this</span> really what you want?</span></span><br></pre></td></tr></table></figure></p>
 <p>这是因为标准模式的Activity会进入启动它的Activity的任务栈中，但是非Activity的Context又没有任务栈，所以就出错了。解决方案在异常信息中已经给出了：在Intent中添加<code>FLAG_ACTIVITY_NEW_TASK</code>标志位，这样就会为目标Activity创建新的任务栈。</p>
