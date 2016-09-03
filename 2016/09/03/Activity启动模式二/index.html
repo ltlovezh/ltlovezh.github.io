@@ -1,0 +1,948 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Android,Activity启动模式," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="上篇文章Activity启动模式一主要介绍了Activity的四种启动模式，这些启动模式都是在AndroidManifest中进行配置的。除此之外，Android系统还通过Intent类提供了一些标志位，同样可以指定Activity的启动模式。本文将介绍下这些和Activity启动相关的标志位。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Activity启动模式二">
+<meta property="og:url" content="http://ltlovezh.github.io/2016/09/03/Activity启动模式二/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="上篇文章Activity启动模式一主要介绍了Activity的四种启动模式，这些启动模式都是在AndroidManifest中进行配置的。除此之外，Android系统还通过Intent类提供了一些标志位，同样可以指定Activity的启动模式。本文将介绍下这些和Activity启动相关的标志位。">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E7%9B%B8%E5%90%8C-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E7%9B%B8%E5%90%8C-2.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E4%B8%8D%E5%90%8C-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E4%B8%8D%E5%90%8C-2.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_top-taskAffinity%E7%9B%B8%E5%90%8C-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_top-taskAffinity%E7%9B%B8%E5%90%8C-2.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_top-taskAffinity%E4%B8%8D%E5%90%8C-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_top-taskAffinity%E4%B8%8D%E5%90%8C-2.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-standard-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-standard-2.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleTop-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleTop-2.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleTask-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleTask-2.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleInstance-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleInstance-2.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/single_top-clear_top-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/single_top-clear_top-2.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/clear_task.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-2.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-3.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-4.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-5.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-6.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-7.png">
+<meta property="og:updated_time" content="2016-09-03T09:31:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Activity启动模式二">
+<meta name="twitter:description" content="上篇文章Activity启动模式一主要介绍了Activity的四种启动模式，这些启动模式都是在AndroidManifest中进行配置的。除此之外，Android系统还通过Intent类提供了一些标志位，同样可以指定Activity的启动模式。本文将介绍下这些和Activity启动相关的标志位。">
+<meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E7%9B%B8%E5%90%8C-1.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 6226090551544907000,
+      author: 'leon'
+    }
+  };
+</script>
+
+  <title> Activity启动模式二 | 风之谷 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">风之谷</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Activity启动模式二
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-09-03T17:16:35+08:00" content="2016-09-03">
+              2016-09-03
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/03/Activity启动模式二/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/03/Activity启动模式二/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/09/03/Activity启动模式二/" class="leancloud_visitors" data-flag-title="Activity启动模式二">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
+      </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>上篇文章<a href="http://ltlovezh.com/2016/08/28/Activity%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F%E4%B8%80/" target="_blank" rel="external">Activity启动模式一</a>主要介绍了Activity的四种启动模式，这些启动模式都是在<code>AndroidManifest</code>中进行配置的。除此之外，Android系统还通过Intent类提供了一些标志位，同样可以指定Activity的启动模式。本文将介绍下这些和Activity启动相关的标志位。</p>
+<a id="more"></a>
+<p>一般情况下，我们在启动目标Activity的Intent中指定这些标志位，如下所示：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Intent intent = <span class="keyword">new</span> Intent();</span><br><span class="line">intent.setClass(MainActivity.<span class="keyword">this</span>,FirstActivity.class);</span><br><span class="line">intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);</span><br><span class="line">startActivity(intent);</span><br></pre></td></tr></table></figure>
+<p>当同时在配置文件中指定launchMode和在Intent中指定上面的标志位时，以标志位为准，即代码的优先级比AndroidManifest的优先级更高！</p>
+<p>下面我们通过具体案例看下和Activity启动相关的4种标志位：</p>
+<h2 id="Activity启动相关的四种标志位"><a href="#Activity启动相关的四种标志位" class="headerlink" title="Activity启动相关的四种标志位"></a>Activity启动相关的四种标志位</h2><h3 id="FLAG-ACTIVITY-NEW-TASK"><a href="#FLAG-ACTIVITY-NEW-TASK" class="headerlink" title="FLAG_ACTIVITY_NEW_TASK"></a>FLAG_ACTIVITY_NEW_TASK</h3><p>官方文档上介绍该标志位和SingleTask启动模式具有相同效果，其实不然。应该是<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TOP</code>一起等同于SingleTask启动模式。</p>
+<p>这里我们通过4个案例，看下单独使用FLAG_ACTIVITY_NEW_TASK标志位和一起使用FLAG_ACTIVITY_NEW_TASK、FLAG_ACTIVITY_CLEAR_TOP标志位的具体效果。</p>
+<h4 id="案例1"><a href="#案例1" class="headerlink" title="案例1"></a>案例1</h4><p>两个Activity的taskAffinity属性相同，具体步骤如下所示：</p>
+<ol>
+<li>创建MainActivity和FirstActivity，且两者的启动模式都是Standard，TaskAffinity也相同。</li>
+<li>首先启动MainActivity，接着通过MainActivity启动FirstActivity，然后再通过FirstActivity启动MainActivity，如此反复。</li>
+<li>启动FirstActivity的Intent中指定了FLAG_ACTIVITY_NEW_TASK标志位，启动MainActivity的Intent不包含任何标志位。</li>
+</ol>
+<p>经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E7%9B%B8%E5%90%8C-1.png" alt="new_task-taskAffinity相同-1">  可见，因为两个Activity的taskAffinity属性相同，所以第一次启动FirstActivity时并没有创建新的任务栈。</p>
+<p>最后，MainActivity再次启动FirstActivity后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E7%9B%B8%E5%90%8C-2.png" alt="new_task-taskAffinity相同-2">  因为只有FLAG_ACTIVITY_NEW_TASK标志位，没有FLAG_ACTIVITY_CLEAR_TOP，所以无法清除FirstActivity之上的MainActivity，复用已有FirstActivity。而是创建了新的FirstActivity。</p>
+<p>通过上面的任务栈可知：在taskAffinity相同的情况下，单独添加FLAG_ACTIVITY_NEW_TASK不起任何作用。</p>
+<h4 id="案例2"><a href="#案例2" class="headerlink" title="案例2"></a>案例2</h4><p>两个Activity的taskAffinity属性不相同，具体步骤如下所示：</p>
+<ol>
+<li>创建MainActivity和FirstActivity，且两者的启动模式都是Standard，但是TaskAffinity不同。</li>
+<li>首先启动MainActivity，接着通过MainActivity启动FirstActivity，然后再通过FirstActivity启动MainActivity，如此反复。</li>
+<li>启动FirstActivity的Intent中指定了FLAG_ACTIVITY_NEW_TASK标志位，启动MainActivity的Intent不包含任何标志位。</li>
+</ol>
+<p>经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E4%B8%8D%E5%90%8C-1.png" alt="new_task-taskAffinity不同-1">  可见，因为两个Activity的taskAffinity属性不同，所以第一次启动FirstActivity时，创建了新的任务栈（TaskId为1979）.</p>
+<p>最后，MainActivity再次启动FirstActivity后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E4%B8%8D%E5%90%8C-2.png" alt="new_task-taskAffinity不同-2">  可以看到，任务栈没有发生任何变化，也没有创建新的FirstActivity实例。这是因为FirstActivity实例已经存在于它所期望的任务栈中，而单独添加FLAG_ACTIVITY_NEW_TASK标志位又不会清除任务栈中位于FirstActivity之上的Activity实例，所以就没有发生跳转。</p>
+<p>通过上面的任务栈可知：在taskAffinity不同的情况下，第一次启动FirstActivity时，会新建一个任务栈，并将FirstActivity实例添加到该task中。这与SingleTask启动模式产生的效果是一致的。但是，当企图再次从MainActivity进入到FirstActivity时，却什么也没有发生，原因上面已经说明了。</p>
+<p>综上所述，单独使用FLAG_ACTIVITY_NEW_TASK会产生非常奇怪的行为，因此一般和FLAG_ACTIVITY_CLEAR_TOP标志位一起使用，这样可以实现类似SingleTask的效果，但是不完全相同，下面会进行介绍。</p>
+<p>下面我们再通过两个案例看下<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TOP</code>一起使用的效果。</p>
+<h4 id="案例3"><a href="#案例3" class="headerlink" title="案例3"></a>案例3</h4><p>两个Activity的taskAffinity属性相同，具体步骤如下所示：</p>
+<ol>
+<li>创建MainActivity和FirstActivity，且两者的启动模式都是Standard，TaskAffinity也相同。</li>
+<li>首先启动MainActivity，接着通过MainActivity启动FirstActivity，然后再通过FirstActivity启动MainActivity，如此反复。</li>
+<li>启动FirstActivity的Intent中指定了<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TOP</code>标志位，启动MainActivity的Intent不包含任何标志位.</li>
+</ol>
+<p>经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_top-taskAffinity%E7%9B%B8%E5%90%8C-1.png" alt="new_task-clear_top-taskAffinity相同-1">  可见，因为两个Activity的taskAffinity属性相同，所以第一次启动FirstActivity时并没有创建新的任务栈。</p>
+<p>最后，MainActivity再次启动FirstActivity后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_top-taskAffinity%E7%9B%B8%E5%90%8C-2.png" alt="new_task-clear_top-taskAffinity相同-2">  貌似是和SingTask启动模式的效果相同，但是细看一下就会发现区别：<strong>前后两次FirstActivity实例是不同的，也就是没有复用第一次启动的FirstActivity，而是清除了FirstActivity及其之上的所有Activity，然后新建FirstActivity实例添加到了当前任务栈</strong>。</p>
+<p>通过上面的任务栈可知：在taskAffinity相同的情况下，<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TOP</code>标志位组合确实不会创建新的任务栈，但是会清除了FirstActivity及其之上的所有Activity，并新建FirstActivity实例添加到了当前任务栈，这点是和SingleTask模式的差异。（SingleTask仅会清除FirstActivity之上的Activity，然后复用已有的FirstActivity）</p>
+<h4 id="案例4"><a href="#案例4" class="headerlink" title="案例4"></a>案例4</h4><p>两个Activity的taskAffinity属性不相同，具体步骤如下所示：</p>
+<ol>
+<li>创建MainActivity和FirstActivity，且两者的启动模式都是Standard，但是TaskAffinity不同。</li>
+<li>首先启动MainActivity，接着通过MainActivity启动FirstActivity，然后再通过FirstActivity启动MainActivity，如此反复。</li>
+<li>启动FirstActivity的Intent中指定了<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TOP</code>标志位，启动MainActivity的Intent不包含任何标志位。</li>
+</ol>
+<p>经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_top-taskAffinity%E4%B8%8D%E5%90%8C-1.png" alt="new_task-clear_top-taskAffinity不同-1">  可见，因为两个Activity的taskAffinity属性不同，所以第一次启动FirstActivity时，创建了新的任务栈（TaskId为1980）.</p>
+<p>最后，MainActivity再次启动FirstActivity后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_top-taskAffinity%E4%B8%8D%E5%90%8C-2.png" alt="new_task-clear_top-taskAffinity不同-2">  可以看到，和案例3 taskAffinity属性相同的情况类似（除了创建了新的任务栈），直接清除了FirstActivity及其之上的所有Activity，然后创建新的FirstActivity实例添加到新的任务栈（TaskId为1980）。</p>
+<p>通过上面的任务栈可知：在taskAffinity不同的情况下，<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TOP</code>标志位组合会为首次启动的FirstActivity创建新的任务栈，其他的逻辑与案例3基本相同，<strong>都是直接清除了FirstActivity及其之上的所有Activity，然后创建新的FirstActivity实例，这也是和SingleTask模式的区别</strong>。</p>
+<p>综上所述，<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TOP</code>标志位组合产生的效果总体上和SingleTask模式相同，除了不会复用FirstActivity实例之外。</p>
+<h3 id="FLAG-ACTIVITY-CLEAR-TOP"><a href="#FLAG-ACTIVITY-CLEAR-TOP" class="headerlink" title="FLAG_ACTIVITY_CLEAR_TOP"></a>FLAG_ACTIVITY_CLEAR_TOP</h3><p>该标志位在上面已经使用过了，作用是清除包含目标Activity的任务栈中位于该Activity实例之上的其他Activity实例。但是是复用已有的目标Activity，还是像上面那样先删除后重建，则有以下规则：</p>
+<ol>
+<li>若是单独使用FLAG_ACTIVITY_CLEAR_TOP，那么只有非Standard启动模式的目标Activity才会被复用，其他启动模式的目标Activity都先被删除，然后被重新创建并入栈。</li>
+<li>若是使用FLAG_ACTIVITY_SINGLE_TOP和FLAG_ACTIVITY_CLEAR_TOP标志位组合，那么不管目标Activity是什么启动模式，都会被复用。</li>
+</ol>
+<p>因为上面的案例3和案例4都不符合上面的两条规则，所以FirstActivity才会先被清除，然后重建。</p>
+<p>下面我们通过几个具体案例，验证下上面的两条规则：</p>
+<h4 id="案例1-1"><a href="#案例1-1" class="headerlink" title="案例1"></a>案例1</h4><p>具体步骤如下所示：</p>
+<ol>
+<li>创建MainActivity和FirstActivity，且两者的启动模式都是Standard。</li>
+<li>首先启动MainActivity，接着通过MainActivity启动FirstActivity，然后再通过FirstActivity启动MainActivity，如此反复。</li>
+<li>启动FirstActivity的Intent中指定了<code>FLAG_ACTIVITY_CLEAR_TOP</code>标志位，启动MainActivity的Intent不包含任何标志位。</li>
+</ol>
+<p>经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-standard-1.png" alt="clear_top-standard-1"></p>
+<p>最后，MainActivity再次启动FirstActivity后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-standard-2.png" alt="clear_top-standard-2"></p>
+<p>通过上面的任务栈可知：第二次<code>MainActivity -&gt; FirstActivity</code>时，会先把FirstActivity以及之上的Activity全部销毁，然后创建新的FirstActivity入栈，正符合我们的预期。</p>
+<h4 id="案例2-1"><a href="#案例2-1" class="headerlink" title="案例2"></a>案例2</h4><p>具体步骤如下所示：</p>
+<ol>
+<li>创建MainActivity和FirstActivity，MainActivity的启动模式是Standard，FirstActivity的启动模式是SingleTop。</li>
+<li>首先启动MainActivity，接着通过MainActivity启动FirstActivity，然后再通过FirstActivity启动MainActivity，如此反复。</li>
+<li>启动FirstActivity的Intent中指定了<code>FLAG_ACTIVITY_CLEAR_TOP</code>标志位，启动MainActivity的Intent不包含任何标志位。</li>
+</ol>
+<p>经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleTop-1.png" alt="clear_top-SingleTop-1"></p>
+<p>最后，MainActivity再次启动FirstActivity后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleTop-2.png" alt="clear_top-SingleTop-2"></p>
+<p>通过上面的任务栈可知：第二次<code>MainActivity -&gt; FirstActivity</code>时，会先把FirstActivity之上的Activity全部销毁，然后复用已有的FirstActivity实例，也符合我们的预期。</p>
+<hr>
+<p>此外，当FirstActivity是SingleTask和SingleInstance模式时，其效果和SingleTop启动模式一样，也是首先销毁FirstActivity之上的所有Activity，然后复用已有的FirstActivity实例。</p>
+<p>这里仅给出我验证的任务栈：<br><strong>当FirstActivity是SingleTask模式时（taskAffinity相同）</strong>，经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleTask-1.png" alt="clear_top-SingleTask-1"></p>
+<p>最后，MainActivity再次启动FirstActivity后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleTask-2.png" alt="clear_top-SingleTask-2">  可见，确实复用了已有的FirstActivity实例。</p>
+<p><strong>当FirstActivity是SingleInstance模式时</strong>，经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleInstance-1.png" alt="clear_top-SingleInstance-1"></p>
+<p>最后，MainActivity再次启动FirstActivity后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/clear_top-SingleInstance-2.png" alt="clear_top-SingleInstance-2"><br>可见，确实复用了已有的FirstActivity实例。</p>
+<p>综上所述，通过案例1和案例2，我们验证了规则1是OK的。<br>下面我们继续验证下规则2：</p>
+<h4 id="案例3-1"><a href="#案例3-1" class="headerlink" title="案例3"></a>案例3</h4><p>具体步骤如下所示：</p>
+<ol>
+<li>创建MainActivity和FirstActivity，且两者的启动模式都是Standard。</li>
+<li>首先启动MainActivity，接着通过MainActivity启动FirstActivity，然后再通过FirstActivity启动MainActivity，如此反复。</li>
+<li>启动FirstActivity的Intent中指定了<code>FLAG_ACTIVITY_SINGLE_TOP + FLAG_ACTIVITY_CLEAR_TOP</code>标志位，启动MainActivity的Intent不包含任何标志位。</li>
+</ol>
+<p>经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/single_top-clear_top-1.png" alt="single_top-clear_top-1"></p>
+<p>最后，MainActivity再次启动FirstActivity后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/single_top-clear_top-2.png" alt="single_top-clear_top-2"></p>
+<p>通过上面的任务栈可知：第二次<code>MainActivity -&gt; FirstActivity</code>时，会先把FirstActivity之上的Activity全部销毁，然后复用已有的FirstActivity实例，也符合我们的预期。</p>
+<p>综上所述，既然在<code>FLAG_ACTIVITY_SINGLE_TOP + FLAG_ACTIVITY_CLEAR_TOP</code>标志位组合的情况下，Standard模式的FirstActivity都已经被复用了，那么其他启动模式的Activity也必然会被复用。（单独使用FLAG_ACTIVITY_CLEAR_TOP都会被复用，何况又添加了FLAG_ACTIVITY_SINGLE_TOP标志位，通过Demo验证也确实如此，就不再给出具体案例了）。</p>
+<p>因此，上面的两条规则还要是遵守的^_^。</p>
+<h3 id="FLAG-ACTIVITY-CLEAR-TASK"><a href="#FLAG-ACTIVITY-CLEAR-TASK" class="headerlink" title="FLAG_ACTIVITY_CLEAR_TASK"></a>FLAG_ACTIVITY_CLEAR_TASK</h3><p>该标志位一般和FLAG_ACTIVITY_CLEAR_TASK一起使用，目的是启动目标Activity时，首先清空已经存在的目标Activity实例所在的任务栈，这自然也就清除了之前存在的目标Activity实例，然后创建新的目标Activity实例并入栈。</p>
+<p>经过Demo测试发现，单独使用FLAG_ACTIVITY_CLEAR_TASK标志位，不管taskAffinity是否相同，都不会产生什么效果。例如下面是单独使用该标志位的最终任务栈（taskAffinity相同 or 不同都是这样）：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/clear_task.png" alt="clear_task"><br>感兴趣的可以自行尝试，这里不再赘述。</p>
+<p>下面看下<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TASK</code>标志位组合在taskAffinity相同 and 不同的情况下的效果。</p>
+<h4 id="案例1-2"><a href="#案例1-2" class="headerlink" title="案例1"></a>案例1</h4><p>两个Activity的taskAffinity属性相同，具体步骤如下所示：</p>
+<ol>
+<li>创建MainActivity和FirstActivity，且两者的启动模式都是Standard，<strong>taskAffinity也相同</strong>。</li>
+<li>首先启动MainActivity，接着通过MainActivity启动FirstActivity，然后再通过FirstActivity启动MainActivity，如此反复。</li>
+<li>启动FirstActivity的Intent中指定了<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TASK</code>标志位，启动MainActivity的Intent不包含任何标志位。</li>
+</ol>
+<p>第一次启动MainActivity后，任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-1.png" alt="new_task-clear_task-1"></p>
+<p>接着MainActivity启动FirstActivity后，任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-2.png" alt="new_task-clear_task-2">  首先启动的MainActivity居然被清除了，然后才创建了FirstActivity实例。</p>
+<p>然后FirstActivity启动MainActivity后，任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-3.png" alt="new_task-clear_task-3"></p>
+<p>最后MainActivity再次启动FirstActivity后，任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-4.png" alt="new_task-clear_task-4">  可见，系统再次清除了FirstActivity及其之上的MainActivity，然后重新创建了新的FirstActivity实例并入栈。</p>
+<p>通过上面的任务栈可知：当通过<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TASK</code>标志位组合启动FirstActivity时，<strong>首先会清空FirstActivity所在的任务栈，然后再创建新的FirstActivity实例并入栈</strong>。</p>
+<h4 id="案例2-2"><a href="#案例2-2" class="headerlink" title="案例2"></a>案例2</h4><p>两个Activity的taskAffinity属性不相同，具体步骤如下所示：</p>
+<ol>
+<li>创建MainActivity和FirstActivity，且两者的启动模式都是Standard，<strong>taskAffinity不相同</strong>。</li>
+<li>首先启动MainActivity，接着通过MainActivity启动FirstActivity，然后再通过FirstActivity启动MainActivity，如此反复。</li>
+<li>启动FirstActivity的Intent中指定了<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TASK</code>标志位，启动MainActivity的Intent不包含任何标志位。</li>
+</ol>
+<p>第一次MainActivity启动FirstActivity后，任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-5.png" alt="new_task-clear_task-5">  因为taskAffinity不同，所以为FirstActivity实例创建了新的任务栈。</p>
+<p>然后FirstActivity启动MainActivity后，任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-6.png" alt="new_task-clear_task-6"></p>
+<p>最后MainActivity再次启动FirstActivity后，任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-7.png" alt="new_task-clear_task-7">  可见，系统首先清除了任务栈（TaskId为2040）中FirstActivity及其之上的MainActivity，然后重新创建了新的FirstActivity实例并入栈（TaskId为2040）。</p>
+<p>通过上面的任务栈可知：当通过<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TASK</code>标志位组合启动FirstActivity时，<strong>首先会清空FirstActivity所在的任务栈，然后再创建新的FirstActivity实例并入栈，这和taskAffinity属性相同是一致的效果，只不过这里第一次为FirstActivity创建了新的任务栈</strong>。</p>
+<p>综上所述，当通过<code>FLAG_ACTIVITY_NEW_TASK + FLAG_ACTIVITY_CLEAR_TASK</code>标志位组合启动目标Activity时，首先会清空目标Activity所在的任务栈（若目标Activity是第一次启动，那么会清空目标Activity所期望的任务栈），然后创建新的目标Activity实例并入栈。</p>
+<h3 id="FLAG-ACTIVITY-SINGLE-TOP"><a href="#FLAG-ACTIVITY-SINGLE-TOP" class="headerlink" title="FLAG_ACTIVITY_SINGLE_TOP"></a>FLAG_ACTIVITY_SINGLE_TOP</h3><p>该标志单独使用就可以达到SingleTop启动模式的效果，该类效果可以参考前篇文章，这里不再赘述。</p>
+<h2 id="Activity启动相关的属性"><a href="#Activity启动相关的属性" class="headerlink" title="Activity启动相关的属性"></a>Activity启动相关的属性</h2><p>这里简单介绍一些<code>AndroidManifest</code>配置文件中与启动模式相关的属性。其实前一篇文章已经介绍了两个比较常用的属性：<code>android:taskAffinity</code>和<code>android:allowTaskReparenting</code>，下面再补充一些不常用的属性。</p>
+<h3 id="android-clearTaskOnLaunch"><a href="#android-clearTaskOnLaunch" class="headerlink" title="android:clearTaskOnLaunch"></a>android:clearTaskOnLaunch</h3><p>字面意思是：是否在启动时清除任务栈，该属性默认为false，表示是否在APP启动时，清除任务栈中除根Activity之外的其他Activity实例。该属性只对任务栈内的根Activity起作用，任务栈内其他的Activity都会被忽略。</p>
+<p>比如：我们有一个App，依次启动了ActivityA、ActivityB和ActivityC，其中ActivityA和ActivityB都设置clearTaskOnLaunch属性为true。那么首先点击“Home”建回到Launcher界面，然后再启动该App，我们看到是ActivityA界面，而ActivityB和ActivityC都被销毁了。<br>除非栈底的ActivityA已经被销毁，那么上面设置clearTaskOnLaunch属性为true的activity(B)才会生效。</p>
+<h3 id="android-finishOnTaskLaunch"><a href="#android-finishOnTaskLaunch" class="headerlink" title="android:finishOnTaskLaunch"></a>android:finishOnTaskLaunch</h3><p>该属性默认值为false，表示当离开当前Activity所在的任务栈时，立即销毁当前Activity，而其他Activity不受影响。</p>
+<h3 id="android-alwaysRetainTaskState"><a href="#android-alwaysRetainTaskState" class="headerlink" title="android:alwaysRetainTaskState"></a>android:alwaysRetainTaskState</h3><p>该属性默认值为false，表示App的任务栈是否保持原来的状态。该属性只对task的根Activity起作用，其他的Activity都会被忽略。 默认情况下，若一个App在后台停留的时间太长，那么再启动该App时，系统会清除任务栈中除了根Activity之外的其他Activity，但是如果根Activity设置了该属性，那么再次启动应用时，就不会清除Task中的Activity，而是保持原样，因此仍然可以看到上一次操作的界面。 </p>
+<hr>
+<p>OK，Activity启动模式相关的内容就介绍这些吧，希望对自己对感兴趣的同学都有所帮助^_^。</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag">#Android</a>
+          
+            <a href="/tags/Activity启动模式/" rel="tag">#Activity启动模式</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/28/Activity启动模式一/" rel="next" title="Activity启动模式一">
+                <i class="fa fa-chevron-left"></i> Activity启动模式一
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/09/03/Activity启动模式二/"
+     data-title="Activity启动模式二"
+     data-content=""
+     data-url="http://ltlovezh.github.io/2016/09/03/Activity启动模式二/">
+  <div class="ds-share-inline">
+    <ul  class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/09/03/Activity启动模式二/"
+           data-title="Activity启动模式二" data-url="http://ltlovezh.github.io/2016/09/03/Activity启动模式二/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+               alt="leon" />
+          <p class="site-author-name" itemprop="name">leon</p>
+          <p class="site-description motion-element" itemprop="description">技术实践者</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">21</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">40</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  github
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                  
+                    <i class="fa fa-weibo"></i>
+                  
+                  weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  zhihu
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.douban.com/people/63230484/" target="_blank">
+                  
+                    <i class="fa fa-globe"></i>
+                  
+                  douban
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+            <div class="links-of-blogroll-title">技术博文</div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Activity启动相关的四种标志位"><span class="nav-number">1.</span> <span class="nav-text">Activity启动相关的四种标志位</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#FLAG-ACTIVITY-NEW-TASK"><span class="nav-number">1.1.</span> <span class="nav-text">FLAG_ACTIVITY_NEW_TASK</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#案例1"><span class="nav-number">1.1.1.</span> <span class="nav-text">案例1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例2"><span class="nav-number">1.1.2.</span> <span class="nav-text">案例2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例3"><span class="nav-number">1.1.3.</span> <span class="nav-text">案例3</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例4"><span class="nav-number">1.1.4.</span> <span class="nav-text">案例4</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FLAG-ACTIVITY-CLEAR-TOP"><span class="nav-number">1.2.</span> <span class="nav-text">FLAG_ACTIVITY_CLEAR_TOP</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#案例1-1"><span class="nav-number">1.2.1.</span> <span class="nav-text">案例1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例2-1"><span class="nav-number">1.2.2.</span> <span class="nav-text">案例2</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例3-1"><span class="nav-number">1.2.3.</span> <span class="nav-text">案例3</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FLAG-ACTIVITY-CLEAR-TASK"><span class="nav-number">1.3.</span> <span class="nav-text">FLAG_ACTIVITY_CLEAR_TASK</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#案例1-2"><span class="nav-number">1.3.1.</span> <span class="nav-text">案例1</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#案例2-2"><span class="nav-number">1.3.2.</span> <span class="nav-text">案例2</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#FLAG-ACTIVITY-SINGLE-TOP"><span class="nav-number">1.4.</span> <span class="nav-text">FLAG_ACTIVITY_SINGLE_TOP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Activity启动相关的属性"><span class="nav-number">2.</span> <span class="nav-text">Activity启动相关的属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#android-clearTaskOnLaunch"><span class="nav-number">2.1.</span> <span class="nav-text">android:clearTaskOnLaunch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-finishOnTaskLaunch"><span class="nav-number">2.2.</span> <span class="nav-text">android:finishOnTaskLaunch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#android-alwaysRetainTaskState"><span class="nav-number">2.3.</span> <span class="nav-text">android:alwaysRetainTaskState</span></a></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+<div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+&nbsp;&nbsp;|&nbsp;&nbsp;
+
+<span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+&nbsp;
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+
+  
+
+
+
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=0.5.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=0.5.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ltlovezh"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+</body>
+</html>

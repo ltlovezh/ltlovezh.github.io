@@ -60,7 +60,7 @@
 <meta name="description" content="技术实践者">
 <meta property="og:type" content="website">
 <meta property="og:title" content="风之谷">
-<meta property="og:url" content="http://ltlovezh.github.io/tags/多媒体数据库/index.html">
+<meta property="og:url" content="http://ltlovezh.github.io/page/3/index.html">
 <meta property="og:site_name" content="风之谷">
 <meta property="og:description" content="技术实践者">
 <meta name="twitter:card" content="summary">
@@ -83,7 +83,7 @@
   };
 </script>
 
-  <title> 标签: 多媒体数据库 | 风之谷 </title>
+  <title> 风之谷 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -123,7 +123,9 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left 
+   page-home 
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -230,47 +232,129 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        多媒体数据库
-        <small>标签</small>
-      </h2>
-    </div>
-
+  <section id="posts" class="posts-expand">
     
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
 
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/" itemprop="url">
-              
-                <span itemprop="name">Android平台监听系统截屏方案预研及相关知识点</span>
-              
-            </a>
-        
-      </h1>
+  
+  
+  
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-06-12T13:21:50+08:00"
-              content="2016-06-12" >
-          06-12
-        </time>
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/04/17/Kotlin基本语法1/" itemprop="url">
+                  Kotlin基本语法1
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-17T21:37:06+08:00" content="2016-04-17">
+              2016-04-17
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/17/Kotlin基本语法1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/17/Kotlin基本语法1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+     
+         
+        
+          <span id="/2016/04/17/Kotlin基本语法1/" class="leancloud_visitors" data-flag-title="Kotlin基本语法1">
+             &nbsp; | &nbsp;
+                 <span class="post-meta-item-icon">
+                   <i class="fa fa-eye"></i>
+                  </span>
+                  <span class="post-meta-item-text">阅读次数 </span>
+                  <span class="leancloud-visitors-count"></span>                                                                                                 
+                </span>
+         
+ 
       </div>
+      </header>
+    
 
-    </header>
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>Kotlin是一门与Swift类似的静态类型JVM语言，由JetBrains设计开发并开源，号称“Android世界的Swift”。最近花时间看了下这门语言，整理了一些和Java区别比较大的方面，仅作备忘（这里仅是一部分）。</p>
+<h2 id="控制流"><a href="#控制流" class="headerlink" title="控制流"></a>控制流</h2><h3 id="if表达式"><a href="#if表达式" class="headerlink" title="if表达式"></a>if表达式</h3><p>在Kotlin 中，if是一个带有返回值的表达式（也可以是一般性语句）。因此，在Kotlin中没有三元操作符(condition ? then : else)，因为<code>if表达式</code>就能胜任这项工作。<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//定义变量</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> a</span> = <span class="number">1</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> b</span> = <span class="number">2</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//if作为表达式，此时必须有else分支</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> max</span> = <span class="keyword">if</span> (a &gt; b) a <span class="keyword">else</span> b</span><br><span class="line"></span><br><span class="line"><span class="comment">//if作为表达式，此时必须有else分支（此时分支是代码块，且代码块的最后一个表达式的值是当前代码块的值）</span></span><br><span class="line"><span class="variable"><span class="keyword">val</span> min</span> = <span class="keyword">if</span> (a &gt; b) &#123; </span><br><span class="line">    print(<span class="string">"Choose a"</span>) </span><br><span class="line">    b </span><br><span class="line">  &#125; <span class="keyword">else</span> &#123; </span><br><span class="line">    print(<span class="string">"Choose b"</span>) </span><br><span class="line">    a </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+<p>作为表达式时，一般是将<code>if表达式</code>（的值）赋值为变量，或者在函数中return<code>if表达式</code>（的值）。在这种情况下，<code>if表达式</code>必须包含else分支。</p>
+<p>除了作为表达式之外，<code>if</code>也可以实现一般性语句，此时则不必包含else分支。<br>例如：<br><figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">fun</span> <span class="title">max</span><span class="params">(a: <span class="type">Int, b: Int</span>)</span>: <span class="keyword">Int</span> &#123;</span></span><br><span class="line">    <span class="keyword">if</span> (a &gt; b) &#123;</span><br><span class="line">        println(<span class="string">"a"</span>)</span><br><span class="line">        <span class="keyword">return</span> a</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> b</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/04/17/Kotlin基本语法1/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
   </article>
 
 
     
-  </div>
+  </section>
 
   
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
+
 
 
           </div>
