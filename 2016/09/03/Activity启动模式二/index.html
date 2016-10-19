@@ -65,7 +65,7 @@
 <meta property="og:description" content="上篇文章Activity启动模式一主要介绍了Activity的四种启动模式，这些启动模式都是在AndroidManifest中进行配置的。除此之外，Android系统还通过Intent类提供了一些标志位，同样可以指定Activity的启动模式。本文将介绍下这些和Activity启动相关的标志位。">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E7%9B%B8%E5%90%8C-1.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E7%9B%B8%E5%90%8C-2.png">
-<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E4%B8%8D%E5%90%8C-1.png">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E4%B8%8D%E5%90%8C-2.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E4%B8%8D%E5%90%8C-2.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_top-taskAffinity%E7%9B%B8%E5%90%8C-1.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_top-taskAffinity%E7%9B%B8%E5%90%8C-2.png">
@@ -89,7 +89,7 @@
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-5.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-6.png">
 <meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-clear_task-7.png">
-<meta property="og:updated_time" content="2016-09-03T09:31:51.000Z">
+<meta property="og:updated_time" content="2016-10-19T02:04:35.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Activity启动模式二">
 <meta name="twitter:description" content="上篇文章Activity启动模式一主要介绍了Activity的四种启动模式，这些启动模式都是在AndroidManifest中进行配置的。除此之外，Android系统还通过Intent类提供了一些标志位，同样可以指定Activity的启动模式。本文将介绍下这些和Activity启动相关的标志位。">
@@ -358,7 +358,7 @@
 <li>首先启动MainActivity，接着通过MainActivity启动FirstActivity，然后再通过FirstActivity启动MainActivity，如此反复。</li>
 <li>启动FirstActivity的Intent中指定了FLAG_ACTIVITY_NEW_TASK标志位，启动MainActivity的Intent不包含任何标志位。</li>
 </ol>
-<p>经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E4%B8%8D%E5%90%8C-1.png" alt="new_task-taskAffinity不同-1">  可见，因为两个Activity的taskAffinity属性不同，所以第一次启动FirstActivity时，创建了新的任务栈（TaskId为1979）.</p>
+<p>经过<code>MainActivity -&gt; FirstActivity -&gt; MainActivity</code>后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E4%B8%8D%E5%90%8C-2.png" alt="new_task-taskAffinity不同-1">  可见，因为两个Activity的taskAffinity属性不同，所以第一次启动FirstActivity时，创建了新的任务栈（TaskId为1979）.</p>
 <p>最后，MainActivity再次启动FirstActivity后，最终的任务栈如下所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/new_task-taskAffinity%E4%B8%8D%E5%90%8C-2.png" alt="new_task-taskAffinity不同-2">  可以看到，任务栈没有发生任何变化，也没有创建新的FirstActivity实例。这是因为FirstActivity实例已经存在于它所期望的任务栈中，而单独添加FLAG_ACTIVITY_NEW_TASK标志位又不会清除任务栈中位于FirstActivity之上的Activity实例，所以就没有发生跳转。</p>
 <p>通过上面的任务栈可知：在taskAffinity不同的情况下，第一次启动FirstActivity时，会新建一个任务栈，并将FirstActivity实例添加到该task中。这与SingleTask启动模式产生的效果是一致的。但是，当企图再次从MainActivity进入到FirstActivity时，却什么也没有发生，原因上面已经说明了。</p>
 <p>综上所述，单独使用FLAG_ACTIVITY_NEW_TASK会产生非常奇怪的行为，因此一般和FLAG_ACTIVITY_CLEAR_TOP标志位一起使用，这样可以实现类似SingleTask的效果，但是不完全相同，下面会进行介绍。</p>
