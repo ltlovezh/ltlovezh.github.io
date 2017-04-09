@@ -63,7 +63,7 @@
 <meta property="og:url" content="http://ltlovezh.github.io/2017/04/09/ApkChannelPackage插件接入文档/index.html">
 <meta property="og:site_name" content="风之谷">
 <meta property="og:description" content="多渠道打包方式选择APKChannelPackage是一个多渠道打包插件，该插件会自动检测基础包是V1签名还是V2签名，并使用不同的多渠道打包方式。目前Gradle Plugin 2.2以上默认开启V2签名，所以如果想关闭V2签名，可将下面的v2SigningEnabled设置为false。12345678910111213signingConfigs &amp;#123;        release">
-<meta property="og:updated_time" content="2017-04-09T14:51:10.000Z">
+<meta property="og:updated_time" content="2017-04-09T15:09:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ApkChannelPackage插件接入文档">
 <meta name="twitter:description" content="多渠道打包方式选择APKChannelPackage是一个多渠道打包插件，该插件会自动检测基础包是V1签名还是V2签名，并使用不同的多渠道打包方式。目前Gradle Plugin 2.2以上默认开启V2签名，所以如果想关闭V2签名，可将下面的v2SigningEnabled设置为false。12345678910111213signingConfigs &amp;#123;        release">
@@ -326,6 +326,7 @@
 <li>appId ： 当前Variant的applicationId</li>
 </ul>
 <p>若是根据已有基础包生成多渠道包，则通过<code>rebuildChannel</code>标签配置：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rebuildChannel &#123;</span><br><span class="line">baseDebugApk = 已有Debug APK    </span><br><span class="line">baseReleaseApk = 已有Release APK</span><br><span class="line"><span class="comment">//默认为new File(project.buildDir, "rebuildChannel/debug")</span></span><br><span class="line">debugOutputDir = Debug渠道包输出目录   </span><br><span class="line"><span class="comment">//默认为new File(project.buildDir, "rebuildChannel/release")</span></span><br><span class="line">releaseOutputDir = Release渠道包输出目录</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里要注意一下，已有APK的名字必须包含<code>base</code>字符串，这样插件生成多渠道包时，会用当前的渠道替换<code>base</code>字符串，形成新的渠道包。</p>
 <h3 id="6-生成多渠道包"><a href="#6-生成多渠道包" class="headerlink" title="6.生成多渠道包"></a>6.生成多渠道包</h3><p>若没有通过Gradle Plugin的 <code>productFlavors</code>配置多渠道，那么通过以下Task<br><code>channelDebug</code> 、<code>channelRelease</code>分别负责生成Debug和Release的多渠道包。</p>
 <p>若是配置了<code>productFlavors</code>，那么对应的Task则是<code>channelFlavorXDebug</code>、<code>channelFlavorXRelease</code>，FlavorX表示在<code>productFlavors</code>中配置的渠道名称。</p>
 <p>除此之外，如果是根据已有基础包生成多渠道包，那么对应的Task则是<code>reBuildChannel</code>。</p>
