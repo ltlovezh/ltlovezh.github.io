@@ -41,7 +41,7 @@
 <link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Android," />
+  <meta name="keywords" content="sql," />
 
 
 
@@ -57,16 +57,16 @@
 
 
 
-<meta name="description" content="这里仅记录Activity相关的知识点和踩坑经历。">
+<meta name="description" content="基础的SQL基本的SQL语句可以概括为以下伪代码：12345678910SELECT DISTINCT &amp;lt;select_list&amp;gt; FROM &amp;lt;left_table&amp;gt; &amp;lt;join_type&amp;gt; JOIN &amp;lt;right_table&amp;gt; ON &amp;lt;join_condition&amp;gt; WHERE &amp;lt;where_condition&amp;gt; GROUP">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Activity杂记">
-<meta property="og:url" content="http://ltlovezh.github.io/2017/06/08/Activity杂记/index.html">
+<meta property="og:title" content="重拾Sql语句">
+<meta property="og:url" content="http://ltlovezh.github.io/2017/09/16/重拾Sql语句/index.html">
 <meta property="og:site_name" content="风之谷">
-<meta property="og:description" content="这里仅记录Activity相关的知识点和踩坑经历。">
-<meta property="og:updated_time" content="2017-06-08T05:43:15.000Z">
+<meta property="og:description" content="基础的SQL基本的SQL语句可以概括为以下伪代码：12345678910SELECT DISTINCT &amp;lt;select_list&amp;gt; FROM &amp;lt;left_table&amp;gt; &amp;lt;join_type&amp;gt; JOIN &amp;lt;right_table&amp;gt; ON &amp;lt;join_condition&amp;gt; WHERE &amp;lt;where_condition&amp;gt; GROUP">
+<meta property="og:updated_time" content="2017-09-16T08:28:28.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Activity杂记">
-<meta name="twitter:description" content="这里仅记录Activity相关的知识点和踩坑经历。">
+<meta name="twitter:title" content="重拾Sql语句">
+<meta name="twitter:description" content="基础的SQL基本的SQL语句可以概括为以下伪代码：12345678910SELECT DISTINCT &amp;lt;select_list&amp;gt; FROM &amp;lt;left_table&amp;gt; &amp;lt;join_type&amp;gt; JOIN &amp;lt;right_table&amp;gt; ON &amp;lt;join_condition&amp;gt; WHERE &amp;lt;where_condition&amp;gt; GROUP">
 
 
 
@@ -84,7 +84,7 @@
   };
 </script>
 
-  <title> Activity杂记 | 风之谷 </title>
+  <title> 重拾Sql语句 | 风之谷 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -253,7 +253,7 @@
             
             
               
-                Activity杂记
+                重拾Sql语句
               
             
           </h1>
@@ -265,8 +265,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2017-06-08T13:40:45+08:00" content="2017-06-08">
-              2017-06-08
+            <time itemprop="dateCreated" datetime="2017-09-16T16:19:01+08:00" content="2017-09-16">
+              2017-09-16
             </time>
           </span>
 
@@ -276,8 +276,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2017/06/08/Activity杂记/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/06/08/Activity杂记/" itemprop="commentsCount"></span>
+                <a href="/2017/09/16/重拾Sql语句/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/16/重拾Sql语句/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -287,7 +287,7 @@
      
          
         
-          <span id="/2017/06/08/Activity杂记/" class="leancloud_visitors" data-flag-title="Activity杂记">
+          <span id="/2017/09/16/重拾Sql语句/" class="leancloud_visitors" data-flag-title="重拾Sql语句">
              &nbsp; | &nbsp;
                  <span class="post-meta-item-icon">
                    <i class="fa fa-eye"></i>
@@ -308,10 +308,101 @@
       
 
       
-        <p>这里仅记录<code>Activity</code>相关的知识点和踩坑经历。</p>
-<a id="more"></a>
-<h3 id="FLAG-ACTIVITY-NEW-TASK标志位"><a href="#FLAG-ACTIVITY-NEW-TASK标志位" class="headerlink" title="FLAG_ACTIVITY_NEW_TASK标志位"></a>FLAG_ACTIVITY_NEW_TASK标志位</h3><p>通过非Activity的Context调用startActivity时，需要在Intent里面加上<code>FLAG_ACTIVITY_NEW_TASK</code>标志位，不然就抛出以下异常：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Caused by: Android.util.AndroidRuntimeException:</span><br><span class="line"><span class="function">Calling <span class="title">startActivity</span><span class="params">()</span> from outside of an Activity context requires the FLAG_ACTIVITY_NEW_TASK flag. Is <span class="keyword">this</span> really what you want?</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="onActivityResult"><a href="#onActivityResult" class="headerlink" title="onActivityResult"></a>onActivityResult</h3><p>ActivityA通过<code>startActivityForResult</code>启动LaunchMode为<code>SingleTask</code> or <code>SingleInstance</code>的ActivityB时。在5.0之前的系统上，<code>onActivityResult</code>方法会立即被调用，而不是正常情况下，等到ActivityB关闭时，再回调ActivityA的<code>onActivityResult</code>方法，可参考<a href="http://stackoverflow.com/questions/8960072/onactivityresult-with-launchmode-singletask" target="_blank" rel="external">这里</a>。 </p>
+        <h2 id="基础的SQL"><a href="#基础的SQL" class="headerlink" title="基础的SQL"></a>基础的SQL</h2><p>基本的SQL语句可以概括为以下伪代码：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line"><span class="keyword">DISTINCT</span> &lt;select_list&gt; </span><br><span class="line"><span class="keyword">FROM</span> &lt;left_table&gt; </span><br><span class="line">&lt;join_type&gt; <span class="keyword">JOIN</span> &lt;right_table&gt; </span><br><span class="line"><span class="keyword">ON</span> &lt;join_condition&gt; </span><br><span class="line"><span class="keyword">WHERE</span> &lt;where_condition&gt; </span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> &lt;group_by_list&gt; </span><br><span class="line"><span class="keyword">HAVING</span> &lt;having_condition&gt; </span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> &lt;order_by_condition&gt; </span><br><span class="line"><span class="keyword">LIMIT</span> &lt;limit_number&gt;</span><br></pre></td></tr></table></figure></p>
+<p>搞清楚上面各个伪代码的执行顺序，对我们写SQL有很大的帮助。<br><a id="more"></a></p>
+<ol>
+<li>首先是处理<code>FROM &lt;left_table&gt; &lt;join_type&gt; JOIN &lt;right_table&gt; ON &lt;join_condition&gt;</code>，对两张表根据<code>ON</code>操作符指定的关联条件，合并成一个临时表A。<blockquote>
+<p>其中，<code>&lt;join_type&gt;</code>包括：<code>INNER JOIN</code>、<code>Full outer join</code>、<code>LEFT OUTER JOIN</code>、<code>RIGHT OUTER JOIN</code>、<code>CROSS JOIN</code>。</p>
+<ol>
+<li><code>INNER JOIN</code>表示合并的临时表A中，仅包含符合<code>ON</code>条件的记录。</li>
+<li><code>LEFT OUTER JOIN</code>表示合并的临时表A中，不仅包含符合<code>ON</code>条件的记录，还会把<code>left_table</code>中剩余的记录也保存在临时表，同时将对应的<code>right_table</code>中的所有列字段赋值为NULL。</li>
+<li><code>RIGHT OUTER JOIN</code>表示合并的临时表A中，不仅包含符合<code>ON</code>条件的记录，还会把<code>right_table</code>中剩余的记录也保存在临时表A，同时将对应的<code>left_table</code>中的所有列字段赋值为NULL。</li>
+<li><code>Full outer join</code>表示合并的临时表A中，不仅包含符合<code>ON</code>条件的记录，还会把<code>left_table</code>和<code>right_table</code>中剩余的记录也保存在临时表A，同时将对应的另外一张表的列字段赋值为NULL。其实就是两张表的交集。</li>
+<li><code>CROSS JOIN</code>表示两张表的笛卡尔积，一般很少使用。<br>关于<code>JOIN</code>的各种使用，可以参考<a href="https://coolshell.cn/articles/3463.html" target="_blank" rel="external">图解SQL的JOIN</a></li>
+</ol>
+</blockquote>
+</li>
+<li>第一步把两张表合并到了一张临时表A，接下来是对临时表A处理<code>WHERE &lt;where_condition&gt;</code>指定的过滤条件，删除一些不符合条件的记录，得到临时表B。</li>
+<li>上一步得到了筛选记录后的临时表B，接下来针对临时表B，根据<code>GROUP BY &lt;group_by_list&gt;</code>指定的列字段，进行分组操作。然后根据<code>HAVING &lt;having_condition&gt;</code>指定的条件对分组进行过滤，得到临时表C。这里HAVING指定的条件只能包含分组字段，或者其他列字段的聚合函数。</li>
+<li>上一步得到了分组后的临时表C，接下来就是根据<code>SELECT 
+DISTINCT &lt;select_list&gt;</code>规定的字段，选出仅包含指定列字段的临时表D，如果指定了<code>DISTINCT</code>，那么还要把重复的行记录过滤掉。</li>
+<li>上一步得到了筛选列字段后的临时表D，然后就是根据<code>ORDER BY &lt;order_by_condition&gt;</code>指定的列字段，对临时表D的所有行记录进行排序，得到临时表E。</li>
+<li>最后，根据<code>LIMIT &lt;limit_number&gt;</code>指定的条件，从临时表E中，摘录出指定数量的行记录，生成最终的结果表。<blockquote>
+<p>limit的用法是：limit n,m，表示从第n条记录开始选择m条记录。一般可用于列表分页，对于小数据，使用limit没有任何问题。但是当数据量非常大的时候，使用limit是非常低效的。因为limit的机制是每次都从头开始扫描，如果需要从第50万行开始，读取10条数据，那么就需要先扫描定位到第50万行，然后再读取10条记录，而扫描是一个非常低效的过程。</p>
+</blockquote>
+</li>
+</ol>
+<p>一般情况下，基本的SQL语句都可以按照上面6个步骤进行分析。</p>
+<h2 id="SQL函数"><a href="#SQL函数" class="headerlink" title="SQL函数"></a>SQL函数</h2><p>上面介绍了基本SQL语句的内部执行顺序，下面我们看一些常用的SQL函数，这些函数的使用能帮助我们解决一些复杂的SQL问题。</p>
+<h3 id="Case-When-Then"><a href="#Case-When-Then" class="headerlink" title="Case When Then"></a><code>Case When Then</code></h3><p>Case函数很像<code>if else</code>语句，可以进行多条件判断。Case具有两种格式：简单Case函数和Case搜索函数。</p>
+<h4 id="简单Case函数"><a href="#简单Case函数" class="headerlink" title="简单Case函数"></a>简单Case函数</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CASE sex</span><br><span class="line">    WHEN '1' THEN '男'</span><br><span class="line">    WHEN '2' THEN '女'</span><br><span class="line">ELSE '其他' <span class="keyword">END</span></span><br></pre></td></tr></table></figure>
+<h4 id="Case搜索函数"><a href="#Case搜索函数" class="headerlink" title="Case搜索函数"></a>Case搜索函数</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CASE WHEN sex = '1' THEN '男'</span><br><span class="line">     WHEN sex = '2' THEN '女'</span><br><span class="line">ELSE '其他' <span class="keyword">END</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">name</span>, score, </span><br><span class="line">(<span class="keyword">CASE</span> <span class="keyword">WHEN</span> score &lt; <span class="number">60</span> <span class="keyword">THEN</span> <span class="string">'不及格'</span> </span><br><span class="line"><span class="keyword">WHEN</span> score <span class="keyword">BETWEEN</span> <span class="number">60</span> <span class="keyword">AND</span> <span class="number">90</span> <span class="keyword">THEN</span> <span class="string">'良好'</span> </span><br><span class="line"><span class="keyword">WHEN</span> score &gt; <span class="number">90</span> <span class="keyword">THEN</span> <span class="string">'优秀'</span> <span class="keyword">END</span>) <span class="keyword">as</span> <span class="keyword">level</span></span><br><span class="line"><span class="keyword">FROM</span> student</span><br></pre></td></tr></table></figure>
+<p>上面两种方式，可以实现相同的功能。简单Case函数的写法相对比较简洁，但是和Case搜索函数相比，功能方面会有些限制，比如写判断式。</p>
+<h4 id="具体案例"><a href="#具体案例" class="headerlink" title="具体案例"></a>具体案例</h4><p>有如下一个数据库表，标示了各个国家的人口，要求求出亚洲和美洲的人口总数：</p>
+<table>
+<thead>
+<tr>
+<th>country</th>
+<th style="text-align:center">people</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>brazil</td>
+<td style="text-align:center">100</td>
+</tr>
+<tr>
+<td>china</td>
+<td style="text-align:center">100</td>
+</tr>
+<tr>
+<td>india</td>
+<td style="text-align:center">100</td>
+</tr>
+<tr>
+<td>mexico</td>
+<td style="text-align:center">100</td>
+</tr>
+<tr>
+<td>usa</td>
+<td style="text-align:center">100</td>
+</tr>
+<tr>
+<td>england</td>
+<td style="text-align:center">100</td>
+</tr>
+</tbody>
+</table>
+<p>我们只要把属于亚洲和美洲的国家的人口累加，就可以了。所以sql语句如下所示：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> </span><br><span class="line">(<span class="keyword">case</span> country <span class="keyword">when</span> <span class="string">'china'</span> <span class="keyword">then</span> <span class="string">"asia"</span></span><br><span class="line">			 <span class="keyword">when</span> <span class="string">'india'</span> <span class="keyword">then</span> <span class="string">"asia"</span></span><br><span class="line">			 <span class="keyword">when</span> <span class="string">'mexico'</span> <span class="keyword">then</span> <span class="string">"america"</span></span><br><span class="line">			 <span class="keyword">when</span> <span class="string">'usa'</span> <span class="keyword">then</span> <span class="string">"america"</span></span><br><span class="line">			 <span class="keyword">when</span> <span class="string">'brazil'</span> <span class="keyword">then</span> <span class="string">"america"</span></span><br><span class="line">			 <span class="keyword">else</span></span><br><span class="line">				<span class="string">"other"</span></span><br><span class="line">			 <span class="keyword">end</span>) <span class="keyword">as</span> continent , <span class="keyword">sum</span>(people) <span class="keyword">as</span> <span class="keyword">num</span> <span class="keyword">FROM</span> leon.TableA</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span></span><br><span class="line">(<span class="keyword">case</span> country <span class="keyword">when</span> <span class="string">'china'</span> <span class="keyword">then</span> <span class="string">"asia"</span></span><br><span class="line">			 <span class="keyword">when</span> <span class="string">'india'</span> <span class="keyword">then</span> <span class="string">"asia"</span></span><br><span class="line">			 <span class="keyword">when</span> <span class="string">'mexico'</span> <span class="keyword">then</span> <span class="string">"america"</span></span><br><span class="line">			 <span class="keyword">when</span> <span class="string">'usa'</span> <span class="keyword">then</span> <span class="string">"america"</span></span><br><span class="line">			 <span class="keyword">when</span> <span class="string">'brazil'</span> <span class="keyword">then</span> <span class="string">"america"</span></span><br><span class="line">			 <span class="keyword">else</span></span><br><span class="line">				<span class="string">"other"</span></span><br><span class="line">			 <span class="keyword">end</span>);</span><br></pre></td></tr></table></figure></p>
+<p>上述SQL语句首先把country分为亚洲和美洲两个维度，然后根据这个新维度进行分组，并使用聚合函数，求出各个大洲的总人口。<br>最后得出的结果表如下所示：</p>
+<table>
+<thead>
+<tr>
+<th>continent</th>
+<th style="text-align:center">num</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>america</td>
+<td style="text-align:center">300</td>
+</tr>
+<tr>
+<td>asia</td>
+<td style="text-align:center">200</td>
+</tr>
+<tr>
+<td>other</td>
+<td style="text-align:center">100</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>后续使用到继续补充…</p>
+<h2 id="参考文档"><a href="#参考文档" class="headerlink" title="参考文档"></a>参考文档</h2><ul>
+<li><a href="https://coolshell.cn/articles/3463.html" target="_blank" rel="external">图解SQL的JOIN</a></li>
+<li><a href="http://www.jellythink.com/archives/924" target="_blank" rel="external">SQL逻辑查询语句执行顺序</a></li>
+</ul>
 
       
     </div>
@@ -332,7 +423,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Android/" rel="tag">#Android</a>
+            <a href="/tags/sql/" rel="tag">#sql</a>
           
         </div>
       
@@ -341,17 +432,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/09/ApkChannelPackage插件接入文档/" rel="next" title="ApkChannelPackage插件接入文档">
-                <i class="fa fa-chevron-left"></i> ApkChannelPackage插件接入文档
+              <a href="/2017/06/08/Activity杂记/" rel="next" title="Activity杂记">
+                <i class="fa fa-chevron-left"></i> Activity杂记
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/16/重拾Sql语句/" rel="prev" title="重拾Sql语句">
-                重拾Sql语句 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -366,10 +453,10 @@
 
     <div class="post-spread">
       
-        <div class="ds-share flat" data-thread-key="2017/06/08/Activity杂记/"
-     data-title="Activity杂记"
+        <div class="ds-share flat" data-thread-key="2017/09/16/重拾Sql语句/"
+     data-title="重拾Sql语句"
      data-content=""
-     data-url="http://ltlovezh.github.io/2017/06/08/Activity杂记/">
+     data-url="http://ltlovezh.github.io/2017/09/16/重拾Sql语句/">
   <div class="ds-share-inline">
     <ul  class="ds-share-icons-16">
 
@@ -396,8 +483,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2017/06/08/Activity杂记/"
-           data-title="Activity杂记" data-url="http://ltlovezh.github.io/2017/06/08/Activity杂记/">
+      <div class="ds-thread" data-thread-key="2017/09/16/重拾Sql语句/"
+           data-title="重拾Sql语句" data-url="http://ltlovezh.github.io/2017/09/16/重拾Sql语句/">
       </div>
     
   </div>
@@ -550,7 +637,7 @@
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#FLAG-ACTIVITY-NEW-TASK标志位"><span class="nav-number">1.</span> <span class="nav-text">FLAG_ACTIVITY_NEW_TASK标志位</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#onActivityResult"><span class="nav-number">2.</span> <span class="nav-text">onActivityResult</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础的SQL"><span class="nav-number">1.</span> <span class="nav-text">基础的SQL</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL函数"><span class="nav-number">2.</span> <span class="nav-text">SQL函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Case-When-Then"><span class="nav-number">2.1.</span> <span class="nav-text">Case When Then</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#简单Case函数"><span class="nav-number">2.1.1.</span> <span class="nav-text">简单Case函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Case搜索函数"><span class="nav-number">2.1.2.</span> <span class="nav-text">Case搜索函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#具体案例"><span class="nav-number">2.1.3.</span> <span class="nav-text">具体案例</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考文档"><span class="nav-number">3.</span> <span class="nav-text">参考文档</span></a></li></ol></div>
             
           </div>
         </section>
