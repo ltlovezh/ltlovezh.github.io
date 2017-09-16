@@ -1,15 +1,22 @@
-<!doctype html>
+<!DOCTYPE html>
 
 
 
   
 
 
-<html class="theme-next pisces use-motion">
+<html class="theme-next gemini use-motion" lang="zh-Hans">
 <head>
   <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
 
 
 
@@ -27,30 +34,61 @@
 
 
 
-  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
 
 
 
 
-  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-
-
-
-<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="风之谷,leon" />
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
 
 
 
 
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
 
 
 
 
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="风之谷,leon,ltlovezh" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
 
 
 
@@ -69,26 +107,42 @@
 
 
 
-<script type="text/javascript" id="hexo.configuration">
+<script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
-    scheme: 'Pisces',
-    sidebar: {"position":"left","display":"post"},
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
     fancybox: true,
-    motion: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
     duoshuo: {
-      userId: 6226090551544907000,
-      author: 'leon'
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
     }
   };
 </script>
 
-  <title> 风之谷 </title>
-</head>
 
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
+  <link rel="canonical" href="http://ltlovezh.github.io/page/2/"/>
+
+
+
+
+
+  <title>风之谷</title>
   
+
+
 
 
 
@@ -96,18 +150,7 @@
     var _hmt = _hmt || [];
     (function() {
       var hm = document.createElement("script");
-      hm.src = "//hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
-
-
-
-  <script type="text/javascript">
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      hm.src = "https://hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
       var s = document.getElementsByTagName("script")[0];
       s.parentNode.insertBefore(hm, s);
     })();
@@ -116,38 +159,43 @@
 
 
 
+</head>
 
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
 
   
   
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left 
+  page-home">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-meta ">
-  
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
 
-  <div class="custom-logo-site-title">
-    <a href="/"  class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <span class="site-title">风之谷</span>
-      <span class="logo-line-after"><i></i></span>
-    </a>
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">风之谷</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+      
   </div>
-  <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
-</div>
 
-<div class="site-nav-toggle">
-  <button>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-    <span class="btn-bar"></span>
-  </button>
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
 </div>
 
 <nav class="site-nav">
@@ -160,49 +208,49 @@
         <li class="menu-item menu-item-home">
           <a href="/" rel="section">
             
-              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
           </a>
         </li>
       
         
-        <li class="menu-item menu-item-categories">
-          <a href="/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
-        
         <li class="menu-item menu-item-about">
-          <a href="/about" rel="section">
+          <a href="/about/" rel="section">
             
-              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
             关于
           </a>
         </li>
       
         
-        <li class="menu-item menu-item-archives">
-          <a href="/archives" rel="section">
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
             
-              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
-            归档
+            标签
           </a>
         </li>
       
         
-        <li class="menu-item menu-item-tags">
-          <a href="/tags" rel="section">
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
             
-              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
             
-            标签
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
           </a>
         </li>
       
@@ -210,7 +258,7 @@
         <li class="menu-item menu-item-commonweal">
           <a href="/404.html" rel="section">
             
-              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
             
             公益404
           </a>
@@ -223,6 +271,8 @@
 
   
 </nav>
+
+
 
  </div>
     </header>
@@ -237,13 +287,27 @@
       
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2016/08/05/Android-Material-Design/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
 
     
       <header class="post-header">
@@ -251,61 +315,51 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/2016/08/05/Android-Material-Design/" itemprop="url">
-                  Android Material Design
-                </a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2016/08/05/Android-Material-Design/" itemprop="url">Android Material Design</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-08-05T20:47:25+08:00" content="2016-08-05">
-              2016-08-05
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-08-05T20:47:25+08:00">
+                2016-08-05
+              </time>
+            
+
+            
+
+            
           </span>
 
           
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/08/05/Android-Material-Design/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/05/Android-Material-Design/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
-     
-         
-        
-          <span id="/2016/08/05/Android-Material-Design/" class="leancloud_visitors" data-flag-title="Android Material Design">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -314,24 +368,29 @@
       
         
           <p>Android Material Design设计规范已经出来很久了，但是国内APP貌似很少使用啊。而且Android Design Support Library提供了良好的兼容性，可以直接向下兼容到Android2.2，完全可以一试哈。本文简单介绍下Design库提供的一些组件，方便日后查询使用。</p>
-          <div class="post-more-link text-center">
+          <!--noindex-->
+          <div class="post-button text-center">
             <a class="btn" href="/2016/08/05/Android-Material-Design/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
+          <!--/noindex-->
         
       
     </div>
     
-    <div>
-      
-    </div>
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
+      
+
       
 
       
@@ -341,6 +400,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -348,13 +411,27 @@
       
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2016/06/26/Android-View系统那些事一/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
 
     
       <header class="post-header">
@@ -362,61 +439,51 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/2016/06/26/Android-View系统那些事一/" itemprop="url">
-                  Android View系统那些事一
-                </a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2016/06/26/Android-View系统那些事一/" itemprop="url">Android View系统那些事一</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-26T21:57:08+08:00" content="2016-06-26">
-              2016-06-26
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-26T21:57:08+08:00">
+                2016-06-26
+              </time>
+            
+
+            
+
+            
           </span>
 
           
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/26/Android-View系统那些事一/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/26/Android-View系统那些事一/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
-     
-         
-        
-          <span id="/2016/06/26/Android-View系统那些事一/" class="leancloud_visitors" data-flag-title="Android View系统那些事一">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -426,24 +493,29 @@
         
           <p>本篇文章打算介绍下View的坐标、自定义View的手势检测以及实现View内容滚动的几种方式。希望对有需要的同学有所帮助。</p>
 <h2 id="View的坐标"><a href="#View的坐标" class="headerlink" title="View的坐标"></a>View的坐标</h2><p>在自定义View中，经常需要处理各种坐标之间的转换，下图展示了View中的各种坐标：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/View%E5%9D%90%E6%A0%87%E7%B3%BB.png" width="400" alt="View坐标系"/></p>
-          <div class="post-more-link text-center">
+          <!--noindex-->
+          <div class="post-button text-center">
             <a class="btn" href="/2016/06/26/Android-View系统那些事一/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
+          <!--/noindex-->
         
       
     </div>
     
-    <div>
-      
-    </div>
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
+      
+
       
 
       
@@ -453,6 +525,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -460,13 +536,27 @@
       
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2016/06/22/Android-Menu/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
 
     
       <header class="post-header">
@@ -474,61 +564,51 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/2016/06/22/Android-Menu/" itemprop="url">
-                  Android Menu
-                </a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2016/06/22/Android-Menu/" itemprop="url">Android Menu</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-22T21:02:07+08:00" content="2016-06-22">
-              2016-06-22
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-22T21:02:07+08:00">
+                2016-06-22
+              </time>
+            
+
+            
+
+            
           </span>
 
           
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/22/Android-Menu/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/22/Android-Menu/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
-     
-         
-        
-          <span id="/2016/06/22/Android-Menu/" class="leancloud_visitors" data-flag-title="Android Menu">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -539,24 +619,29 @@
           <p>之前总结的一些知识点，仅当备忘！</p>
 <h2 id="基础知识篇"><a href="#基础知识篇" class="headerlink" title="基础知识篇"></a>基础知识篇</h2><p>Android系统里面有3种类型的菜单：选项菜单（OptionsMenu）、上下文菜单（ContextMenu）和子菜单（SubMenu）。还有一个菜单项MenuItem.</p>
 <p>关于Menu相关的XML标签，可以参见官网解释Menu Resource，很详细。</p>
-          <div class="post-more-link text-center">
+          <!--noindex-->
+          <div class="post-button text-center">
             <a class="btn" href="/2016/06/22/Android-Menu/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
+          <!--/noindex-->
         
       
     </div>
     
-    <div>
-      
-    </div>
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
+      
+
       
 
       
@@ -566,6 +651,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -573,13 +662,27 @@
       
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
 
     
       <header class="post-header">
@@ -587,61 +690,51 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/" itemprop="url">
-                  Android平台监听系统截屏方案预研及相关知识点
-                </a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/" itemprop="url">Android平台监听系统截屏方案预研及相关知识点</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-12T13:21:50+08:00" content="2016-06-12">
-              2016-06-12
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-12T13:21:50+08:00">
+                2016-06-12
+              </time>
+            
+
+            
+
+            
           </span>
 
           
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/12/Android平台监听系统截屏方案预研及相关知识点/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
-     
-         
-        
-          <span id="/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/" class="leancloud_visitors" data-flag-title="Android平台监听系统截屏方案预研及相关知识点">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -652,24 +745,29 @@
           <p>最近有个针对系统截屏的需求，所以预研了Android平台上捕获系统截屏的方案。</p>
 <p>最直接的方式就是监听手机的系统截屏组合键（电源键+音量下键），但是这种方式实现难度大，且有的机型使用特殊手势进行截屏，兼容性问题难以解决。</p>
 <p>所以网上流行的方案是监听系统截屏目录下文件创建事件或者多媒体数据库图片资源变更通知。我对两种方式都做了测试，多多少少都存在一些问题，现整理如下：</p>
-          <div class="post-more-link text-center">
+          <!--noindex-->
+          <div class="post-button text-center">
             <a class="btn" href="/2016/06/12/Android平台监听系统截屏方案预研及相关知识点/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
+          <!--/noindex-->
         
       
     </div>
     
-    <div>
-      
-    </div>
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
+      
+
       
 
       
@@ -679,6 +777,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -686,13 +788,27 @@
       
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2016/06/05/Binder之数据结构/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
 
     
       <header class="post-header">
@@ -700,61 +816,51 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/2016/06/05/Binder之数据结构/" itemprop="url">
-                  Binder之数据结构
-                </a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2016/06/05/Binder之数据结构/" itemprop="url">Binder之数据结构</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-06-05T16:49:18+08:00" content="2016-06-05">
-              2016-06-05
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-05T16:49:18+08:00">
+                2016-06-05
+              </time>
+            
+
+            
+
+            
           </span>
 
           
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/06/05/Binder之数据结构/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/05/Binder之数据结构/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
-     
-         
-        
-          <span id="/2016/06/05/Binder之数据结构/" class="leancloud_visitors" data-flag-title="Binder之数据结构">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -769,24 +875,29 @@
 <li><a href="http://www.cnblogs.com/albert1017/p/3849585.html">Android Bander设计与实现 - 实现篇</a></li>
 <li><a href="http://blog.csdn.net/luoshengyang/article/details/6618363">老罗的binder系列文章</a></li>
 </ol>
-          <div class="post-more-link text-center">
+          <!--noindex-->
+          <div class="post-button text-center">
             <a class="btn" href="/2016/06/05/Binder之数据结构/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
+          <!--/noindex-->
         
       
     </div>
     
-    <div>
-      
-    </div>
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
+      
+
       
 
       
@@ -796,6 +907,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -803,13 +918,27 @@
       
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2016/05/31/Android-SystemBar/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
 
     
       <header class="post-header">
@@ -817,61 +946,51 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/2016/05/31/Android-SystemBar/" itemprop="url">
-                  Android SystemBar
-                </a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2016/05/31/Android-SystemBar/" itemprop="url">Android SystemBar</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-31T20:42:10+08:00" content="2016-05-31">
-              2016-05-31
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-31T20:42:10+08:00">
+                2016-05-31
+              </time>
+            
+
+            
+
+            
           </span>
 
           
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/31/Android-SystemBar/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/31/Android-SystemBar/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
-     
-         
-        
-          <span id="/2016/05/31/Android-SystemBar/" class="leancloud_visitors" data-flag-title="Android SystemBar">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -880,24 +999,29 @@
       
         
           <p>SystemBar是用来展示通知、表现设备状态和完成设备导航的屏幕区域。主要包括状态栏（1：status bar）和导航栏（2：navigation bar）。借用官方的图，如下所示，我们可以根据需要对SystemBar进行一些操作，满足自己的需求。<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E5%AE%98%E6%96%B9.png" alt="SystemBar"><br>
-          <div class="post-more-link text-center">
+          <!--noindex-->
+          <div class="post-button text-center">
             <a class="btn" href="/2016/05/31/Android-SystemBar/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
+          <!--/noindex-->
         
       
     </div>
     
-    <div>
-      
-    </div>
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
+      
+
       
 
       
@@ -907,6 +1031,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -914,13 +1042,27 @@
       
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2016/05/31/Android-Bitmap那些事/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
 
     
       <header class="post-header">
@@ -928,61 +1070,51 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/2016/05/31/Android-Bitmap那些事/" itemprop="url">
-                  Android Bitmap那些事
-                </a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2016/05/31/Android-Bitmap那些事/" itemprop="url">Android Bitmap那些事</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-31T17:45:22+08:00" content="2016-05-31">
-              2016-05-31
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-31T17:45:22+08:00">
+                2016-05-31
+              </time>
+            
+
+            
+
+            
           </span>
 
           
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/31/Android-Bitmap那些事/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/31/Android-Bitmap那些事/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
-     
-         
-        
-          <span id="/2016/05/31/Android-Bitmap那些事/" class="leancloud_visitors" data-flag-title="Android Bitmap那些事">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -996,24 +1128,29 @@
 <li>Bitmap复用的限制</li>
 </ol>
 <p>OK，开始之前先介绍下解码图片时的控制类<code>BitmapFactory.Options</code>。</p>
-          <div class="post-more-link text-center">
+          <!--noindex-->
+          <div class="post-button text-center">
             <a class="btn" href="/2016/05/31/Android-Bitmap那些事/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
+          <!--/noindex-->
         
       
     </div>
     
-    <div>
-      
-    </div>
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
+      
+
       
 
       
@@ -1023,6 +1160,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1030,13 +1171,27 @@
       
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2016/05/14/Java8的Lambda表达式和流式操作/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
 
     
       <header class="post-header">
@@ -1044,61 +1199,51 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/2016/05/14/Java8的Lambda表达式和流式操作/" itemprop="url">
-                  Java8的Lambda表达式和流式操作
-                </a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2016/05/14/Java8的Lambda表达式和流式操作/" itemprop="url">Java8的Lambda表达式和流式操作</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-14T17:16:41+08:00" content="2016-05-14">
-              2016-05-14
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-14T17:16:41+08:00">
+                2016-05-14
+              </time>
+            
+
+            
+
+            
           </span>
 
           
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/14/Java8的Lambda表达式和流式操作/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/14/Java8的Lambda表达式和流式操作/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
-     
-         
-        
-          <span id="/2016/05/14/Java8的Lambda表达式和流式操作/" class="leancloud_visitors" data-flag-title="Java8的Lambda表达式和流式操作">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1108,24 +1253,29 @@
         
           <p>Java8在2014年就已经发布了，但是直到Android N宣布支持Java8，我才开始关注Java8的一些新特性。本篇主要介绍Java8中的Lambda表达式相关的特性。</p>
 <h2 id="Lambda和函数接口"><a href="#Lambda和函数接口" class="headerlink" title="Lambda和函数接口"></a>Lambda和函数接口</h2><p>不像<code>Groovy</code>、<code>Scala</code>和<code>Kotlin</code>等语言，一开始就支持Lambda表达式。在Java8之前，Java一直是使用匿名内部类实现类似功能。所以如果要在Java中实现Lambda，需要借助于函数式接口（Functional Interface)。<br>所谓函数接口，就是只包含一个方法的接口（排除默认方法和静态方法） 。一般情况下，函数接口使用Java8新提供的注解<code>@FunctionalInterface</code>进行修饰，防止开发者往函数接口中添加更多的方法。</p>
-          <div class="post-more-link text-center">
+          <!--noindex-->
+          <div class="post-button text-center">
             <a class="btn" href="/2016/05/14/Java8的Lambda表达式和流式操作/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
+          <!--/noindex-->
         
       
     </div>
     
-    <div>
-      
-    </div>
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
+      
+
       
 
       
@@ -1135,6 +1285,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1142,13 +1296,27 @@
       
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2016/05/11/Hexo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
 
     
       <header class="post-header">
@@ -1156,61 +1324,51 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/2016/05/11/Hexo/" itemprop="url">
-                  Hexo
-                </a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2016/05/11/Hexo/" itemprop="url">Hexo</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-11T21:07:43+08:00" content="2016-05-11">
-              2016-05-11
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-11T21:07:43+08:00">
+                2016-05-11
+              </time>
+            
+
+            
+
+            
           </span>
 
           
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/11/Hexo/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/11/Hexo/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
-     
-         
-        
-          <span id="/2016/05/11/Hexo/" class="leancloud_visitors" data-flag-title="Hexo">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1223,24 +1381,29 @@
 <p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
 <h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-          <div class="post-more-link text-center">
+          <!--noindex-->
+          <div class="post-button text-center">
             <a class="btn" href="/2016/05/11/Hexo/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
+          <!--/noindex-->
         
       
     </div>
     
-    <div>
-      
-    </div>
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
+      
+
       
 
       
@@ -1250,6 +1413,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1257,13 +1424,27 @@
       
 
   
-  
 
   
   
   
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2016/05/09/Android事件分发机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
 
     
       <header class="post-header">
@@ -1271,61 +1452,51 @@
         
         
           <h1 class="post-title" itemprop="name headline">
-            
-            
-              
                 
-                <a class="post-title-link" href="/2016/05/09/Android事件分发机制/" itemprop="url">
-                  Android事件分发机制
-                </a>
-              
-            
-          </h1>
+                <a class="post-title-link" href="/2016/05/09/Android事件分发机制/" itemprop="url">Android事件分发机制</a></h1>
         
 
         <div class="post-meta">
           <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-09T13:29:51+08:00" content="2016-05-09">
-              2016-05-09
-            </time>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-09T13:29:51+08:00">
+                2016-05-09
+              </time>
+            
+
+            
+
+            
           </span>
 
           
 
           
             
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/09/Android事件分发机制/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/09/Android事件分发机制/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
           
 
           
-     
-         
-        
-          <span id="/2016/05/09/Android事件分发机制/" class="leancloud_visitors" data-flag-title="Android事件分发机制">
-             &nbsp; | &nbsp;
-                 <span class="post-meta-item-icon">
-                   <i class="fa fa-eye"></i>
-                  </span>
-                  <span class="post-meta-item-text">阅读次数 </span>
-                  <span class="leancloud-visitors-count"></span>                                                                                                 
-                </span>
-         
- 
-      </div>
+          
+
+          
+
+          
+
+          
+
+        </div>
       </header>
     
 
-
+    
+    
+    
     <div class="post-body" itemprop="articleBody">
 
       
@@ -1342,24 +1513,29 @@
 </ol>
 <p>4、一般情况下，处理View事件时，我们会给View注册OnTouchListener、OnClickListener等事件监听器，我们注意到onTouch回调方法会有布尔返回值，而onClick回调方法则返回void。经测试发现，如果onTouch返回false，那么才会回调onClick方法，若返回true，则不会回调Click事件。</p>
 <p>好了，熟悉这些基本用法，应付一般的Coding就没问题了。不过作为有追求的猿们，我们要从源码层面揭开事件分发机制的神秘面纱。</p>
-          <div class="post-more-link text-center">
+          <!--noindex-->
+          <div class="post-button text-center">
             <a class="btn" href="/2016/05/09/Android事件分发机制/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
+          <!--/noindex-->
         
       
     </div>
     
-    <div>
-      
-    </div>
+    
+    
 
-    <div>
-      
-    </div>
+    
+
+    
+
+    
 
     <footer class="post-footer">
+      
+
       
 
       
@@ -1369,6 +1545,10 @@
         <div class="post-eof"></div>
       
     </footer>
+  </div>
+  
+  
+  
   </article>
 
 
@@ -1401,33 +1581,44 @@
   </div>
 
   <aside id="sidebar" class="sidebar">
+    
     <div class="sidebar-inner">
 
       
 
       
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
-               alt="leon" />
-          <p class="site-author-name" itemprop="name">leon</p>
-          <p class="site-description motion-element" itemprop="description">技术实践者</p>
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+              alt="leon" />
+          
+            <p class="site-author-name" itemprop="name">leon</p>
+            <p class="site-description motion-element" itemprop="description">技术实践者</p>
         </div>
+
         <nav class="site-state motion-element">
-          <div class="site-state-item site-state-posts">
-            <a href="/archives">
-              <span class="site-state-item-count">28</span>
-              <span class="site-state-item-name">日志</span>
-            </a>
-          </div>
 
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
           
 
           
+
+          
+            
+            
             <div class="site-state-item site-state-tags">
-              <a href="/tags">
+              <a href="/tags/index.html">
                 <span class="site-state-item-count">46</span>
                 <span class="site-state-item-name">标签</span>
               </a>
@@ -1442,39 +1633,15 @@
           
             
               <span class="links-of-author-item">
-                <a href="https://github.com/ltlovezh" target="_blank">
+                <a href="https://github.com/ltlovezh" target="_blank" title="github">
                   
-                    <i class="fa fa-globe"></i>
-                  
-                  github
-                </a>
+                    <i class="fa fa-fw fa-github"></i>github</a>
               </span>
             
               <span class="links-of-author-item">
-                <a href="http://weibo.com/1758856740/profile?topnav=1&wvr=6&is_all=1" target="_blank">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank" title="zhihu">
                   
-                    <i class="fa fa-weibo"></i>
-                  
-                  weibo
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank">
-                  
-                    <i class="fa fa-globe"></i>
-                  
-                  zhihu
-                </a>
-              </span>
-            
-              <span class="links-of-author-item">
-                <a href="https://www.douban.com/people/63230484/" target="_blank">
-                  
-                    <i class="fa fa-globe"></i>
-                  
-                  douban
-                </a>
+                    <i class="fa fa-fw fa-stack-overflow"></i>zhihu</a>
               </span>
             
           
@@ -1484,40 +1651,48 @@
         
 
         
-        <div class="links-of-blogroll motion-element">
-          
-            <div class="links-of-blogroll-title">技术博文</div>
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              技术博文
+            </div>
             <ul class="links-of-blogroll-list">
               
                 <li class="links-of-blogroll-item">
-                  <a href="http://www.androidweekly.cn" target="_blank">Android开发技术周报</a>
+                  <a href="http://www.androidweekly.cn" title="Android开发技术周报" target="_blank">Android开发技术周报</a>
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="http://droidyue.com" target="_blank">技术小黑屋</a>
+                  <a href="http://droidyue.com" title="技术小黑屋" target="_blank">技术小黑屋</a>
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="http://www.importnew.com" target="_blank">ImportNew</a>
+                  <a href="http://www.importnew.com" title="ImportNew" target="_blank">ImportNew</a>
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/luoshengyang" target="_blank">老罗</a>
+                  <a href="http://blog.csdn.net/luoshengyang" title="老罗" target="_blank">老罗</a>
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/innost" target="_blank">邓凡平</a>
+                  <a href="http://blog.csdn.net/innost" title="邓凡平" target="_blank">邓凡平</a>
                 </li>
               
                 <li class="links-of-blogroll-item">
-                  <a href="http://blog.csdn.net/guolin_blog" target="_blank">郭霖</a>
+                  <a href="http://blog.csdn.net/guolin_blog" title="郭霖" target="_blank">郭霖</a>
                 </li>
               
             </ul>
-          
-        </div>
+          </div>
+        
+
+        
+
 
       </section>
+
+      
 
       
 
@@ -1531,57 +1706,57 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
-</script>
-<div class="copyright" >
+        <div class="copyright" >
   
-  &copy;  2016 - 
+  &copy;  2016 &mdash; 
   <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">leon</span>
-</div>
 
-<div class="powered-by">
-  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
-</div>
-
-<div class="theme-info">
-  主题 -
-  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
-    NexT.Pisces
-  </a>
+  
 </div>
 
 
-&nbsp;&nbsp;|&nbsp;&nbsp;
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
 
-<span id="busuanzi_container_site_pv">
-    本站总访问量<span id="busuanzi_value_site_pv"></span>次
-</span>
-&nbsp;
-<span id="busuanzi_container_site_uv">
-  本站访客数<span id="busuanzi_value_site_uv"></span>人次
-</span>
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.2</div>
 
 
+        
 
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
       </div>
     </footer>
 
-    <div class="back-to-top">
-      <i class="fa fa-arrow-up"></i>
-    </div>
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
   </div>
 
   
-
-
-  
-
-
-
 
 <script type="text/javascript">
   if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
@@ -1590,25 +1765,51 @@
 </script>
 
 
-  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
 
-  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
 
-  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
 
-  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
 
-  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
 
-  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
 
 
   
 
 
-  <script type="text/javascript" src="/js/src/utils.js?v=0.5.0"></script>
 
-  <script type="text/javascript" src="/js/src/motion.js?v=0.5.0"></script>
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
 
 
 
@@ -1616,44 +1817,42 @@
   
 
 
-  <script type="text/javascript" src="/js/src/affix.js?v=0.5.0"></script>
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
 
-  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=0.5.0"></script>
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
 
 
 
   
 
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=0.5.0"></script>
-
-
 
   
+
+
+
+
+	
+
+
+
+
 
   
     
-  
 
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"ltlovezh"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.id = 'duoshuo-script';
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
-
-  
-    
-      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js"></script>
-      <script src="/js/src/hook-duoshuo.js"></script>
     
   
 
@@ -1662,104 +1861,31 @@
 
 
   
-  
-  
 
-  
 
-  
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
-  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
 
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
 
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
 
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
 
 
 
   
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
 </body>
 </html>
