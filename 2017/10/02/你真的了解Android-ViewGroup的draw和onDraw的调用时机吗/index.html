@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ViewGroup.onDraw,ViewGroup.draw," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="前几天遇到一个ViewGroup.onDraw不会调用的问题，在网上查了一些资料，发现基本都混淆了onDraw和draw的区别，趁着十一假期有时间，简单梳理了下这里的逻辑。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="你真的了解Android ViewGroup的draw和onDraw的调用时机吗">
+<meta property="og:url" content="http://ltlovezh.github.io/2017/10/02/你真的了解Android-ViewGroup的draw和onDraw的调用时机吗/index.html">
+<meta property="og:site_name" content="风之谷">
+<meta property="og:description" content="前几天遇到一个ViewGroup.onDraw不会调用的问题，在网上查了一些资料，发现基本都混淆了onDraw和draw的区别，趁着十一假期有时间，简单梳理了下这里的逻辑。">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/setWillNotDraw.jpg">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/%E8%AE%BE%E7%BD%AE%E8%83%8C%E6%99%AF.jpg">
+<meta property="og:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/ViewGroup.jpg">
+<meta property="og:updated_time" content="2017-10-02T10:28:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="你真的了解Android ViewGroup的draw和onDraw的调用时机吗">
+<meta name="twitter:description" content="前几天遇到一个ViewGroup.onDraw不会调用的问题，在网上查了一些资料，发现基本都混淆了onDraw和draw的区别，趁着十一假期有时间，简单梳理了下这里的逻辑。">
+<meta name="twitter:image" content="http://7xs2qy.com1.z0.glb.clouddn.com/setWillNotDraw.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.2',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://ltlovezh.github.io/2017/10/02/你真的了解Android-ViewGroup的draw和onDraw的调用时机吗/"/>
+
+
+
+
+
+  <title>你真的了解Android ViewGroup的draw和onDraw的调用时机吗 | 风之谷</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?3eb4a2a3d5caf7e808ca7df210442e1f";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">风之谷</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">你必须非常努力,才能看起来毫不费力</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://ltlovezh.github.io/2017/10/02/你真的了解Android-ViewGroup的draw和onDraw的调用时机吗/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="leon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="风之谷">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">你真的了解Android ViewGroup的draw和onDraw的调用时机吗</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-02T18:03:39+08:00">
+                2017-10-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Android/" itemprop="url" rel="index">
+                    <span itemprop="name">Android</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/10/02/你真的了解Android-ViewGroup的draw和onDraw的调用时机吗/" class="leancloud_visitors" data-flag-title="你真的了解Android ViewGroup的draw和onDraw的调用时机吗">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前几天遇到一个ViewGroup.onDraw不会调用的问题，在网上查了一些资料，发现基本都混淆了<code>onDraw</code>和<code>draw</code>的区别，趁着十一假期有时间，简单梳理了下这里的逻辑。</p>
+<a id="more"></a>
+<h2 id="View-draw和View-onDraw的调用关系"><a href="#View-draw和View-onDraw的调用关系" class="headerlink" title="View.draw和View.onDraw的调用关系"></a><code>View.draw</code>和<code>View.onDraw</code>的调用关系</h2><p>首先，<code>View.draw</code>和<code>View.onDraw</code>是两个不同的方法，只有<code>View.draw</code>被调用，<code>View.onDraw</code>才有可能被调用。在<code>View.draw</code>中有下面一段代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">boolean</span> dirtyOpaque = (privateFlags &amp; PFLAG_DIRTY_MASK) == PFLAG_DIRTY_OPAQUE &amp;&amp;</span><br><span class="line">                (mAttachInfo == <span class="keyword">null</span> || !mAttachInfo.mIgnoreDirtyState);<span class="comment">//是否是实心控件</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!dirtyOpaque) &#123;</span><br><span class="line">    drawBackground(canvas);<span class="comment">//绘制背景</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="comment">// Step 3, draw the content</span></span><br><span class="line"><span class="keyword">if</span> (!dirtyOpaque) onDraw(canvas);<span class="comment">//调用onDraw</span></span><br></pre></td></tr></table></figure></p>
+<p>通过上述代码可知：</p>
+<ol>
+<li><code>View.draw</code>方法中会调用<code>View.onDraw</code></li>
+<li>只有<code>dirtyOpaque</code>为false（透明，非实心），才会调用<code>View.onDraw</code>方法。</li>
+</ol>
+<p>因此，如果希望<code>ViewGroup.onDraw</code>方法被调用，那么就必须同时满足两个条件：</p>
+<ol>
+<li>设法让<code>ViewGroup.draw</code>方法被调用</li>
+<li>让<code>draw</code>方法中的<code>dirtyOpaque</code>为false。</li>
+</ol>
+<hr>
+<p>既然谈到了<code>View.draw</code>和<code>View.onDraw</code>，这里简单说下两者的区别。查看View源码，可知<code>View.draw</code>基本包含6个步骤：</p>
+<ol>
+<li>Draw the background，通过View.drawBackground方法来实现。</li>
+<li>If necessary, save the canvas’ layers to prepare for fading，如果需要，保存画布层（Canvas.saveLayer）为淡入或淡出做准备。</li>
+<li>draw the content，通过<code>View.onDraw</code>方法来实现，一般自定义View，就是通过该方法来绘制内容。获得Canvas后，可以draw任何内容，实现个性化的定制。</li>
+<li>draw the children，通过View.dispatchDraw方法来实现，ViewGroup都会实现该方法，来绘制自己的子View。</li>
+<li>If necessary, draw the fading edges and restore layers，如果需要，绘制淡入淡出的相关内容并恢复之前保存的画布层（layer）。</li>
+<li>draw decorations (scrollbars)，通过View.onDrawScrollBars方法来实现，绘制滚动条的操作就是在这里实现的。</li>
+</ol>
+<p>简单来说，<code>View.draw</code>负责绘制当前View的所有内容以及子View的内容，是一个全集。而<code>View.onDraw</code>则只负责绘制本身相关的内容，是一个子集。</p>
+<h2 id="ViewGroup-draw的调用时机"><a href="#ViewGroup-draw的调用时机" class="headerlink" title="ViewGroup.draw的调用时机"></a><code>ViewGroup.draw</code>的调用时机</h2><p>其实也是<code>View.draw</code>的调用时机，通过查看View源码可知：单参数的<code>View.draw</code>方法会在三个参数的<code>View.draw</code>方法中被调用，如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!hasDisplayList) &#123; <span class="comment">//软件绘制</span></span><br><span class="line">    <span class="comment">// Fast path for layouts with no backgrounds</span></span><br><span class="line">    <span class="keyword">if</span> ((mPrivateFlags &amp; PFLAG_SKIP_DRAW) == PFLAG_SKIP_DRAW) &#123;      </span><br><span class="line">        <span class="comment">//跳过当前View的绘制,直接绘制子view</span></span><br><span class="line">        mPrivateFlags &amp;= ~PFLAG_DIRTY_MASK;</span><br><span class="line">        dispatchDraw(canvas);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;                            </span><br><span class="line">        <span class="comment">//此时坐标系已经切换到View自身坐标系了,可以纯碎的绘制当前view了,又回到了draw(canvas)</span></span><br><span class="line">        draw(canvas);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在软件绘制下，三参数的<code>View.draw</code>负责把View坐标系从父View那里切换到当前View，然后再交给当前View去绘制。一般情况下，交给当前View去绘制就是通过调用单参数的<code>View.draw</code>方法来实现。<br>但是，这里有一个优化逻辑：如果当前View不需要绘制（打上了<code>PFLAG_SKIP_DRAW</code>标志），那么会通过<code>dispatchDraw</code>方法直接绘制当前View的子View。</p>
+<p>所以，我们的<code>ViewGroup.draw</code>方法会不会被调用，完全取决于mPrivateFlags是不是包含<code>PFLAG_SKIP_DRAW</code>标志：</p>
+<ol>
+<li>若mPrivateFlags包含<code>PFLAG_SKIP_DRAW</code>，那么会跳过当前View的draw方法，直接调用dispatchDraw方法绘制当前View的子View。</li>
+<li>若mPrivateFlags不包含<code>PFLAG_SKIP_DRAW</code>，那么会调用当前View的draw方法，完成所有内容的绘制。</li>
+</ol>
+<p>那么<code>PFLAG_SKIP_DRAW</code>取决于哪些因素那？</p>
+<h3 id="setWillNotDraw"><a href="#setWillNotDraw" class="headerlink" title="setWillNotDraw"></a>setWillNotDraw</h3><p>View中有一个<code>setWillNotDraw</code>方法，从注释上来看，就是控制是否要跳过<code>View.draw</code>方法，以进行优化的。我们看一下该方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setWillNotDraw</span><span class="params">(<span class="keyword">boolean</span> willNotDraw)</span> </span>&#123;</span><br><span class="line">    setFlags(willNotDraw ? WILL_NOT_DRAW : <span class="number">0</span>, DRAW_MASK);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>该方法很简单，我们继续看下setFlags方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setFlags</span><span class="params">(<span class="keyword">int</span> flags, <span class="keyword">int</span> mask)</span> </span>&#123;</span><br><span class="line"><span class="keyword">int</span> old = mViewFlags;</span><br><span class="line"><span class="comment">//设置flags</span></span><br><span class="line">mViewFlags = (mViewFlags &amp; ~mask) | (flags &amp; mask);</span><br><span class="line"><span class="keyword">int</span> changed = mViewFlags ^ old;</span><br><span class="line"><span class="comment">//若mViewFlags前后没有变化，则直接返回</span></span><br><span class="line"><span class="keyword">if</span> (changed == <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">int</span> privateFlags = mPrivateFlags;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> ((changed &amp; DRAW_MASK) != <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> ((mViewFlags &amp; WILL_NOT_DRAW) != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">//mViewFlags设置了WILL_NOT_DRAW标志</span></span><br><span class="line">        <span class="keyword">if</span> (mBseackground != <span class="keyword">null</span>) &#123;</span><br><span class="line">            <span class="comment">//如果当前View有背景，那么取消mPrivateFlags的PFLAG_SKIP_DRAW标志，但是设置另外一个PFLAG_ONLY_DRAWS_BACKGROUND标志</span></span><br><span class="line">            mPrivateFlags &amp;= ~PFLAG_SKIP_DRAW;</span><br><span class="line">            mPrivateFlags |= PFLAG_ONLY_DRAWS_BACKGROUND;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//如果当前View没有背景，那么直接设置PrivateFlags的PFLAG_SKIP_DRAW标志</span></span><br><span class="line">            mPrivateFlags |= PFLAG_SKIP_DRAW;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">//因为mViewFlags没有设置WILL_NOT_DRAW标志，所以取消mPrivateFlags的PFLAG_SKIP_DRAW标志</span></span><br><span class="line">        mPrivateFlags &amp;= ~PFLAG_SKIP_DRAW;</span><br><span class="line">    &#125;</span><br><span class="line">    requestLayout();</span><br><span class="line">    invalidate(<span class="keyword">true</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过上述代码可知，要想对mPrivateFlags设置<code>PFLAG_SKIP_DRAW</code>标识，必须满足两个条件：</p>
+<ol>
+<li>针对mViewFlags，设置WILL_NOT_DRAW标志</li>
+<li>当前View没有背景图</li>
+</ol>
+<p>通过<code>setWillNotDraw(true)</code>一定会对mViewFlags设置<code>WILL_NOT_DRAW</code>标识。如果此时当前View没有背景图，那么就会对mPrivateFlags设置<code>PFLAG_SKIP_DRAW</code>标识。<br>但是若此时当前View有背景图，那么就会取消mPrivateFlags的<code>PFLAG_SKIP_DRAW</code>标识，同时设置另外一个<code>PFLAG_ONLY_DRAWS_BACKGROUND</code>标识。<code>setWillNotDraw</code>方法的相关逻辑如下图所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/setWillNotDraw.jpg" alt="setWillNotDraw"></p>
+<h3 id="设置背景"><a href="#设置背景" class="headerlink" title="设置背景"></a>设置背景</h3><p>那这里就有一个疑问，如果我们在运行过程中，取消了当前View的背景图，那么当前View还会重新为mPrivateFlags设置<code>PFLAG_SKIP_DRAW</code>标志吗？<br>答案：会，这也正是<code>PFLAG_ONLY_DRAWS_BACKGROUND</code>标志的作用。</p>
+<p>我们看下<code>View.setBackgroundDrawable</code>方法的实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setBackgroundDrawable</span><span class="params">(Drawable background)</span> </span>&#123;</span><br><span class="line"><span class="keyword">if</span> (background == mBackground) &#123;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (background != <span class="keyword">null</span>) &#123;</span><br><span class="line">    ...</span><br><span class="line">    mBackground = background;</span><br><span class="line">    <span class="keyword">if</span> ((mPrivateFlags &amp; PFLAG_SKIP_DRAW) != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">//若当前View既设置PFLAG_SKIP_DRAW，又添加了背景，那么只能取消mPrivateFlags的PFLAG_SKIP_DRAW标志，同时替换成PFLAG_ONLY_DRAWS_BACKGROUND，这和setFlags方法里面的逻辑一致</span></span><br><span class="line">        mPrivateFlags &amp;= ~PFLAG_SKIP_DRAW;</span><br><span class="line">        mPrivateFlags |= PFLAG_ONLY_DRAWS_BACKGROUND;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="comment">//这里取消了背景图</span></span><br><span class="line">    mBackground = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> ((mPrivateFlags &amp; PFLAG_ONLY_DRAWS_BACKGROUND) != <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="comment">/*</span><br><span class="line">        * This view ONLY drew the background before and we're removing</span><br><span class="line">        * the background, so now it won't draw anything</span><br><span class="line">        * (hence we SKIP_DRAW)</span><br><span class="line">        */</span></span><br><span class="line">        <span class="comment">//如果mPrivateFlags包含PFLAG_ONLY_DRAWS_BACKGROUND标志，说明之前mViewFlags设置了WILL_NOT_DRAW标志，但是因为之前当前View有背景图，那么只能先设置PFLAG_ONLY_DRAWS_BACKGROUND标志。现在当前View的背景图取消了，所以可以重新对mPrivateFlags设置PFLAG_SKIP_DRAW了</span></span><br><span class="line">        mPrivateFlags &amp;= ~PFLAG_ONLY_DRAWS_BACKGROUND;</span><br><span class="line">        mPrivateFlags |= PFLAG_SKIP_DRAW;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>上述代码里的注释已经说的很清楚了。如果取消了当前View的背景图，系统会把mPrivateFlags的<code>PFLAG_ONLY_DRAWS_BACKGROUND</code>标志重新替换为<code>PFLAG_SKIP_DRAW</code>标志。<code>setBackgroundDrawable</code>方法的相关逻辑如下图所示：<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/%E8%AE%BE%E7%BD%AE%E8%83%8C%E6%99%AF.jpg" alt="setBackgroundDrawable"></p>
+<p>到这里关于<code>PFLAG_SKIP_DRAW</code>标志的分析已经结束了。回到我们开头的问题：为什么默认情况下，<code>ViewGroup.draw</code>（ViewGroup.onDraw）方法不会被调用。对照上面的分析，可知：肯定是ViewGroup的mPrivateFlags打上了<code>PFLAG_SKIP_DRAW</code>标志，那么究竟是在哪里设置的该标志那？</p>
+<p>原来默认情况下，ViewGroup在初始化的时候，会通过下面的代码为为mViewFlags设置<code>WILL_NOT_DRAW</code>标志。并且默认情况下，ViewGroup也没有背景图，所以就为ViewGroup的mPrivateFlags打上了<code>PFLAG_SKIP_DRAW</code>标志。导致<code>ViewGroup.draw</code>方法不会被调用，那么<code>ViewGroup.onDraw</code>方法就更不会被调用了。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">initViewGroup</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// ViewGroup doesn't draw by default</span></span><br><span class="line">    <span class="keyword">if</span> (!debugDraw()) &#123;</span><br><span class="line">        setFlags(WILL_NOT_DRAW, DRAW_MASK);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>总结一下，决定<code>View.draw</code>方法是否被调用的直接因素是：<strong>View.mPrivateFlags是否包含PFLAG_SKIP_DRAW标识</strong>；而要包含此标识，需要同时满足两个条件：</p>
+<ol>
+<li>View.mViewFlags包含WILL_NOT_DRAW标识，可通过View.setWillNotDraw(true)设置该标识。</li>
+<li>当前View没有背景图。</li>
+</ol>
+<p>因此，如果我们想让<code>ViewGroup.draw</code>被调用，只要破坏上述任何一个条件就可以了。</p>
+<ol>
+<li>调用View.setWillNotDraw(false)，取消View.mViewFlags中的<strong>WILL_NOT_DRAW</strong>标识</li>
+<li>为ViewGroup设置背景图</li>
+</ol>
+</blockquote>
+<h2 id="ViewGroup-onDraw的调用时机"><a href="#ViewGroup-onDraw的调用时机" class="headerlink" title="ViewGroup.onDraw的调用时机"></a><code>ViewGroup.onDraw</code>的调用时机</h2><p>由上文可知，即使<code>ViewGroup.draw</code>被调用了，<code>ViewGroup.onDraw</code>也不一定会被调用。必须满足不是实心控件（View.mPrivateFlags没有打上<code>PFLAG_DIRTY_OPAQUE</code>标识），<code>ViewGroup.onDraw</code>才会被调用。</p>
+<blockquote>
+<p>实心控件：控件的onDraw方法能够保证此控件的所有区域都会被其所绘制的内容完全覆盖。换句话说，通过此控件所属的区域无法看到此控件之下的内容，也就是既没有半透明也没有空缺的部分。</p>
+</blockquote>
+<p>那么View.mPrivateFlags在什么情况下会被打上<code>PFLAG_DIRTY_OPAQUE</code>标识那。通过查看源码，发现相关逻辑在<code>ViewGroup.invalidateChild</code>方法中：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这里的child表示直接调用invalidate的子View。</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">invalidateChild</span><span class="params">(View child, <span class="keyword">final</span> Rect dirty)</span> </span>&#123;</span><br><span class="line"><span class="comment">//计算子View是否是实心的</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">boolean</span> isOpaque = child.isOpaque() &amp;&amp; !drawAnimation &amp;&amp; child.getAnimation() == <span class="keyword">null</span> &amp;&amp; childMatrix.isIdentity();</span><br><span class="line"><span class="comment">//PFLAG_DIRTY和PFLAG_DIRTY_OPAQUE是互斥的</span></span><br><span class="line"><span class="keyword">int</span> opaqueFlag = isOpaque ? PFLAG_DIRTY_OPAQUE : PFLAG_DIRTY;</span><br><span class="line"></span><br><span class="line">do &#123; <span class="comment">//循环遍历到ViewRootImpl为止</span></span><br><span class="line">    View view = <span class="keyword">null</span>;<span class="comment">//父View</span></span><br><span class="line">    <span class="keyword">if</span> (parent <span class="keyword">instanceof</span> View) &#123;</span><br><span class="line">        view = (View) parent;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (view != <span class="keyword">null</span>) &#123; <span class="comment">//给当前父View打上相应的flag</span></span><br><span class="line">        <span class="comment">//父View若包含FADING_EDGE_MASK标识，那么只能打上FLAG_DIRTY标识，表示会调用ViewGroup.onDraw方法</span></span><br><span class="line">        <span class="keyword">if</span> ((view.mViewFlags &amp; FADING_EDGE_MASK) != <span class="number">0</span> &amp;&amp;</span><br><span class="line">                            view.getSolidColor() == <span class="number">0</span>) &#123;</span><br><span class="line">            opaqueFlag = PFLAG_DIRTY;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> ((view.mPrivateFlags &amp; PFLAG_DIRTY_MASK) != PFLAG_DIRTY) &#123;</span><br><span class="line">            <span class="comment">//PFLAG_DIRTY和PFLAG_DIRTY_OPAQUE是互斥的</span></span><br><span class="line">            view.mPrivateFlags = (view.mPrivateFlags &amp; ~PFLAG_DIRTY_MASK) | opaqueFlag;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过上述代码可知：View.invalidate方法会向上回溯到ViewRootImpl，在此过程中，若子控件是实心的，则会将<strong>当前父控件</strong>标记为<strong>PFLAG_DIRTY_OPAQUE</strong>，否则为<strong>PFLAG_DIRTY</strong>。<br>对于包含<strong>PFLAG_DIRTY_OPAQUE</strong>标识的控件，在绘制过程中，会跳过<code>drawBackground</code>方法（绘制背景）和<code>onDraw</code>方法(绘制自身内容）。 </p>
+<p>决定一个View是否实心完全取决于<code>isOpaque</code>方法，该方法的默认实现是检查<code>View.mPrivateFlags</code>是否包含<code>PFLAG_OPAQUE_MASK</code>标识。<code>PFLAG_OPAQUE_MASK</code>标识（实心）又由<code>PFLAG_OPAQUE_BACKGROUND</code>（背景实心）和<code>PFLAG_OPAQUE_SCROLLBARS</code>（滚动条实心）组成。即：只有View同时满足背景实心和滚动条实心，那么它才是opaque的。<br>真正计算View是否实心的方法是<code>computeOpaqueFlags</code>，如下所示：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">computeOpaqueFlags</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// Opaque if:</span></span><br><span class="line">    <span class="comment">//   - Has a background</span></span><br><span class="line">    <span class="comment">//   - Background is opaque</span></span><br><span class="line">    <span class="comment">//   - Doesn't have scrollbars or scrollbars overlay</span></span><br><span class="line">    <span class="comment">//若View包含背景，且背景是不透明的，则打上PFLAG_OPAQUE_BACKGROUND标识</span></span><br><span class="line">    <span class="keyword">if</span> (mBackground != <span class="keyword">null</span> &amp;&amp; mBackground.getOpacity() == PixelFormat.OPAQUE) &#123;</span><br><span class="line">        mPrivateFlags |= PFLAG_OPAQUE_BACKGROUND;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mPrivateFlags &amp;= ~PFLAG_OPAQUE_BACKGROUND;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> flags = mViewFlags;</span><br><span class="line">    <span class="comment">//若没有横竖滚动条，或者滚动条是OVERLAY类型的，则打上PFLAG_OPAQUE_SCROLLBARS标识</span></span><br><span class="line">    <span class="keyword">if</span> (((flags &amp; SCROLLBARS_VERTICAL) == <span class="number">0</span> &amp;&amp; (flags &amp; SCROLLBARS_HORIZONTAL) == <span class="number">0</span>) ||</span><br><span class="line">                (flags &amp; SCROLLBARS_STYLE_MASK) == SCROLLBARS_INSIDE_OVERLAY ||</span><br><span class="line">                (flags &amp; SCROLLBARS_STYLE_MASK) == SCROLLBARS_OUTSIDE_OVERLAY) &#123;</span><br><span class="line">        mPrivateFlags |= PFLAG_OPAQUE_SCROLLBARS;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        mPrivateFlags &amp;= ~PFLAG_OPAQUE_SCROLLBARS;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>只有同时打上了<code>PFLAG_OPAQUE_BACKGROUND</code>和<code>PFLAG_OPAQUE_SCROLLBARS</code>标识，当前View才是实心的。该方法会在View中的很多地方被调用，以实时确定View是否是实心的。<br>当然，如果<code>isOpaque</code>方法的默认实现不符合我们的需求，我们可以自己实现，这也是官方推荐的做法。</p>
+<h3 id="Demo验证"><a href="#Demo验证" class="headerlink" title="Demo验证"></a>Demo验证</h3><p>下面我们通过一个Demo验证上述逻辑：</p>
+<ol>
+<li>设定一个自定义父ViewGroupA和子ViewB。</li>
+<li>对父ViewGroupA调用setWillNotDraw(false)，保证父ViewGroupA的draw方法会被调用。</li>
+<li>对子ViewB设置一个Click事件，具体实现就是调用子ViewB.invalidate方法。</li>
+<li>通过点击子ViewB，观察父ViewGroupA和子ViewB的draw和onDraw方法是否会被调用。</li>
+</ol>
+<blockquote>
+<p>上述Demo必须采用软件绘制才有效。在硬件绘制下，子ViewB调用invalidate方法，只会触发子ViewB自己的draw方法，它的父View是不需要重绘的。</p>
+</blockquote>
+<p>假如我们对子ViewB设置了一个纯色的背景（子ViewB变成实心了），那么可以得到如下结论：</p>
+<ol>
+<li>在View树第一次渲染的时候，父ViewGroupA和子ViewB的draw和onDraw方法都会被调用。</li>
+<li>在后续点击子ViewB的时候，子ViewB的draw和onDraw方法都会被调用，父ViewGroupA的draw方法也会被调用，<strong>但是父ViewGroupA的onDraw方法不会被调用</strong>。</li>
+</ol>
+<p>假如我们没有对子ViewB设置背景（子ViewB变成非实心了），那么可以得到如下结论：</p>
+<ol>
+<li>在View树第一次渲染的时候，父ViewGroupA和子ViewB的draw和onDraw方法都会被调用。</li>
+<li>在后续点击子ViewB的时候，父ViewGroupA和子ViewB的draw和onDraw方法都会被调用。</li>
+</ol>
+<p>当然控制一个View是否实心，我们也可以直接重写<code>isOpaque</code>方法，没必要像上面这么麻烦。</p>
+<blockquote>
+<p>总结一下，<strong>首次渲染View树的时候，只要ViewGroup.draw方法被调用了，那么ViewGroup.onDraw就会被调用</strong>。<br><strong>但是后续子View.invalidate的时候，在ViewGroup.draw方法被调用的前提下，还要子View是非实心的，那么ViewGroup.onDraw和ViewGroup.drawBackground才会被调用</strong>。`</p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>最后用一张图来总结下ViewGroup的draw和onDraw方法的调用逻辑图。<br><img src="http://7xs2qy.com1.z0.glb.clouddn.com/ViewGroup.jpg" alt="ViewGroup的draw和onDraw方法的调用逻辑图"></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ViewGroup-onDraw/" rel="tag"># ViewGroup.onDraw</a>
+          
+            <a href="/tags/ViewGroup-draw/" rel="tag"># ViewGroup.draw</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/17/基于Hexo搭建个人博客/" rel="next" title="基于Hexo搭建个人博客">
+                <i class="fa fa-chevron-left"></i> 基于Hexo搭建个人博客
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="uyan_frame"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          
+            <img class="site-author-image" itemprop="image"
+              src="http://7xs2qy.com1.z0.glb.clouddn.com/Android.png"
+              alt="leon" />
+          
+            <p class="site-author-name" itemprop="name">leon</p>
+            <p class="site-description motion-element" itemprop="description">技术实践者</p>
+        </div>
+
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+            
+              <a href="/archives/">
+            
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ltlovezh" target="_blank" title="github">
+                  
+                    <i class="fa fa-fw fa-github"></i>github</a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://www.zhihu.com/people/li-tao-81-84" target="_blank" title="zhihu">
+                  
+                    <i class="fa fa-fw fa-stack-overflow"></i>zhihu</a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              技术博文
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.androidweekly.cn" title="Android开发技术周报" target="_blank">Android开发技术周报</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://droidyue.com" title="技术小黑屋" target="_blank">技术小黑屋</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.importnew.com" title="ImportNew" target="_blank">ImportNew</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/luoshengyang" title="老罗" target="_blank">老罗</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/innost" title="邓凡平" target="_blank">邓凡平</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.csdn.net/guolin_blog" title="郭霖" target="_blank">郭霖</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#View-draw和View-onDraw的调用关系"><span class="nav-number">1.</span> <span class="nav-text">View.draw和View.onDraw的调用关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewGroup-draw的调用时机"><span class="nav-number">2.</span> <span class="nav-text">ViewGroup.draw的调用时机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#setWillNotDraw"><span class="nav-number">2.1.</span> <span class="nav-text">setWillNotDraw</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#设置背景"><span class="nav-number">2.2.</span> <span class="nav-text">设置背景</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ViewGroup-onDraw的调用时机"><span class="nav-number">3.</span> <span class="nav-text">ViewGroup.onDraw的调用时机</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Demo验证"><span class="nav-number">3.1.</span> <span class="nav-text">Demo验证</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2016 &mdash; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">leon</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+  <span class="post-meta-divider">|</span>
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.2</div>
+
+
+        
+
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//tajs.qq.com/stats?sId=55452216";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2144734"></script>
+      <!-- UY END -->
+    
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("O6G37ih07JTb0JMO5fLi1AO4-gzGzoHsz", "JQOTur9Y1GDaPWghewFrdFA1");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
